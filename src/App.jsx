@@ -739,52 +739,105 @@ const StageEquipe = () => (
   </div>
 );
 
-// ─── PRÉPA PHYSIQUE ───────────────────────────────────────────────────────────
+// ─── PRÉPA PHYSIQUE ─────────────────────────────────────────────────────────
+const PHYS_TYPES = ["Endurance","Force","Explosivité","Vitesse","Technique","Récupération","Compétition","Haltérophilie","PPG","Corps entier"];
+const PHYS_COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Jérémie","Michel","Kevin","Autre"];
+const INTENSITES = ["Faible","Moyenne","Élevée","Maximale"];
+const STATUTS_PHYS = ["À venir","Terminée","Non réalisé"];
+const RESSENTIS_PHYS = ["😃 Excellent","😊 Très bon","🙂 Bon","😐 Moyen","😔 Fatigué","😩 Épuisé"];
+
 const PrepaPhysique = () => {
   const [activeFilter, setActiveFilter] = useState("Semaine");
-  const TYPES = ["Semaine","Endurance","Force","Explosivité","Haltéro","PPG","Full Body","Vitesse","Technique","Récup","Compét"];
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ date:new Date().toISOString().split("T")[0], type:"Endurance", duration:"", intensite:"Moyenne", statut:"À venir", programme:"", coach:"", distance:"", calories:"", fcMoy:"", fcMax:"", ressenti:"🙂 Bon", notes:"" });
+  const TYPES_LABELS = ["Semaine","🏃 Endurance","💪 Force","⚡ Explosivité","🏋️ Haltéro","🔥 PPG","🔥 Corps entier","⚡ Vitesse","🎯 Technique","🧘 Récup","🏆 Compét"];
+
+  const SelectF = ({ label, value, options, onChange }) => (
+    <div style={{ marginBottom:14 }}>
+      <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{label}</label>
+      <select value={value} onChange={e=>onChange(e.target.value)} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+        {options.map(o=><option key={o}>{o}</option>)}
+      </select>
+    </div>
+  );
 
   return (
     <div>
       <SectionHeader icon="💪" title="Préparation Physique" subtitle="Suivez toutes vos séances de préparation physique" color={C.blue}
-        action={<Btn color="#fff" style={{ color:C.blue, fontSize:12 }}><Plus size={12}/> Nouvelle séance</Btn>} />
+        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.blue, fontSize:12 }}><Plus size={12}/> Nouvelle séance</Btn>} />
       <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:8, marginBottom:16 }}>
-        {TYPES.map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} />)}
+        {TYPES_LABELS.map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} />)}
       </div>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
-        {[{l:"Séances totales",v:"42",c:C.blue},{l:"Durée moy.",v:"55 min",c:C.primary},{l:"Cette semaine",v:"2",c:C.green}].map(s=>(
-          <div key={s.l} style={{ background:C.card, borderRadius:12, padding:12, border:"1px solid "+C.border, textAlign:"center" }}>
-            <div style={{ fontSize:11, color:C.muted }}>{s.l}</div>
-            <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.v}</div>
+      <EmptyState icon={<Dumbbell size={24}/>} title="Aucune séance cette semaine" sub="Les séances de cette semaine apparaîtront ici" action={{ label:"Créer une séance", fn:()=>setShowForm(true) }} />
+
+      {showForm && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
+          <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ background:"linear-gradient(135deg, "+C.blue+", "+C.primary+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle séance</div>
+              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+            </div>
+            <div style={{ padding:"20px 24px" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date *</label>
+                  <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <SelectF label="Type *" value={form.type} options={PHYS_TYPES} onChange={v=>setForm(f=>({...f,type:v}))} />
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Durée (min) *</label>
+                  <input type="number" placeholder="60" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+                <SelectF label="Intensité" value={form.intensite} options={INTENSITES} onChange={v=>setForm(f=>({...f,intensite:v}))} />
+                <SelectF label="Statut *" value={form.statut} options={STATUTS_PHYS} onChange={v=>setForm(f=>({...f,statut:v}))} />
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Nom du programme</label>
+                  <input type="text" placeholder="Ex: Programme Semaine 1" value={form.programme} onChange={e=>setForm(f=>({...f,programme:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <SelectF label="Coach / Préparateur" value={form.coach} options={["Sélectionner...",...PHYS_COACHES]} onChange={v=>setForm(f=>({...f,coach:v}))} />
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:12, marginBottom:14 }}>
+                {[["Distance (km)","distance"],["Calories","calories"],["FC moyenne (bpm)","fcMoy"],["FC max (bpm)","fcMax"]].map(([l,k])=>(
+                  <div key={k}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
+                    <input type="number" value={form[k]} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                ))}
+              </div>
+              <SelectF label="Ressenti" value={form.ressenti} options={RESSENTIS_PHYS} onChange={v=>setForm(f=>({...f,ressenti:v}))} />
+              <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Notes</label>
+                <textarea rows={3} value={form.notes} onChange={e=>setForm(f=>({...f,notes:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={()=>setShowForm(false)} style={{ background:C.blue, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}>💾 Enregistrer</button>
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
-      {mockPhysique.map(s=>(
-        <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid "+C.blue+"33", padding:16, marginBottom:12 }}>
-          <div style={{ fontWeight:700, fontSize:14, marginBottom:4 }}>Séance {s.type}</div>
-          <div style={{ color:C.muted, fontSize:11, marginBottom:8 }}>{s.date}</div>
-          <div style={{ display:"flex", gap:16 }}>
-            <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
-            <span style={{ fontSize:12, color:C.muted }}>⭐ <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
-          </div>
-          {s.notes && <div style={{ marginTop:8, fontSize:12, color:C.muted }}>{s.notes}</div>}
         </div>
-      ))}
+      )}
     </div>
   );
 };
 
 // ─── COMPÉTITIONS ─────────────────────────────────────────────────────────────
+const COMP_COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Jérémie","Michel","Autre"];
+const COMP_MONTHS = ["Mai 2026","Avril 2026","Mars 2026","Janvier 2026","Décembre 2025","Novembre 2025","Octobre 2025","Septembre 2025"];
+
 const Competitions = () => {
-  const MONTHS = ["Mai 2026","Avril 2026","Mars 2026","Janvier 2026","Décembre 2025","Novembre 2025","Octobre 2025","Septembre 2025"];
   const [activeMois, setActiveMois] = useState("Mai 2026");
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ nom:"", date:"", lieu:"", statut:"À venir", coach:"", resultat:"", recordPerso:false, tours:[], lienVideo:"", notes:"" });
+  const [newTour, setNewTour] = useState({ nom:"", kata:"", score:"", ok:true, note:"" });
+
+  const addTour = () => {
+    setForm(f=>({...f, tours:[...f.tours, { ...newTour, num: f.tours.length+1 }]}));
+    setNewTour({ nom:"", kata:"", score:"", ok:true, note:"" });
+  };
+
   return (
     <div>
       <SectionHeader icon="🏆" title="Compétitions" subtitle="Suivez vos performances et résultats 🥇" color={C.orange}
-        action={<Btn color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle</Btn>} />
+        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle compétition</Btn>} />
       <div style={{ fontWeight:700, marginBottom:10, fontSize:14 }}>Historique</div>
       <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:8, marginBottom:16 }}>
-        {MONTHS.map(m=><FilterPill key={m} label={m} active={activeMois===m} onClick={()=>setActiveMois(m)} />)}
+        {COMP_MONTHS.map(m=><FilterPill key={m} label={m} active={activeMois===m} onClick={()=>setActiveMois(m)} />)}
       </div>
       {mockCompetitions.map(c=>(
         <div key={c.id} style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12 }}>
@@ -802,42 +855,111 @@ const Competitions = () => {
                 </div>
                 <div style={{ fontSize:12, color:C.muted }}>Kata: <strong style={{ color:C.text }}>{t.kata}</strong> · Score: <strong style={{ color:C.text }}>{t.score}</strong></div>
                 {t.note && <div style={{ fontSize:11, color:C.muted, marginTop:2, fontStyle:"italic" }}>{t.note}</div>}
-                <button style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, fontSize:11, marginTop:4, display:"flex", alignItems:"center", gap:3 }}>
-                  <Video size={11}/> Voir la vidéo
-                </button>
+                <button style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, fontSize:11, marginTop:4, display:"flex", alignItems:"center", gap:3 }}><Video size={11}/> Voir la vidéo</button>
               </div>
               {t.ok ? <CheckCircle2 color={C.green} size={18}/> : <XCircle color={C.red} size={18}/>}
             </div>
           ))}
         </div>
       ))}
+
+      {showForm && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
+          <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ background:"linear-gradient(135deg, "+C.orange+", "+C.yellow+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle compétition</div>
+              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+            </div>
+            <div style={{ padding:"20px 24px" }}>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Nom de la compétition *</label>
+                <input type="text" value={form.nom} onChange={e=>setForm(f=>({...f,nom:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date *</label>
+                  <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Lieu</label>
+                  <input type="text" value={form.lieu} onChange={e=>setForm(f=>({...f,lieu:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Statut *</label>
+                  <select value={form.statut} onChange={e=>setForm(f=>({...f,statut:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                    {["À venir","Terminée","Annulée"].map(o=><option key={o}>{o}</option>)}
+                  </select></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Nom du coach</label>
+                  <select value={form.coach} onChange={e=>setForm(f=>({...f,coach:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                    <option>Sélectionner un coach</option>
+                    {COMP_COACHES.map(o=><option key={o}>{o}</option>)}
+                  </select></div>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Résultat</label>
+                  <input type="text" placeholder="Médaille d'or, 1ère place..." value={form.resultat} onChange={e=>setForm(f=>({...f,resultat:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <div style={{ display:"flex", alignItems:"center", gap:8, paddingTop:22 }}>
+                  <input type="checkbox" checked={form.recordPerso} onChange={e=>setForm(f=>({...f,recordPerso:e.target.checked}))} style={{ width:16, height:16 }}/>
+                  <label style={{ fontSize:13 }}>Record personnel battu</label>
+                </div>
+              </div>
+
+              <div style={{ marginBottom:14 }}>
+                <div style={{ fontWeight:600, fontSize:13, marginBottom:10 }}>Tours de la compétition</div>
+                {form.tours.map((t,i)=>(
+                  <div key={i} style={{ background:C.bg, borderRadius:10, padding:12, marginBottom:8, fontSize:12 }}>
+                    Tour {t.num} · {t.nom} · Kata: {t.kata} · Score: {t.score}
+                  </div>
+                ))}
+                <div style={{ background:C.bg, borderRadius:10, padding:12, border:"1px dashed "+C.border }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:8 }}>
+                    {[["Nom du tour","nom"],["Kata","kata"],["Score","score"]].map(([l,k])=>(
+                      <div key={k}><label style={{ fontSize:11, display:"block", marginBottom:3 }}>{l}</label>
+                        <input type="text" placeholder={l} value={newTour[k]} onChange={e=>setNewTour(t=>({...t,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:6, padding:"7px 10px", fontSize:12, boxSizing:"border-box" }}/></div>
+                    ))}
+                  </div>
+                  <div style={{ display:"flex", gap:8, alignItems:"center", marginBottom:8 }}>
+                    <input type="checkbox" checked={newTour.ok} onChange={e=>setNewTour(t=>({...t,ok:e.target.checked}))}/>
+                    <label style={{ fontSize:12 }}>Qualifié / Victoire</label>
+                  </div>
+                  <button onClick={addTour} style={{ background:C.orange+"22", border:"1px solid "+C.orange, borderRadius:8, padding:"6px 14px", fontSize:12, color:C.orange, cursor:"pointer" }}>+ Ajouter ce tour</button>
+                </div>
+              </div>
+
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Lien vidéo</label>
+                <input type="text" placeholder="https://..." value={form.lienVideo} onChange={e=>setForm(f=>({...f,lienVideo:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Notes</label>
+                <textarea rows={3} value={form.notes} onChange={e=>setForm(f=>({...f,notes:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={()=>setShowForm(false)} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 // ─── CORRECTIONS ──────────────────────────────────────────────────────────────
+const CORR_COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Jérémie","Michel","Fernando","Perso","Autre"];
+const CORR_CATEGORIES = ["Technique","Position","Rythme","Kimé","Autre"];
+
 const Corrections = ({ sessions }) => {
   const [activeFilter, setActiveFilter] = useState("Toutes");
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ kata:"", entraineur:"", date:"", categorie:"Technique", commentaires:"", coachFeedback:"" });
 
-  // Extraire toutes les corrections des séances
-  const correctionsFromSessions = sessions
-    .filter(s => s.notes && s.notes.length > 0)
-    .map(s => ({ id:s.id, date:s.date, trainer:s.coach||"Entraîneur", kata:s.katas?.[0]||"", content:s.notes }))
-    .slice(0, 30);
-
-  const allCorrections = [...mockCorrections, ...correctionsFromSessions.slice(3)];
+  const allCorrections = [
+    ...mockCorrections,
+    ...sessions.filter(s=>s.notes&&s.notes.length>0).slice(0,20).map((s,i)=>({ id:1000+i, date:s.date, trainer:s.coach||"Entraîneur", kata:s.katas?.[0]||"", content:s.notes }))
+  ];
 
   return (
     <div>
       <SectionHeader icon="⏱" title="Corrections" subtitle="Points techniques à travailler" color={C.orange}
-        action={<Btn color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle</Btn>} />
+        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle correction</Btn>} />
       <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap" }}>
-        {["Toutes","Par semaine","Par entraîneur","Par kata"].map(f=>(
-          <FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} />
-        ))}
+        {["Toutes","Par semaine","Par entraîneur","Par kata"].map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} />)}
       </div>
       <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{allCorrections.length} corrections</div>
-      {allCorrections.slice(0,20).map((c,i)=>(
+      {allCorrections.slice(0,25).map((c,i)=>(
         <div key={i} style={{ background:C.card, borderRadius:12, border:"1px solid "+C.border, padding:14, marginBottom:10, display:"flex", gap:12 }}>
           <div style={{ width:3, borderRadius:4, background:C.orange, flexShrink:0 }} />
           <div style={{ flex:1 }}>
@@ -849,66 +971,311 @@ const Corrections = ({ sessions }) => {
             </div>
             <div style={{ fontSize:12, color:C.text }}>{c.content}</div>
           </div>
+          <button style={{ background:"none", border:"none", cursor:"pointer", color:C.muted }}><X size={14}/></button>
         </div>
       ))}
+
+      {showForm && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
+          <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ background:"linear-gradient(135deg, "+C.orange+", "+C.red+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle correction</div>
+              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+            </div>
+            <div style={{ padding:"20px 24px" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Kata *</label>
+                  <select value={form.kata} onChange={e=>setForm(f=>({...f,kata:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                    <option>Sélectionner un kata</option>
+                    {KATAS_LIST.map(k=><option key={k}>{k}</option>)}
+                  </select></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Entraîneur *</label>
+                  <select value={form.entraineur} onChange={e=>setForm(f=>({...f,entraineur:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                    <option>Sélectionner un entraîneur</option>
+                    {CORR_COACHES.map(c=><option key={c}>{c}</option>)}
+                  </select></div>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date</label>
+                  <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Catégorie</label>
+                  <select value={form.categorie} onChange={e=>setForm(f=>({...f,categorie:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                    {CORR_CATEGORIES.map(c=><option key={c}>{c}</option>)}
+                  </select></div>
+              </div>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Commentaires</label>
+                <textarea rows={3} value={form.commentaires} onChange={e=>setForm(f=>({...f,commentaires:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
+              <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Commentaires du Coach</label>
+                <textarea rows={3} value={form.coachFeedback} onChange={e=>setForm(f=>({...f,coachFeedback:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={()=>setShowForm(false)} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 // ─── VIDÉOS ───────────────────────────────────────────────────────────────────
-const Videos = () => (
-  <div>
-    <SectionHeader icon="🎬" title="Vidéos" subtitle="Bibliothèque de vidéos d'entraînement" color="#DC2626"
-      action={<Btn color="#fff" style={{ color:"#DC2626", fontSize:12 }}><Plus size={12}/> Ajouter une vidéo</Btn>} />
-    <EmptyState icon={<Video size={24}/>} title="Aucune vidéo" sub="Commencez à créer votre bibliothèque vidéo"
-      action={{ label:"Ajouter une vidéo", fn:()=>{} }} />
-  </div>
-);
+const VIDEOS_CATEGORIES = ["Kata","Compétition","Entraînement","Technique","Autre"];
+const mockVideos = {
+  "🏆 Compétitions": [
+    { id:1, titre:"9 mai 2026 – Championnat de France Équipe Sénior", date:"2026-05-09", cat:"Compét." },
+    { id:2, titre:"12 avr. 2026 – Championnat de France Équipe", date:"2026-04-12", cat:"Compét." },
+    { id:3, titre:"11 avr. 2026 – Championnat de France Indiv", date:"2026-04-11", cat:"Compét." },
+    { id:4, titre:"8 mars 2026 – Liga Nacional 2026", date:"2026-03-08", cat:"Compét." },
+    { id:5, titre:"17 janv. 2026 – Milon Cup Junior", date:"2026-01-17", cat:"Compét." },
+    { id:6, titre:"17 janv. 2026 – Milon Cup Sénior", date:"2026-01-17", cat:"Compét." },
+    { id:7, titre:"9 nov. 2025 – Championnat Départemental", date:"2025-11-09", cat:"Compét." },
+    { id:8, titre:"5 oct. 2025 – Liga Nacional", date:"2025-10-05", cat:"Compét." },
+    { id:9, titre:"26 sept. 2025 – Lion Cup", date:"2025-09-26", cat:"Compét." },
+  ],
+  "💪 Cours Persos": [
+    { id:10, titre:"17 mai 2026 – Gojūshiho Dai, Supaenpei", date:"2026-05-17", cat:"Perso" },
+    { id:11, titre:"13 mai 2026 – Gojūshiho Dai", date:"2026-05-13", cat:"Perso" },
+    { id:12, titre:"12 mai 2026 – Supaenpei", date:"2026-05-12", cat:"Perso" },
+    { id:13, titre:"6 mai 2026 – Unsu, Gojūshiho Shō, Gojūshiho Dai", date:"2026-05-06", cat:"Perso" },
+    { id:14, titre:"30 avr. 2026 – Sansai", date:"2026-04-30", cat:"Perso" },
+    { id:15, titre:"28 avr. 2026 – Supaenpei", date:"2026-04-28", cat:"Perso" },
+    { id:16, titre:"25 avr. 2026 – Gankaku", date:"2026-04-25", cat:"Perso" },
+    { id:17, titre:"21 avr. 2026 – Gojūshiho Shō", date:"2026-04-21", cat:"Perso" },
+    { id:18, titre:"18 avr. 2026 – Unsu", date:"2026-04-18", cat:"Perso" },
+    { id:19, titre:"16 avr. 2026 – Gojūshiho Dai", date:"2026-04-16", cat:"Perso" },
+  ],
+};
+
+const Videos = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ titre:"", categorie:"Kata", date:"", uploadePar:"", description:"" });
+
+  return (
+    <div>
+      <SectionHeader icon="🎬" title="Vidéos" subtitle="Bibliothèque de vidéos d'entraînement" color="#DC2626"
+        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:"#DC2626", fontSize:12 }}><Plus size={12}/> Ajouter une vidéo</Btn>} />
+
+      {Object.entries(mockVideos).map(([section, videos])=>(
+        <div key={section} style={{ marginBottom:24 }}>
+          <div style={{ background:C.yellow+"22", borderRadius:12, padding:"12px 16px", marginBottom:12, display:"flex", justifyContent:"space-between", alignItems:"center", border:"1px solid "+C.yellow+"44" }}>
+            <span style={{ fontWeight:700, fontSize:14, color:C.orange }}>{section}</span>
+            <span style={{ background:C.yellow+"44", borderRadius:"50%", width:28, height:28, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:700 }}>{videos.length}</span>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12 }}>
+            {videos.map(v=>(
+              <div key={v.id} style={{ background:"#1a1a2e", borderRadius:12, overflow:"hidden", cursor:"pointer" }}>
+                <div style={{ height:100, display:"flex", alignItems:"center", justifyContent:"center", color:"#ffffff44" }}>
+                  <Video size={32}/>
+                </div>
+                <div style={{ padding:"10px 12px", background:C.card, borderTop:"1px solid "+C.border }}>
+                  <div style={{ fontSize:12, fontWeight:600, marginBottom:4, color:C.text }}>{v.titre}</div>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                    <span style={{ fontSize:10, color:C.muted }}>{v.date}</span>
+                    <Badge label={v.cat} color={C.orange}/>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {showForm && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
+          <div style={{ background:"#fff", width:"100%", maxHeight:"85vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ background:"linear-gradient(135deg, #DC2626, #F97316)", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle vidéo</div>
+              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+            </div>
+            <div style={{ padding:"20px 24px" }}>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Titre *</label>
+                <input type="text" value={form.titre} onChange={e=>setForm(f=>({...f,titre:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Catégorie</label>
+                  <select value={form.categorie} onChange={e=>setForm(f=>({...f,categorie:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                    {VIDEOS_CATEGORIES.map(c=><option key={c}>{c}</option>)}
+                  </select></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date</label>
+                  <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Uploadé par</label>
+                  <input type="text" value={form.uploadePar} onChange={e=>setForm(f=>({...f,uploadePar:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              </div>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Description</label>
+                <textarea rows={3} value={form.description} onChange={e=>setForm(f=>({...f,description:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
+              <div style={{ marginBottom:14 }}>
+                <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Vidéo *</label>
+                <div style={{ border:"2px dashed "+C.border, borderRadius:10, padding:"24px", textAlign:"center", color:C.muted, fontSize:13 }}>🎬 Cliquez pour ajouter une vidéo</div>
+              </div>
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={()=>setShowForm(false)} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ─── NUTRITION ────────────────────────────────────────────────────────────────
-const Nutrition = () => (
-  <div>
-    <SectionHeader icon="🥗" title="Nutrition" subtitle="Suivez votre alimentation et hydratation" color={C.green}
-      action={<div style={{ display:"flex", gap:8 }}>
-        <Btn color="#fff" style={{ color:C.green, fontSize:12 }}>⚖ Pesée</Btn>
-        <Btn color="#fff" style={{ color:C.green, fontSize:12 }}><Plus size={12}/> Repas</Btn>
-      </div>} />
-    <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:12, marginBottom:16 }}>
-      <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
-        <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>Résumé du jour</div>
-        <div style={{ display:"flex", justifyContent:"space-between", padding:"6px 0", borderBottom:"1px solid "+C.border }}>
-          <span style={{ fontSize:12 }}>Calories</span><strong style={{ color:C.red }}>0</strong>
+const MEAL_TYPES = ["Petit déjeuner","Déjeuner","Dîner","Collation"];
+
+const Nutrition = () => {
+  const [showRepas, setShowRepas] = useState(false);
+  const [showPesee, setShowPesee] = useState(false);
+  const [formRepas, setFormRepas] = useState({ date:new Date().toISOString().split("T")[0], type:"Déjeuner", description:"", calories:"", proteines:"", glucides:"", lipides:"", hydratation:"" });
+  const [formPesee, setFormPesee] = useState({ date:new Date().toISOString().split("T")[0], poids:"" });
+
+  return (
+    <div>
+      <SectionHeader icon="🥗" title="Nutrition" subtitle="Suivez votre alimentation et hydratation" color={C.green}
+        action={<div style={{ display:"flex", gap:8 }}>
+          <Btn onClick={()=>setShowPesee(true)} color="#fff" style={{ color:C.green, fontSize:12 }}>⚖ Ajouter pesée</Btn>
+          <Btn onClick={()=>setShowRepas(true)} color="#fff" style={{ color:C.green, fontSize:12 }}><Plus size={12}/> Ajouter un repas</Btn>
+        </div>} />
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, marginBottom:16 }}>
+        <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
+          <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>Résumé du jour</div>
+          <div style={{ display:"flex", justifyContent:"space-between", padding:"6px 0", borderBottom:"1px solid "+C.border }}>
+            <span style={{ fontSize:12 }}>Calories</span><strong style={{ color:C.red }}>0</strong>
+          </div>
+          <div style={{ display:"flex", justifyContent:"space-between", padding:"6px 0" }}>
+            <span style={{ fontSize:12 }}>💧 Hydratation</span><strong style={{ color:C.blue }}>0.0 L</strong>
+          </div>
         </div>
-        <div style={{ display:"flex", justifyContent:"space-between", padding:"6px 0" }}>
-          <span style={{ fontSize:12 }}>💧 Hydratation</span><strong style={{ color:C.blue }}>0.0 L</strong>
+        <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
+          <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>Répartition des macros</div>
+          <div style={{ color:C.muted, fontSize:12, textAlign:"center", paddingTop:10 }}>Aucune donnée pour aujourd'hui</div>
+        </div>
+        <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
+          <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>⚖ Poids actuel</div>
+          <div style={{ fontSize:28, fontWeight:800, color:C.primary, textAlign:"center" }}>54.2 kg</div>
+          <div style={{ fontSize:11, color:C.green, textAlign:"center" }}>↘ -0.1 kg</div>
         </div>
       </div>
       <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
-        <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>⚖ Poids actuel</div>
-        <div style={{ color:C.muted, fontSize:12, textAlign:"center", paddingTop:10 }}>Aucune pesée enregistrée</div>
+        <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>Historique des repas</div>
+        <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:20 }}>Aucun repas enregistré</div>
       </div>
+
+      {showRepas && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowRepas(false)}>
+          <div style={{ background:"#fff", width:"100%", maxHeight:"90vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ background:"linear-gradient(135deg, "+C.green+", #059669)", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouveau repas</div>
+              <button onClick={()=>setShowRepas(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+            </div>
+            <div style={{ padding:"20px 24px" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date</label>
+                  <input type="date" value={formRepas.date} onChange={e=>setFormRepas(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Type de repas</label>
+                  <select value={formRepas.type} onChange={e=>setFormRepas(f=>({...f,type:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                    {MEAL_TYPES.map(t=><option key={t}>{t}</option>)}
+                  </select></div>
+              </div>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Description</label>
+                <textarea rows={2} value={formRepas.description} onChange={e=>setFormRepas(f=>({...f,description:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10, marginBottom:14 }}>
+                {[["Calories","calories"],["Protéines (g)","proteines"],["Glucides (g)","glucides"],["Lipides (g)","lipides"]].map(([l,k])=>(
+                  <div key={k}><label style={{ fontSize:11, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
+                    <input type="number" value={formRepas[k]} onChange={e=>setFormRepas(f=>({...f,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                ))}
+              </div>
+              <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Hydratation (litres)</label>
+                <input type="number" step="0.1" value={formRepas.hydratation} onChange={e=>setFormRepas(f=>({...f,hydratation:e.target.value}))} style={{ width:"50%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+                <button onClick={()=>setShowRepas(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={()=>setShowRepas(false)} style={{ background:C.green, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPesee && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"center", justifyContent:"center" }} onClick={()=>setShowPesee(false)}>
+          <div style={{ background:"#fff", borderRadius:20, padding:28, width:340 }} onClick={e=>e.stopPropagation()}>
+            <div style={{ fontWeight:800, fontSize:17, marginBottom:20 }}>⚖ Ajouter une pesée</div>
+            <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date</label>
+              <input type="date" value={formPesee.date} onChange={e=>setFormPesee(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+            <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Poids (kg)</label>
+              <input type="number" step="0.1" placeholder="54.2" value={formPesee.poids} onChange={e=>setFormPesee(f=>({...f,poids:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+            <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+              <button onClick={()=>setShowPesee(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 18px", fontSize:13, cursor:"pointer" }}>Annuler</button>
+              <button onClick={()=>setShowPesee(false)} style={{ background:C.green, border:"none", borderRadius:8, padding:"9px 20px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-    <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
-      <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>Répartition des macros</div>
-      <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:20 }}>Aucune donnée pour aujourd'hui</div>
-    </div>
-    <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginTop:12 }}>
-      <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>Historique des repas</div>
-      <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:20 }}>Aucun repas enregistré</div>
-    </div>
-  </div>
-);
+  );
+};
 
 // ─── SOMMEIL ──────────────────────────────────────────────────────────────────
-const Sommeil = () => (
-  <div>
-    <SectionHeader icon="🌙" title="Suivi du Sommeil" subtitle="Optimisez votre récupération et vos performances 😴" color={C.primary}
-      action={<Btn color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Ajouter une nuit</Btn>} />
-    <EmptyState icon={<Moon size={24}/>} title="Aucune nuit enregistrée"
-      sub="Commencez à suivre votre sommeil pour optimiser votre récupération"
-      action={{ label:"Enregistrer ma première nuit", fn:()=>{} }} />
-  </div>
-);
+const QUALITE_SOMMEIL = ["😴 Excellent","😊 Bon","😐 Moyen","😕 Mauvais","😫 Très mauvais"];
+const RESSENTI_REVEIL = ["🌟 Très reposé","✨ Reposé","👍 Correct","😴 Fatigué","😩 Épuisé"];
+
+const Sommeil = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ date:"", coucher:"", reveil:"", heures:"", qualite:"😊 Bon", reveils:"0", ressentiReveil:"✨ Reposé", sommeilProfond:false, facteurs:"", reves:"", notes:"" });
+
+  return (
+    <div>
+      <SectionHeader icon="🌙" title="Suivi du Sommeil" subtitle="Optimisez votre récupération et vos performances 😴" color={C.primary}
+        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Ajouter une nuit</Btn>} />
+      <EmptyState icon={<Moon size={24}/>} title="Aucune nuit enregistrée" sub="Commencez à suivre votre sommeil pour optimiser votre récupération"
+        action={{ label:"Enregistrer ma première nuit", fn:()=>setShowForm(true) }} />
+
+      {showForm && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
+          <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ background:"linear-gradient(135deg, #4C1D95, "+C.primary+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>🌙 Nouvelle nuit de sommeil</div>
+              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+            </div>
+            <div style={{ padding:"20px 24px" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:12, marginBottom:14 }}>
+                {[["Date *","date","date"],["Heure de coucher","coucher","time"],["Heure de réveil","reveil","time"],["Heures de sommeil *","heures","number"]].map(([l,k,t])=>(
+                  <div key={k}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
+                    <input type={t} value={form[k]} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                ))}
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Qualité du sommeil</label>
+                  <select value={form.qualite} onChange={e=>setForm(f=>({...f,qualite:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                    {QUALITE_SOMMEIL.map(q=><option key={q}>{q}</option>)}
+                  </select></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Réveils nocturnes</label>
+                  <input type="number" min="0" value={form.reveils} onChange={e=>setForm(f=>({...f,reveils:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Ressenti au réveil</label>
+                  <select value={form.ressentiReveil} onChange={e=>setForm(f=>({...f,ressentiReveil:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                    {RESSENTI_REVEIL.map(r=><option key={r}>{r}</option>)}
+                  </select></div>
+              </div>
+              <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:14 }}>
+                <input type="checkbox" checked={form.sommeilProfond} onChange={e=>setForm(f=>({...f,sommeilProfond:e.target.checked}))} style={{ width:16, height:16 }}/>
+                <label style={{ fontSize:13 }}>Sensation de sommeil profond et réparateur 💤</label>
+              </div>
+              {[["Facteurs ayant influencé le sommeil","facteurs"],["Rêves / Cauchemars","reves"],["Notes","notes"]].map(([l,k])=>(
+                <div key={k} style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
+                  <textarea rows={2} value={form[k]} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
+              ))}
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end", marginTop:6 }}>
+                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={()=>setShowForm(false)} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ─── CHAT ─────────────────────────────────────────────────────────────────────
 const Chat = () => {
@@ -976,7 +1343,7 @@ const Profil = ({ sessions }) => {
         <Btn color={C.primary} style={{ marginTop:14 }}><Edit2 size={13}/> Modifier le profil</Btn>
       </div>
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10 }}>
-        {[{l:"Séances totales",v:sessions.length,c:C.red},{l:"Compétitions",v:"1",c:C.yellow},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.green}].map(s=>(
+        {[{l:"Séances totales",v:sessions.length,c:C.red},{l:"Compétitions",v:"9",c:C.yellow},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.green}].map(s=>(
           <div key={s.l} style={{ background:C.card, borderRadius:12, border:"1px solid "+C.border, padding:14, textAlign:"center" }}>
             <div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.v}</div>
             <div style={{ fontSize:10, color:C.muted, marginTop:2 }}>{s.l}</div>
@@ -988,37 +1355,103 @@ const Profil = ({ sessions }) => {
 };
 
 // ─── PLANNING ─────────────────────────────────────────────────────────────────
-const Planning = () => (
-  <div>
-    <SectionHeader icon="📅" title="Planification" subtitle="Organisez vos entraînements" color={C.primary}
-      action={<Btn color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Nouveau</Btn>} />
-    <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12 }}>
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
-        <div style={{ fontWeight:700, fontSize:14 }}>Semaine du 8 au 14 juin 2026</div>
-        <div style={{ display:"flex", gap:6 }}>
-          <Btn small outlined color={C.primary} style={{ fontSize:10 }}>Modifier</Btn>
-          <Btn small outlined color={C.red} style={{ fontSize:10 }}>Supprimer</Btn>
+const Planning = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ debut:"", club:0, prepa:0, perso:0, compet:0, objectif:"", commentaireCoach:"" });
+
+  return (
+    <div>
+      <SectionHeader icon="📅" title="Planning" subtitle="Organisez vos entraînements et planifiez vos semaines 📅" color={C.primary}
+        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Planifier semaine</Btn>} />
+
+      {/* Récapitulatif S-1 */}
+      <div style={{ background:C.card, borderRadius:16, border:"1px solid "+C.border, padding:16, marginBottom:16 }}>
+        <div style={{ fontWeight:700, fontSize:14, marginBottom:4 }}>📊 Récapitulatif S-1</div>
+        <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>Semaine du 1 juin au 7 juin 2026</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10 }}>
+          {[{l:"Entraînement Club",prevu:3,realise:4,ok:true,pct:133,c:C.red},
+            {l:"Prépa Physique",prevu:2,realise:2,ok:true,pct:100,c:C.blue},
+            {l:"Entraînement Perso",prevu:1,realise:0,ok:false,pct:0,c:C.primary},
+            {l:"Compétitions",prevu:0,realise:0,ok:true,pct:100,c:C.yellow}].map(s=>(
+            <div key={s.l} style={{ background:s.c+"11", border:"1px solid "+s.c+"33", borderRadius:12, padding:"12px 14px" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+                <span style={{ fontSize:12, fontWeight:600, color:s.c }}>{s.l}</span>
+                <div style={{ display:"flex", alignItems:"center", gap:4 }}>
+                  {s.ok ? <CheckCircle2 size={14} color={C.green}/> : <XCircle size={14} color={C.red}/>}
+                  <span style={{ fontSize:11, fontWeight:700, color:s.ok?C.green:C.red }}>{s.pct}%</span>
+                </div>
+              </div>
+              <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>Prévu</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.prevu}</div></div>
+                <span style={{ color:C.muted }}>→</span>
+                <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>Réalisé</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.realise}</div></div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      <Badge label="📅 Planifié" color={C.primary} />
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:8, margin:"12px 0" }}>
-        {[{l:"Club",v:4,c:C.red},{l:"Prépa",v:2,c:C.blue},{l:"Perso",v:0,c:C.muted},{l:"Compét.",v:0,c:C.yellow}].map(x=>(
-          <div key={x.l} style={{ textAlign:"center", padding:8, background:x.c+"11", borderRadius:8 }}>
-            <div style={{ fontSize:10, color:x.c }}>{x.l}</div>
-            <div style={{ fontSize:20, fontWeight:800, color:x.c }}>{x.v}</div>
+
+      {/* Planifications à venir */}
+      <div style={{ fontWeight:700, fontSize:14, marginBottom:12 }}>Planifications à venir</div>
+      <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
+          <div><div style={{ fontWeight:700, fontSize:14 }}>Semaine du 8 au 14 juin 2026</div>
+            <Badge label="📅 Planifié" color={C.primary} /></div>
+          <div style={{ display:"flex", gap:6 }}>
+            <Btn small outlined color={C.primary} style={{ fontSize:10 }}>Modifier</Btn>
+            <Btn small outlined color={C.red} style={{ fontSize:10 }}>Supprimer</Btn>
           </div>
-        ))}
+        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8, margin:"12px 0" }}>
+          {[{l:"Club",v:4,c:C.red},{l:"Prépa",v:2,c:C.blue},{l:"Perso",v:0,c:C.muted},{l:"Compét.",v:0,c:C.yellow}].map(x=>(
+            <div key={x.l} style={{ textAlign:"center", padding:8, background:x.c+"11", borderRadius:8 }}>
+              <div style={{ fontSize:10, color:x.c }}>{x.l}</div>
+              <div style={{ fontSize:20, fontWeight:800, color:x.c }}>{x.v}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ background:C.green+"15", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+C.green }}>
+          <span style={{ fontSize:12, color:C.green }}>🎯 <strong>Objectif :</strong> Prépa Porec</span>
+        </div>
       </div>
-      <div style={{ background:C.green+"15", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+C.green }}>
-        <span style={{ fontSize:12, color:C.green }}>🎯 <strong>Objectif :</strong> Prépa Porec</span>
-      </div>
+
+      {showForm && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
+          <div style={{ background:"#fff", width:"100%", maxHeight:"90vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ background:"linear-gradient(135deg, "+C.primary+", "+C.accent+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Planification de la semaine</div>
+              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+            </div>
+            <div style={{ padding:"20px 24px" }}>
+              <div style={{ marginBottom:16 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Début de semaine (Lundi) *</label>
+                <input type="date" value={form.debut} onChange={e=>setForm(f=>({...f,debut:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              <div style={{ fontWeight:600, fontSize:13, marginBottom:12 }}>Nombre de séances prévues :</div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
+                {[["🥋 Entraînement Club","club"],["💪 Prépa Physique","prepa"],["👤 Entraînement Perso","perso"],["🏆 Compétitions","compet"]].map(([l,k])=>(
+                  <div key={k} style={{ background:C.bg, borderRadius:10, padding:"12px 14px" }}>
+                    <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:8 }}>{l}</label>
+                    <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+                      <input type="range" min={0} max={10} value={form[k]} onChange={e=>setForm(f=>({...f,[k]:parseInt(e.target.value)}))} style={{ flex:1, accentColor:C.primary }}/>
+                      <span style={{ fontSize:20, fontWeight:800, color:C.primary, minWidth:24 }}>{form[k]}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Objectif de la semaine *</label>
+                <input type="text" placeholder="Ex: Prépa compétition" value={form.objectif} onChange={e=>setForm(f=>({...f,objectif:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Commentaire du coach</label>
+                <textarea rows={3} value={form.commentaireCoach} onChange={e=>setForm(f=>({...f,commentaireCoach:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={()=>setShowForm(false)} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-    <div style={{ color:C.muted, fontWeight:600, fontSize:13, marginBottom:8 }}>Calendrier</div>
-    <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, minHeight:150, display:"flex", alignItems:"center", justifyContent:"center", color:C.muted, fontSize:13 }}>
-      Vue calendrier hebdomadaire
-    </div>
-  </div>
-);
+  );
+};
 
 // ─── NAV ──────────────────────────────────────────────────────────────────────
 const NAV = [
