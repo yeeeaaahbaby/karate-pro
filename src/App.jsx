@@ -1842,6 +1842,8 @@ const BOTTOM_NAV = NAV.filter(n => n.bottomIcon);
 export default function App() {
   const [page, setPage] = useState("dashboard");
   const [currentUser, setCurrentUserState] = useState(() => { try { return JSON.parse(localStorage.getItem("kp_user")||"null"); } catch { return null; } });
+  const [splashVisible, setSplashVisible] = useState(true);
+  const [splashOpacity, setSplashOpacity] = useState(1);
   const [sessions, setSessions] = useState(ALL_SESSIONS);
   const [notifPermission, setNotifPermission] = useState("default");
   const [toast, setToast] = useState(null);
@@ -1860,6 +1862,12 @@ export default function App() {
     });
     return () => unsub();
   }, [currentUser]);
+
+  useEffect(() => {
+    const fadeT = setTimeout(() => setSplashOpacity(0), 2200);
+    const hideT = setTimeout(() => setSplashVisible(false), 2800);
+    return () => { clearTimeout(fadeT); clearTimeout(hideT); };
+  }, []);
 
   const handleEnableNotifications = async () => {
     const token = await requestNotificationPermission();
@@ -1960,6 +1968,22 @@ export default function App() {
   if (isMobile) {
     return (
       <div style={{ display:"flex", flexDirection:"column", height:"100vh", background:C.bg, fontFamily:"'Inter', -apple-system, sans-serif", color:C.text }}>
+        {splashVisible && (
+          <div style={{position:"fixed",top:0,left:0,width:"100%",height:"100%",background:"#0c0c14",zIndex:99999,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"flex-end",paddingBottom:56,transition:"opacity 0.6s ease",opacity:splashOpacity}}>
+            <div style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:"60%",height:"55%",background:"radial-gradient(ellipse at top, rgba(255,220,120,0.12) 0%, transparent 70%)",pointerEvents:"none"}}></div>
+            <img src="/iliana.png" alt="Iliana" onError={e=>{e.target.style.display="none"}} style={{position:"absolute",bottom:110,left:"50%",transform:"translateX(-50%)",maxHeight:"62%",objectFit:"contain",filter:"drop-shadow(0 0 30px rgba(200,169,81,0.2))"}}/>
+            <div style={{position:"relative",zIndex:2,textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+              <div style={{width:80,height:2,background:"#c8a951",borderRadius:2,marginBottom:10}}></div>
+              <div style={{fontSize:30,fontWeight:700,letterSpacing:5,color:"#fff",textTransform:"uppercase",fontFamily:"'Inter',-apple-system,sans-serif"}}>Karaté Pro</div>
+              <div style={{fontSize:12,letterSpacing:3,color:"#c8a951",textTransform:"uppercase",fontFamily:"'Inter',-apple-system,sans-serif"}}>SKB Elite</div>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginTop:8}}>
+                <div style={{width:28,height:1,background:"rgba(200,169,81,0.4)"}}></div>
+                <div style={{fontSize:10,letterSpacing:2,color:"rgba(200,169,81,0.6)",textTransform:"uppercase",fontFamily:"'Inter',-apple-system,sans-serif"}}>Iliana Voratovic</div>
+                <div style={{width:28,height:1,background:"rgba(200,169,81,0.4)"}}></div>
+              </div>
+            </div>
+          </div>
+        )}
         {!currentUser && (
           <div style={{position:"fixed",top:0,left:0,width:"100%",height:"100%",background:"rgba(0,0,0,0.88)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}}>
             <div style={{background:"#fff",borderRadius:16,padding:"32px 40px",textAlign:"center",width:320}}>
