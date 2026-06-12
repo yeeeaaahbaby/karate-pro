@@ -1,45 +1,192 @@
 import { db } from "./firebase";
-import { collection, addDoc, getDocs, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, serverTimestamp, onSnapshot, orderBy, limit } from "firebase/firestore";
 
-// Sauvegarder le token FCM d'un utilisateur dans Firestore
-export async function saveUserToken(userId, token, role, name) {
+// ─── IDENTITÉ UTILISATEUR (pas d'auth, juste localStorage) ───────────────────
+export const TEAM_USERS = [
+  { id: "iliana",   name: "Iliana",   fullName: "Iliana Voratovic",   role: "athlete", emoji: "🥋" },
+  { id: "isabelle", name: "Isabelle", fullName: "Isabelle Voratovic", role: "parent",  emoji: "👩" },
+  { id: "alexandre",name: "Alexandre",fullName: "Alexandre Voratovic",role: "parent",  emoji: "👨" },
+  { id: "helvetia", name: "Helvétia", fullName: "Helvétia Taily",     role: "coach",   emoji: "🎯" },
+];
+
+export function getUserId() {
   try {
+    const u = JSON.parse(localStorage.getItem("kp_user") || "null");
+    return u ? u.id : null;
+  } catch { return null; }
+}
+
+export function getCurrentUser() {
+  try {
+    return JSON.parse(localStorage.getItem("kp_user") || "null");
+  } catch { return null; }
+}
+
+export function setCurrentUser(user) {
+  localStorage.setItem("kp_user", JSON.stringify(user));
+}
+
+// ─── SAUVEGARDER TOKEN FCM ────────────────────────────────────────────────────
+export async function saveUserToken(userId, token) {
+  try {
+    const user = TEAM_USERS.find(u => u.id === userId);
+    if (!user || !token) return;
+    const q = query(collection(db, "fcm_tokens"), where("token", "==", token));
+    const existing = await getDocs(q);
+    if (!existing.empty) return;
     await addDoc(collection(db, "fcm_tokens"), {
       userId,
       token,
-      role, // "athlete", "coach", "parent"
-      name,
-      createdAt: serverTimestamp()
+      role: user.role,
+      name: user.fullName,
+      createdAt: serverTimestamp(),
     });
+    console.log("✅ Token FCM enregistré pour", user.name);
   } catch (error) {
     console.error("Erreur sauvegarde token:", error);
   }
 }
 
-// Enregistrer une séance et déclencher une notification
-export async function enregistrerSeance(seance) {
+// ─── ENVOYER UNE NOTIFICATION (écrit dans notifications_queue) ────────────────
+export async function notifyNewContent({ type, title, body, createdBy }) {
   try {
-    // 1. Sauvegarder la séance dans Firestore
+    await addDoc(collection(db, "notifications_queue"), {
+      type,
+      title,
+      body,
+      createdBy: createdBy || getUserId() || "unknown",
+      createdAt: serverTimestamp(),
+      sent: false,
+    });
+  } catch (error) {
+    console.error("Erreur notification:", error);
+  }
+}
+
+// ─── ÉCOUTER LES NOTIFICATIONS ENTRANTES (in-app) ────────────────────────────
+export function subscribeToNotifications(onNewNotif) {
+  const userId = getUserId();
+  if (!userId) return () => {};
+
+  const q = query(
+    collection(db, "notifications_queue"),
+    where("sent", "==", false),
+    orderBy("createdAt", "desc"),
+    limit(20)
+  );
+
+  let initialized = false;
+  return onSnapshot(q, (snapshot) => {
+    if (!initialized) { initialized = true; return; }
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === "added") {
+        const data = change.doc.data();
+        if (data.createdBy !== userId) {
+          onNewNotif({ title: data.title, body: data.body, type: data.type });
+        }
+      }
+    });
+  });
+}
+
+// ─── HELPERS PAR TYPE D'ÉVÉNEMENT ────────────────────────────────────────────
+
+export async function notifyNewSeance(seance, createdBy) {
+  const katas = seance.katas?.slice(0,2).join(", ") || "";
+  await notifyNewContent({
+    type: "nouvelle_seance",
+    title: `🥋 Nouvelle séance ${seance.type}`,
+    body: `${seance.date} · ${seance.duration} min · ${katas}`,
+    createdBy,
+  });
+  if (seance.coachFeedback?.trim()) {
+    await notifyNewContent({
+      type: "notes_coach_seance",
+      title: `💬 Retours du coach — séance ${seance.type}`,
+      body: seance.coachFeedback,
+      createdBy,
+    });
+  }
+}
+
+export async function notifyNewStage(stage, createdBy) {
+  const katas = stage.katas?.slice(0,2).join(", ") || "";
+  await notifyNewContent({
+    type: "nouveau_stage",
+    title: `🏅 Nouveau stage Équipe de France`,
+    body: `${stage.date} · ${stage.duration} min · ${katas}`,
+    createdBy,
+  });
+  if (stage.corrections?.trim()) {
+    await notifyNewContent({
+      type: "notes_coach_stage",
+      title: `💬 Corrections du stage`,
+      body: stage.corrections,
+      createdBy,
+    });
+  }
+}
+
+export async function notifyNewPrepa(seance, createdBy) {
+  await notifyNewContent({
+    type: "nouvelle_prepa",
+    title: `💪 Nouvelle prépa physique — ${seance.type}`,
+    body: `${seance.date} · ${seance.duration} min · Coach: ${seance.coach || "N/A"}`,
+    createdBy,
+  });
+  if (seance.notes?.trim()) {
+    await notifyNewContent({
+      type: "notes_coach_prepa",
+      title: `💬 Notes prépa physique`,
+      body: seance.notes,
+      createdBy,
+    });
+  }
+}
+
+export async function notifyNewCompetition(comp, createdBy) {
+  await notifyNewContent({
+    type: "nouvelle_competition",
+    title: `🏆 Nouvelle compétition ajoutée`,
+    body: `${comp.name} · ${comp.date} · ${comp.lieu || ""}`,
+    createdBy,
+  });
+  if (comp.notes?.trim()) {
+    await notifyNewContent({
+      type: "notes_coach_competition",
+      title: `💬 Notes de compétition`,
+      body: comp.notes,
+      createdBy,
+    });
+  }
+}
+
+export async function notifyNewCorrection(correction, createdBy) {
+  await notifyNewContent({
+    type: "nouvelle_correction",
+    title: `⚠️ Nouvelle correction — ${correction.kata || ""}`,
+    body: correction.content,
+    createdBy,
+  });
+}
+
+export async function notifyNewChatMessage(message, senderName, createdBy) {
+  await notifyNewContent({
+    type: "nouveau_message",
+    title: `💬 ${senderName}`,
+    body: message,
+    createdBy,
+  });
+}
+
+// ─── LEGACY : enregistrerSeance (compatibilité) ───────────────────────────────
+export async function enregistrerSeance(seance, createdBy) {
+  try {
     const docRef = await addDoc(collection(db, "seances"), {
       ...seance,
-      createdAt: serverTimestamp()
-    });
-
-    // 2. Créer une notification dans la collection "notifications"
-    // (un Cloud Function Firebase écoutera cette collection et enverra le push)
-    await addDoc(collection(db, "notifications_queue"), {
-      type: "nouvelle_seance",
-      seanceId: docRef.id,
-      athlete: seance.athlete || "Iliana",
-      type_seance: seance.type,
-      duree: seance.duration,
-      satisfaction: seance.satisfaction,
-      katas: seance.katas || [],
-      date: seance.date,
       createdAt: serverTimestamp(),
-      sent: false
     });
-
+    await notifyNewSeance(seance, createdBy);
     return docRef.id;
   } catch (error) {
     console.error("Erreur enregistrement séance:", error);
@@ -47,7 +194,6 @@ export async function enregistrerSeance(seance) {
   }
 }
 
-// Récupérer les séances depuis Firestore
 export async function getSeances() {
   try {
     const snapshot = await getDocs(collection(db, "seances"));
