@@ -332,7 +332,7 @@ const Dashboard = ({ sessions }) => {
 };
 
 // ─── SÉANCES KARATÉ ──────────────────────────────────────────────────────────
-const COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Fernando","Perso","Autre"];
+const COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Fernando","Jérémie","Michel","Perso","Autres"];
 const KATAS_LIST = ["Gojūshiho Dai","Gojūshiho Shō","Unsu","Gankaku","Kanku Shō","Kanku Dai","Supaenpei","Empi","Sōchin","Sansai","Bassai Dai","Bassai Shō","Jion","Jitte","Hangetsu","Nijūshiho","Chinte","Wankan","Gojūshiho"];
 const TECHNIQUES_LIST = [
   "Mae Geri (Coup de pied avant)","Mawashi Geri (Coup de pied circulaire)","Ushiro Geri (Coup de pied arrière)",
@@ -388,24 +388,41 @@ const MultiSelect = ({ label, options, selected, onAdd, onRemove, color=C.primar
 
 const SeancesKarate = ({ sessions, setSessions, showToast }) => {
   const [showForm, setShowForm] = useState(false);
+  const [editingSession, setEditingSession] = useState(null);
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [searchText, setSearchText] = useState("");
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({
+
+  const emptyForm = {
     date: new Date().toISOString().split('T')[0],
-    type: "Collectif",
-    duration: "",
-    coaches: [],
-    katas: [],
-    techniques: [],
-    focusPoints: "",
-    corrections: "",
-    ressenti: "🙂 Bon",
-    energie: "Normal",
-    satisfaction: 5,
-    coachFeedback: "",
-    notes: "",
-  });
+    type: "Collectif", duration: "",
+    coaches: [], katas: [], techniques: [],
+    focusPoints: "", corrections: "",
+    ressenti: "🙂 Bon", energie: "Normal",
+    satisfaction: 5, coachFeedback: "", notes: "", lienVideo: "",
+  };
+  const [form, setForm] = useState(emptyForm);
+
+  const openEdit = (s) => {
+    setEditingSession(s.id);
+    setForm({
+      date: s.date, type: s.type, duration: String(s.duration),
+      coaches: s.coach ? s.coach.split(", ").filter(Boolean) : [],
+      katas: s.katas || [], techniques: s.techniques || [],
+      focusPoints: s.focusPoints || "", corrections: s.notes || "",
+      ressenti: s.ressenti || "🙂 Bon", energie: s.energie || "Normal",
+      satisfaction: s.satisfaction || 5,
+      coachFeedback: s.coachFeedback || "", notes: s.additionalNotes || "",
+      lienVideo: s.lienVideo || "",
+    });
+    setShowForm(true);
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+    setEditingSession(null);
+    setForm(emptyForm);
+  };
 
   const counts = {
     ALL: sessions.length,
@@ -446,14 +463,20 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
         satisfaction: form.satisfaction, katas: form.katas, techniques: form.techniques,
         notes: form.corrections, focusPoints: form.focusPoints,
         coachFeedback: form.coachFeedback, additionalNotes: form.notes,
-        ressenti: form.ressenti, energie: form.energie,
+        ressenti: form.ressenti, energie: form.energie, lienVideo: form.lienVideo,
         coach: form.coaches.join(", "), athlete: "Iliana Voratovic"
       };
-      await enregistrerSeance(seance);
-      setSessions(prev => [{ id: Date.now(), ...seance }, ...prev]);
-      showToast("Séance "+form.type+" — "+form.duration+" min. Entraîneur et parents notifiés.");
-      setShowForm(false);
-      setForm({ date:new Date().toISOString().split('T')[0], type:"Collectif", duration:"", coaches:[], katas:[], techniques:[], focusPoints:"", corrections:"", ressenti:"🙂 Bon", energie:"Normal", satisfaction:5, coachFeedback:"", notes:"" });
+      if (editingSession) {
+        // Modifier séance existante
+        setSessions(prev => prev.map(s => s.id === editingSession ? { ...s, ...seance } : s));
+        showToast("Séance modifiée avec succès ✓");
+      } else {
+        // Nouvelle séance
+        await enregistrerSeance(seance);
+        setSessions(prev => [{ id: Date.now(), ...seance }, ...prev]);
+        showToast("Séance "+form.type+" — "+form.duration+" min. Entraîneur et parents notifiés.");
+      }
+      closeForm();
     } catch(e) { console.error(e); }
     setSaving(false);
   };
@@ -513,8 +536,8 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
               <div style={{ color:C.muted, fontSize:11 }}>{s.date}{s.coach?" · "+s.coach:""}</div>
             </div>
             <div style={{ display:"flex", gap:6 }}>
-              <button style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
-              <button style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
+              <button onClick={()=>openEdit(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
+              <button onClick={()=>setSessions(prev=>prev.filter(p=>p.id!==s.id))} style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
             </div>
           </div>
           <div style={{ display:"flex", gap:16, marginBottom:s.katas?.length>0||s.notes?8:0 }}>
@@ -554,8 +577,8 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
 
             {/* Header formulaire */}
             <div style={{ background:"linear-gradient(135deg, "+C.red+", "+C.orange+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between", alignItems:"center", position:"sticky", top:0, zIndex:10 }}>
-              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle séance de karaté</div>
-              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>{editingSession ? "Modifier la séance" : "Nouvelle séance de karaté"}</div>
+              <button onClick={closeForm} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
             </div>
 
             <div style={{ padding:"20px 24px" }}>
@@ -637,6 +660,17 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
               </div>
 
+              {/* Lien vidéo — visible si type=Perso ET coach=Perso ou Autres */}
+              {form.type === "Perso" && (form.coaches.length === 0 || form.coaches.some(c => c === "Perso" || c === "Autres")) && (
+                <div style={{ marginBottom:16 }}>
+                  <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>🔗 Lien Vidéo</label>
+                  <input type="text" placeholder="https://youtube.com/... ou lien de votre vidéo"
+                    value={form.lienVideo||""}
+                    onChange={e=>setForm(f=>({...f,lienVideo:e.target.value}))}
+                    style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box" }} />
+                </div>
+              )}
+
               {/* Notes additionnelles */}
               <div style={{ marginBottom:24 }}>
                 <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Notes additionnelles</label>
@@ -647,11 +681,11 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
 
               {/* Boutons */}
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end", paddingBottom:8 }}>
-                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}>
+                <button onClick={closeForm} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}>
                   <X size={14}/> Annuler
                 </button>
                 <button onClick={handleSubmit} disabled={saving} style={{ background:C.red, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer", display:"flex", alignItems:"center", gap:6, opacity:saving?0.7:1 }}>
-                  💾 {saving ? "Enregistrement..." : "Enregistrer"}
+                  💾 {saving ? "Enregistrement..." : editingSession ? "Modifier" : "Enregistrer"}
                 </button>
               </div>
             </div>
