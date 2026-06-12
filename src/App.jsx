@@ -331,12 +331,80 @@ const Dashboard = ({ sessions }) => {
 };
 
 // ─── SÉANCES KARATÉ ──────────────────────────────────────────────────────────
+const COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Fernando","Perso","Autre"];
+const KATAS_LIST = ["Gojūshiho Dai","Gojūshiho Shō","Unsu","Gankaku","Kanku Shō","Kanku Dai","Supaenpei","Empi","Sōchin","Sansai","Bassai Dai","Bassai Shō","Jion","Jitte","Hangetsu","Nijūshiho","Chinte","Wankan","Gojūshiho"];
+const TECHNIQUES_LIST = [
+  "Mae Geri (Coup de pied avant)","Mawashi Geri (Coup de pied circulaire)","Ushiro Geri (Coup de pied arrière)",
+  "Yoko Geri (Coup de pied latéral)","Oi Zuki (Coup de poing direct)","Gyaku Zuki (Coup de poing inverse)",
+  "Uraken (Revers de poing)","Empi (Coup de coude)","Shuto (Tranchant de main)","Uke (Blocages)","Kihon (Bases)"
+];
+const RESSENTIS = ["😃 Excellent","😊 Très bon","🙂 Bon","😐 Moyen","😩 Difficile","😴 Fatigué"];
+const ENERGIES = ["Très bas","Bas","Normal","Élevé","Très élevé"];
+
+const MultiSelect = ({ label, options, selected, onAdd, onRemove, color=C.primary }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ marginBottom:16 }}>
+      <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>{label}</label>
+      {selected.length > 0 && (
+        <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:8 }}>
+          {selected.map(item => (
+            <span key={item} style={{ background:color+"22", color, borderRadius:20, padding:"3px 10px", fontSize:12, display:"flex", alignItems:"center", gap:4 }}>
+              {item}
+              <button onClick={()=>onRemove(item)} style={{ background:"none", border:"none", cursor:"pointer", color, fontSize:14, lineHeight:1, padding:0 }}>×</button>
+            </span>
+          ))}
+        </div>
+      )}
+      <div style={{ position:"relative" }}>
+        <div style={{ display:"flex", gap:8 }}>
+          <button type="button" onClick={()=>setOpen(!open)} style={{
+            flex:1, border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13,
+            background:"#fff", cursor:"pointer", textAlign:"left", color:C.muted, display:"flex", justifyContent:"space-between", alignItems:"center"
+          }}>
+            <span>Sélectionner {label.toLowerCase().replace("(s)","")}</span>
+            <ChevronDown size={14}/>
+          </button>
+          <button type="button" onClick={()=>setOpen(!open)} style={{ background:color, border:"none", borderRadius:8, padding:"10px 14px", cursor:"pointer", color:"#fff", fontWeight:700, fontSize:16 }}>+</button>
+        </div>
+        {open && (
+          <div style={{ position:"absolute", top:"100%", left:0, right:0, background:"#fff", border:"1px solid "+C.border, borderRadius:10,
+            boxShadow:"0 8px 24px rgba(0,0,0,0.12)", zIndex:300, maxHeight:220, overflowY:"auto", marginTop:4 }}>
+            {options.filter(o => !selected.includes(o)).map(option => (
+              <button key={option} type="button" onClick={()=>{ onAdd(option); setOpen(false); }} style={{
+                width:"100%", textAlign:"left", background:"none", border:"none", cursor:"pointer",
+                padding:"10px 14px", fontSize:13, display:"block"
+              }} onMouseEnter={e=>e.target.style.background=color+"11"} onMouseLeave={e=>e.target.style.background="none"}>
+                {option}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const SeancesKarate = ({ sessions, setSessions, showToast }) => {
   const [showForm, setShowForm] = useState(false);
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [searchText, setSearchText] = useState("");
-  const [form, setForm] = useState({ type:"Collectif", date:"", duration:"", satisfaction:"", katas:"", notes:"" });
   const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    date: new Date().toISOString().split('T')[0],
+    type: "Collectif",
+    duration: "",
+    coaches: [],
+    katas: [],
+    techniques: [],
+    focusPoints: "",
+    corrections: "",
+    ressenti: "🙂 Bon",
+    energie: "Normal",
+    satisfaction: 5,
+    coachFeedback: "",
+    notes: "",
+  });
 
   const counts = {
     ALL: sessions.length,
@@ -352,13 +420,16 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
   };
 
   const filtered = sessions.filter(s => {
-    const matchType = activeFilter === "ALL" || s.type === activeFilter ||
+    const matchType = activeFilter === "ALL" ||
+      s.type === activeFilter ||
       (activeFilter === "Cette semaine" && (() => { const d=new Date(s.date); const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return d>=w; })()) ||
       (activeFilter === "Ce mois-ci" && (() => { const d=new Date(s.date); const n=new Date(); return d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear(); })()) ||
       (activeFilter === "Mois dernier" && (() => { const d=new Date(s.date); const n=new Date(); const lm=new Date(n.getFullYear(),n.getMonth()-1,1); return d.getMonth()===lm.getMonth()&&d.getFullYear()===lm.getFullYear(); })()) ||
       (activeFilter === "Corrections" && s.notes && s.notes.length>0);
-    const matchSearch = !searchText || s.katas?.some(k=>k.toLowerCase().includes(searchText.toLowerCase())) ||
-      s.notes?.toLowerCase().includes(searchText.toLowerCase()) || s.coach?.toLowerCase().includes(searchText.toLowerCase());
+    const matchSearch = !searchText ||
+      s.katas?.some(k=>k.toLowerCase().includes(searchText.toLowerCase())) ||
+      s.notes?.toLowerCase().includes(searchText.toLowerCase()) ||
+      s.coach?.toLowerCase().includes(searchText.toLowerCase());
     return matchType && matchSearch;
   });
 
@@ -369,19 +440,38 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
     if (!form.date || !form.duration) return;
     setSaving(true);
     try {
-      const seance = { type:form.type, date:form.date, duration:parseInt(form.duration),
-        satisfaction:parseInt(form.satisfaction)||7, katas:form.katas.split(",").map(k=>k.trim()).filter(Boolean),
-        notes:form.notes, athlete:"Iliana Voratovic", coach:"" };
+      const seance = {
+        type: form.type, date: form.date, duration: parseInt(form.duration),
+        satisfaction: form.satisfaction, katas: form.katas, techniques: form.techniques,
+        notes: form.corrections, focusPoints: form.focusPoints,
+        coachFeedback: form.coachFeedback, additionalNotes: form.notes,
+        ressenti: form.ressenti, energie: form.energie,
+        coach: form.coaches.join(", "), athlete: "Iliana Voratovic"
+      };
       await enregistrerSeance(seance);
-      setSessions(prev => [{ id:Date.now(), ...seance }, ...prev]);
+      setSessions(prev => [{ id: Date.now(), ...seance }, ...prev]);
       showToast("Séance "+form.type+" — "+form.duration+" min. Entraîneur et parents notifiés.");
       setShowForm(false);
-      setForm({ type:"Collectif", date:"", duration:"", satisfaction:"", katas:"", notes:"" });
+      setForm({ date:new Date().toISOString().split('T')[0], type:"Collectif", duration:"", coaches:[], katas:[], techniques:[], focusPoints:"", corrections:"", ressenti:"🙂 Bon", energie:"Normal", satisfaction:5, coachFeedback:"", notes:"" });
     } catch(e) { console.error(e); }
     setSaving(false);
   };
 
   const emoji = (sat) => sat>=9?"😃":sat>=7?"😊":sat>=6?"🙂":sat>=4?"😐":"😔";
+
+  const SelectField = ({ label, value, options, onChange, style={} }) => (
+    <div style={style}>
+      <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>{label}</label>
+      <select value={value} onChange={e=>onChange(e.target.value)} style={{
+        width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px",
+        fontSize:13, background:"#fff", cursor:"pointer", appearance:"none",
+        backgroundImage:"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2394A3B8'/%3E%3C/svg%3E\")",
+        backgroundRepeat:"no-repeat", backgroundPosition:"right 12px center"
+      }}>
+        {options.map(o => <option key={o} value={o}>{o}</option>)}
+      </select>
+    </div>
+  );
 
   return (
     <div>
@@ -444,7 +534,12 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
           )}
           {s.notes && (
             <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.orange }}>
-              <div style={{ fontSize:11, color:C.orange }}>⚠ {s.notes}</div>
+              <div style={{ fontSize:11, color:C.orange }}>⚠ Corrections : {s.notes}</div>
+            </div>
+          )}
+          {s.coachFeedback && (
+            <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green, marginTop:6 }}>
+              <div style={{ fontSize:11, color:C.green }}>💬 Retours coach : {s.coachFeedback}</div>
             </div>
           )}
         </div>
@@ -453,39 +548,119 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }}
           onClick={()=>setShowForm(false)}>
-          <div style={{ background:"#fff", borderRadius:"20px 20px 0 0", padding:24, width:"100%", maxHeight:"90vh", overflowY:"auto" }}
+          <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }}
             onClick={e=>e.stopPropagation()}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
-              <div style={{ fontWeight:800, fontSize:17 }}>Nouvelle séance</div>
-              <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"none", cursor:"pointer" }}><X size={20}/></button>
+
+            {/* Header formulaire */}
+            <div style={{ background:"linear-gradient(135deg, "+C.red+", "+C.orange+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between", alignItems:"center", position:"sticky", top:0, zIndex:10 }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle séance de karaté</div>
+              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
             </div>
-            <div style={{ fontSize:12, color:C.muted, marginBottom:16 }}>🔔 L'entraîneur et les parents seront <strong>notifiés automatiquement</strong></div>
-            {[["Type","type","text","Collectif / Perso / Privé / Stage"],["Date","date","date",""],["Durée (min)","duration","number","75"],["Satisfaction /10","satisfaction","number","7"]].map(([l,k,t,ph])=>(
-              <div key={k} style={{ marginBottom:12 }}>
-                <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
-                <input type={t} placeholder={ph} value={form[k]} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))}
-                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:14, boxSizing:"border-box" }} />
+
+            <div style={{ padding:"20px 24px" }}>
+              {/* Ligne 1: Date, Type, Durée */}
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:16 }}>
+                <div>
+                  <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Date *</label>
+                  <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))}
+                    style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box" }} />
+                </div>
+                <SelectField label="Type de séance *" value={form.type} onChange={v=>setForm(f=>({...f,type:v}))}
+                  options={["Collectif","Privé","Perso","Stage","Visio"]} />
+                <div>
+                  <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Durée (minutes) *</label>
+                  <input type="number" placeholder="120" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))}
+                    style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box" }} />
+                </div>
               </div>
-            ))}
-            <div style={{ marginBottom:12 }}>
-              <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Katas (séparés par des virgules)</label>
-              <input type="text" placeholder="Gojūshiho Dai, Unsu..." value={form.katas} onChange={e=>setForm(f=>({...f,katas:e.target.value}))}
-                style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:14, boxSizing:"border-box" }} />
+
+              {/* Entraîneurs */}
+              <MultiSelect label="Entraîneur(s)" options={COACHES} selected={form.coaches}
+                onAdd={v=>setForm(f=>({...f,coaches:[...f.coaches,v]}))}
+                onRemove={v=>setForm(f=>({...f,coaches:f.coaches.filter(c=>c!==v)}))}
+                color={C.primary} />
+
+              {/* Katas */}
+              <MultiSelect label="Katas pratiqués" options={KATAS_LIST} selected={form.katas}
+                onAdd={v=>setForm(f=>({...f,katas:[...f.katas,v]}))}
+                onRemove={v=>setForm(f=>({...f,katas:f.katas.filter(k=>k!==v)}))}
+                color={C.primary} />
+
+              {/* Techniques */}
+              <MultiSelect label="Techniques travaillées" options={TECHNIQUES_LIST} selected={form.techniques}
+                onAdd={v=>setForm(f=>({...f,techniques:[...f.techniques,v]}))}
+                onRemove={v=>setForm(f=>({...f,techniques:f.techniques.filter(t=>t!==v)}))}
+                color={C.orange} />
+
+              {/* Points de focus */}
+              <div style={{ marginBottom:16 }}>
+                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Points de focus</label>
+                <textarea rows={3} placeholder="Sur quoi vous êtes-vous concentré..." value={form.focusPoints}
+                  onChange={e=>setForm(f=>({...f,focusPoints:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
+              </div>
+
+              {/* Corrections */}
+              <div style={{ marginBottom:16 }}>
+                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Corrections à travailler</label>
+                <textarea rows={3} placeholder="Points techniques à améliorer..." value={form.corrections}
+                  onChange={e=>setForm(f=>({...f,corrections:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
+              </div>
+
+              {/* Ressenti + Énergie */}
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
+                <SelectField label="Ressenti" value={form.ressenti} onChange={v=>setForm(f=>({...f,ressenti:v}))} options={RESSENTIS} />
+                <SelectField label="Niveau d'énergie" value={form.energie} onChange={v=>setForm(f=>({...f,energie:v}))} options={ENERGIES} />
+              </div>
+
+              {/* Satisfaction technique slider */}
+              <div style={{ marginBottom:16 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
+                  <label style={{ fontSize:13, fontWeight:600 }}>Satisfaction technique</label>
+                  <span style={{ fontSize:20, fontWeight:800, color:C.red }}>{form.satisfaction}/10</span>
+                </div>
+                <input type="range" min={1} max={10} value={form.satisfaction}
+                  onChange={e=>setForm(f=>({...f,satisfaction:parseInt(e.target.value)}))}
+                  style={{ width:"100%", accentColor:C.red }} />
+                <div style={{ display:"flex", justifyContent:"space-between", fontSize:11, color:C.muted }}>
+                  <span>1 (Insatisfait)</span><span>10 (Excellent)</span>
+                </div>
+              </div>
+
+              {/* Retours coach */}
+              <div style={{ marginBottom:16 }}>
+                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Retours du Coach</label>
+                <textarea rows={3} placeholder="Commentaires du coach..." value={form.coachFeedback}
+                  onChange={e=>setForm(f=>({...f,coachFeedback:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
+              </div>
+
+              {/* Notes additionnelles */}
+              <div style={{ marginBottom:24 }}>
+                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Notes additionnelles</label>
+                <textarea rows={2} placeholder="Autres observations..." value={form.notes}
+                  onChange={e=>setForm(f=>({...f,notes:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
+              </div>
+
+              {/* Boutons */}
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end", paddingBottom:8 }}>
+                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}>
+                  <X size={14}/> Annuler
+                </button>
+                <button onClick={handleSubmit} disabled={saving} style={{ background:C.red, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer", display:"flex", alignItems:"center", gap:6, opacity:saving?0.7:1 }}>
+                  💾 {saving ? "Enregistrement..." : "Enregistrer"}
+                </button>
+              </div>
             </div>
-            <div style={{ marginBottom:20 }}>
-              <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Notes / corrections</label>
-              <textarea rows={3} value={form.notes} onChange={e=>setForm(f=>({...f,notes:e.target.value}))}
-                style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:14, boxSizing:"border-box", resize:"none" }} />
-            </div>
-            <Btn color={C.red} onClick={handleSubmit} style={{ width:"100%", justifyContent:"center", padding:"14px", fontSize:15, opacity:saving?0.7:1 }}>
-              {saving ? "Enregistrement..." : "🔔 Enregistrer & notifier"}
-            </Btn>
           </div>
         </div>
       )}
     </div>
   );
 };
+
 
 // ─── TABLEAU DE VISUALISATION (Vision Board) ──────────────────────────────────
 const VisionBoard = ({ sessions }) => {
