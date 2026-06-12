@@ -136,10 +136,84 @@ const mockWeekActivity = [
 ];
 
 const mockCompetitions = [
-  { id:1, date:"2026-05-09", name:"Championnat de France Équipe Sénior", lieu:"Cormeilles-En-Parisis", coach:"Olivier", result:"Médaille d'Argent",
+  { id:1, date:"2026-05-09", name:"Championnat de France Équipe Sénior", lieu:"Cormeilles-En-Parisis", coach:"Olivier", result:"Médaille d'Argent", hasVideo:true,
     tours:[
       { num:1, name:"Demi Finale", kata:"Gojūshiho Shō", score:"5-0", ok:true, note:"Bonnes sensations" },
       { num:2, name:"Finale", kata:"Unsu", score:"1-4", ok:false, note:"un peu stressée et pas très stable mais bien sur le bunkai" },
+    ]
+  },
+  { id:2, date:"2026-04-12", name:"Championnat de France Équipe", lieu:"Mulhouse", coach:"Romain", result:"Médaille d'Or", hasVideo:true,
+    tours:[
+      { num:1, name:"1er tour", kata:"Gojūshiho Dai", score:"5-0", ok:true, note:"" },
+      { num:2, name:"Demi Finale", kata:"Gojūshiho Shō", score:"3-2", ok:true, note:"" },
+      { num:3, name:"Finale", kata:"Unsu", score:"5-0", ok:true, note:"" },
+    ]
+  },
+  { id:3, date:"2026-04-11", name:"Championnat de France Indiv", lieu:"Mulhouse", coach:"Olivier", result:"Défaite au 3ème tour", hasVideo:true,
+    tours:[
+      { num:1, name:"1er tour", kata:"Unsu", score:"5-0", ok:true, note:"" },
+      { num:2, name:"2ème tour", kata:"Gojūshiho Shō", score:"5-0", ok:true, note:"" },
+      { num:3, name:"Huitième de Finale", kata:"Gojūshiho Dai", score:"2-3", ok:false, note:"" },
+    ]
+  },
+  { id:4, date:"2026-03-08", name:"Liga Nacional 2026", lieu:"Ciudad Real Espagne", coach:"Autre", result:"Perdu au 2ème tour", hasVideo:true,
+    notes:"Pas de respi donc dur d'être a fond. Déçue d'avoir pas vraiment pu être a fond.",
+    tours:[
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"3-2", ok:true, note:"Contente de mon Kata, j'ai réussi à appliquer des corrections. Peu d'énergie" },
+      { num:2, name:"2ème tour", kata:"Unsu", score:"2-3", ok:false, note:"Très peu d'énergie mais contente de shion tsuki" },
+    ]
+  },
+  { id:5, date:"2026-01-17", name:"Milon Cup Junior", lieu:"Luxembourg", coach:"Romain", result:"Médaille de Bronze", hasVideo:true,
+    tours:[
+      { num:1, name:"1er tour", kata:"Gojūshiho Dai", score:"0-5", ok:false, note:"Contente de mon Kata malgré le déséquilibre" },
+      { num:2, name:"Finale de Bronze", kata:"Supaenpei", score:"5-0", ok:true, note:"À part le retourner un peu raté je l'ai trouvé bien" },
+    ]
+  },
+  { id:6, date:"2026-01-17", name:"Milon Cup Sénior", lieu:"Luxembourg", coach:"Romain", result:"Médaille d'argent", hasVideo:true,
+    notes:"Pour l'échauffement j'ai fait ce qu'on a fait à Venise : mobilité, course, Kata entier doucement, puis petites parties a fond.",
+    tours:[
+      { num:1, name:"1er tour", kata:"Gojūshiho Dai", score:"3-2", ok:true, note:"Je suis contente pour un premier tour" },
+      { num:2, name:"2ème tour", kata:"Supaenpei", score:"4-1", ok:true, note:"Très bonnes sensations" },
+      { num:3, name:"Demi Finale", kata:"Gojūshiho Shō", score:"3-2", ok:true, note:"Pas fan du début et les pics un peu caca" },
+      { num:4, name:"Finale", kata:"Gankaku", score:"2-3", ok:false, note:"Un peu lente peut être trop dans le boum boum" },
+    ]
+  },
+  { id:7, date:"2025-12-04", name:"Youth League", lieu:"Venise", coach:"Helvétia", result:"11ème", hasVideo:false,
+    notes:"Contente des mes 1ers tours mais je reste sur ma faim...",
+    tours:[
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"23.3", ok:true, note:"Bonnes sensations, mais très stressée" },
+      { num:2, name:"2ème tour", kata:"Gojūshiho Dai", score:"23.1", ok:true, note:"Très fière" },
+      { num:3, name:"Huitième de Finale", kata:"Supaenpei", score:"22.8", ok:false, note:"Fatigue ressentie à la fin du kata" },
+      { num:4, name:"1er tour de repêchage", kata:"Unsu", score:"21.4", ok:false, note:"Déçue" },
+    ]
+  },
+  { id:8, date:"2025-11-09", name:"Championnat Départemental", lieu:"Épinay-Sous-Sénart", coach:"Hugo", result:"Médaille d'Or", hasVideo:true,
+    tours:[
+      { num:1, name:"Finale", kata:"Gojūshiho Shō", score:"5-0", ok:true, note:"" },
+    ]
+  },
+  { id:9, date:"2025-11-02", name:"Coupe de France Équipe", lieu:"Lille", coach:"Romain", result:"Médaille d'Argent", hasVideo:false,
+    tours:[
+      { num:1, name:"Demi Finale", kata:"Gojūshiho Shō", score:"5-0", ok:true, note:"" },
+      { num:2, name:"Finale", kata:"Kanku Shō", score:"0-5", ok:false, note:"" },
+    ]
+  },
+  { id:10, date:"2025-11-01", name:"Coupe de France Junior", lieu:"Lille", coach:"Olivier", result:"Défaite au 1er tour", hasVideo:false,
+    tours:[
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"2-3", ok:false, note:"" },
+    ]
+  },
+  { id:11, date:"2025-10-05", name:"Liga Nacional", lieu:"Langreo", coach:"Autre", result:"Défaite au 1er tour", hasVideo:true,
+    tours:[
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"2-3", ok:false, note:"" },
+    ]
+  },
+  { id:12, date:"2025-09-26", name:"Lion Cup", lieu:"Strassen", coach:"Olivier", result:"Médaille d'Argent", hasVideo:true,
+    tours:[
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"22.8", ok:true, note:"" },
+      { num:2, name:"2ème tour", kata:"Supaenpei", score:"23", ok:true, note:"" },
+      { num:3, name:"Demi Finale", kata:"Gojūshiho Dai", score:"23.6", ok:true, note:"" },
+      { num:4, name:"Finale", kata:"Gankaku", score:"23.3", ok:false, note:"" },
     ]
   },
 ];
@@ -164,8 +238,55 @@ const mockTeam = {
 };
 
 const mockPhysique = [
-  { id:1, date:"2026-06-05", type:"PPG", duration:60, satisfaction:8, notes:"Bonne séance de prépa générale" },
-  { id:2, date:"2026-06-03", type:"Endurance", duration:45, satisfaction:7, notes:"Course 5km" },
+  // PPG / Full Body (Kevin) — 24 séances
+  { id:1, date:"2026-06-05", type:"PPG", subType:"Full Body", duration:75, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:2, date:"2026-06-01", type:"PPG", subType:"Full Body", duration:80, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:3, date:"2026-05-25", type:"PPG", subType:"Full Body", duration:75, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:4, date:"2026-05-20", type:"PPG", subType:"Full Body", duration:75, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:5, date:"2026-05-18", type:"PPG", subType:"Full Body", duration:80, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:6, date:"2026-05-14", type:"PPG", subType:"Full Body", duration:75, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:7, date:"2026-05-11", type:"PPG", subType:"Full Body", duration:80, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:8, date:"2026-05-08", type:"PPG", subType:"Full Body", duration:85, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:9, date:"2026-05-04", type:"PPG", subType:"Full Body", duration:75, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:10, date:"2026-04-30", type:"PPG", subType:"Full Body", duration:60, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:11, date:"2026-04-29", type:"PPG", subType:"Full Body", duration:85, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:12, date:"2026-04-27", type:"PPG", subType:"Full Body", duration:85, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:13, date:"2026-04-24", type:"PPG", subType:"Full Body", duration:65, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:14, date:"2026-04-22", type:"PPG", subType:"Full Body", duration:85, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:15, date:"2026-04-20", type:"PPG", subType:"Full Body", duration:85, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:16, date:"2026-04-18", type:"PPG", subType:"Full Body", duration:65, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:17, date:"2026-04-14", type:"PPG", subType:"Full Body", duration:60, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:18, date:"2026-04-03", type:"PPG", subType:"Full Body", duration:65, satisfaction:7, coach:"Kevin", notes:"", programme:"" },
+  { id:19, date:"2026-04-02", type:"PPG", subType:"Full Body", duration:60, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:20, date:"2026-03-29", type:"PPG", subType:"Full Body", duration:70, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
+  { id:21, date:"2026-03-23", type:"PPG", subType:"Full Body", duration:70, satisfaction:8, coach:"Kevin", notes:"Problème de grip", programme:"" },
+  { id:22, date:"2026-03-20", type:"PPG", subType:"Full Body", duration:60, satisfaction:7, coach:"Kevin", notes:"", programme:"" },
+  { id:23, date:"2026-03-18", type:"PPG", subType:"Full Body", duration:60, satisfaction:7, coach:"Kevin", notes:"", programme:"" },
+  { id:24, date:"2025-12-31", type:"PPG", subType:"Full Body", duration:120, satisfaction:8, coach:"Helvétia", notes:"Séance Full Body", programme:"Séance Full Body - Gainage & Stabilité" },
+  // Haltérophilie (6 séances)
+  { id:25, date:"2026-03-11", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:8, coach:"Helvétia", notes:"Mal aux bras 😂", programme:"Haltérophilie" },
+  { id:26, date:"2026-02-16", type:"Haltérophilie", subType:"Haltérophilie", duration:50, satisfaction:8, coach:"Helvétia", notes:"ça fait du bien de refaire du physique 😅", programme:"Haltérophilie" },
+  { id:27, date:"2025-12-08", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:8, coach:"Helvétia", notes:"Mal aux mains 😂", programme:"Haltérophilie" },
+  { id:28, date:"2025-11-26", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:8, coach:"Helvétia", notes:"", programme:"Haltérophilie" },
+  { id:29, date:"2025-11-10", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:7, coach:"Helvétia", notes:"", programme:"Haltérophilie" },
+  { id:30, date:"2025-10-21", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:7, coach:"Helvétia", notes:"", programme:"Haltérophilie" },
+  // Endurance (5 séances)
+  { id:31, date:"2026-03-02", type:"Endurance", subType:"Endurance", duration:60, satisfaction:8, coach:"Michel", distance:"6km", intensite:"Élevée", notes:"Intensité courte et répétée" },
+  { id:32, date:"2026-02-24", type:"Endurance", subType:"Endurance", duration:120, satisfaction:8, coach:"Jérémie", notes:"Travail de vitesse sur courte distance, puis travail sur les 5 Kata" },
+  { id:33, date:"2026-02-18", type:"Endurance", subType:"Endurance", duration:30, satisfaction:7, coach:"Michel", notes:"Relancer le cardio sans surcharge" },
+  { id:34, date:"2025-10-27", type:"Endurance", subType:"Endurance", duration:60, satisfaction:6, coach:"Michel", notes:"Affûtage" },
+  { id:35, date:"2025-10-20", type:"Endurance", subType:"Endurance", duration:60, satisfaction:7, coach:"Michel", notes:"Relancer le cardio sans surcharge" },
+  // Explosivité (3 séances)
+  { id:36, date:"2026-02-23", type:"Explosivité", subType:"Explosivité", duration:75, satisfaction:8, coach:"Helvétia", notes:"HALTÉRO + RENFO — Hang Power Clean, Front Squat, Push Press..." },
+  { id:37, date:"2025-11-24", type:"Explosivité", subType:"Explosivité", duration:75, satisfaction:8, coach:"Helvétia", notes:"HALTÉRO + RENFO" },
+  { id:38, date:"2025-10-23", type:"Explosivité", subType:"Explosivité", duration:60, satisfaction:7, coach:"Michel", notes:"Résistance Explosive — Circuit burpees/pompes/kihon" },
+  // Technique (1 séance)
+  { id:39, date:"2025-11-23", type:"Technique", subType:"Technique", duration:60, satisfaction:7, coach:"Michel", notes:"Tests Physiques — Epreuve 1=9'48 Epreuve 5=VMA 13,3km/h" },
+  // Compét (1 séance)
+  { id:40, date:"2026-02-24", type:"Compétition", subType:"Compétition", duration:120, satisfaction:7, coach:"Jérémie", notes:"Explo + Révisions gammes" },
+  // Full Body séparé (2 séances déjà dans PPG mais avec type distinct)
+  { id:41, date:"2025-12-12", type:"Full Body", subType:"Full Body", duration:60, satisfaction:7, coach:"", notes:"Travail de gainage : Élastique ou câble à hauteur de poitrine pour Pallof Press" },
+  { id:42, date:"2026-05-31", type:"Full Body", subType:"Full Body", duration:120, satisfaction:8, coach:"Helvétia", notes:"" },
 ];
 
 function useIsMobile() {
@@ -765,13 +886,120 @@ const VisionBoard = ({ sessions }) => {
 };
 
 // ─── STAGE ÉQUIPE ─────────────────────────────────────────────────────────────
-const StageEquipe = () => (
-  <div>
-    <SectionHeader icon="🏕️" title="Stage Équipe de France" subtitle="Stages et événements équipe" color="#DC2626" />
-    <EmptyState icon={<Users size={24}/>} title="Aucun stage enregistré" sub="Les stages de l'équipe de France apparaîtront ici"
-      action={{ label:"Ajouter un stage", fn:()=>{} }} />
-  </div>
-);
+const mockStages = [
+  { id:1, date:"2026-01-31", satisfaction:9, katas:["Gojūshiho Shō","Gojūshiho Dai","Empi"], duration:240,
+    focus:"Passage mode compétition en quart de Kata enchaînés",
+    corrections:"Les mains plus tendus, tendre plus la jambe arrière",
+    retours:"Très bien, corrigé" },
+  { id:2, date:"2026-01-29", satisfaction:8, katas:["Empi","Gojūshiho Shō","Gojūshiho Dai"], duration:120,
+    focus:"Parties importantes dans les kata",
+    corrections:"Plus de frappe", retours:"" },
+  { id:3, date:"2026-01-11", satisfaction:9, katas:["Gojūshiho Shō","Unsu"], duration:105,
+    focus:"Partie importante dans unsu et goju",
+    corrections:"Tendre plus jambe arrière", retours:"" },
+  { id:4, date:"2026-01-10", satisfaction:8, katas:["Empi","Gojūshiho Shō","Gojūshiho Dai"], duration:150,
+    focus:"Passage mode compétition avec Julia et Louise",
+    corrections:"Empi : plus d'impact, pas d'appel avec pied arrière. Dai : revoir rythme ligne kiba, plus de maintien. Sho : attention Mae gueri du début", retours:"" },
+  { id:5, date:"2026-01-09", satisfaction:7, katas:["Gojūshiho Shō","Gojūshiho Dai","Unsu"], duration:260,
+    focus:"Le matin : les goju en quart 4 fois. L'aprem : dai entier+demi et unsu en quart 4 fois",
+    corrections:"Attention trajectoires, plus d'impact, plus d'intention au bout des doigts", retours:"" },
+  { id:6, date:"2026-01-08", satisfaction:8, katas:["Empi","Gojūshiho Shō"], duration:120,
+    focus:"Travail commun sur empi, goju. Équipe sur empi chaque demi 4 fois",
+    corrections:"Empi : tourner la tête sur gedan barai, regarder le poignet avant le 1er kiai", retours:"" },
+  { id:7, date:"2025-12-21", satisfaction:8, katas:["Empi","Gojūshiho Dai","Unsu"], duration:240,
+    focus:"Empi 2eme + dai, unsu + bunkai 2eme partie",
+    corrections:"Empi : Tirer l'iquité sur le kokutsu avant le saut. Dai : plus d'intention sur les temps lents. Unsu 2: ne pas tordre le poignet sur le 1er mouvement",
+    retours:"Travailler au club les bras sur empi et le coup de pied de unsu" },
+  { id:8, date:"2025-12-20", satisfaction:8, katas:["Empi","Gojūshiho Shō","Unsu"], duration:240,
+    focus:"Empi + sho, unsu 1ere partie + bunkai",
+    corrections:"Empi : se laisser plus tomber sur la montée de genoux. Sho : ne pas aller chercher trop large au début. Unsu : tomber plus vite au sol",
+    retours:"Très bien le unsu. Temps début de empi : 1 2,1 2,12" },
+  { id:9, date:"2025-12-19", satisfaction:8, katas:["Empi"], duration:120,
+    focus:"Harmonisation empi",
+    corrections:"Tier les épaules en opposition, se laisser tomber apres monter de genoux en posant les pieds 12", retours:"" },
+  { id:10, date:"2025-10-12", satisfaction:7, katas:["Gojūshiho Shō","Gojūshiho Dai","Unsu"], duration:240,
+    focus:"Cours normalement avec tout le monde puis 3 katas : sho, dai, unsu",
+    corrections:"Lucas m'a dit de rétrécir mes positions pour descendre plus, et de faire attention à mes axes au niveau du haut du corps (je tire trop les épaules)",
+    retours:"" },
+];
+
+const StageEquipe = () => {
+  const [editId, setEditId] = useState(null);
+  const avgSat = (mockStages.reduce((a,b)=>a+b.satisfaction,0)/mockStages.length).toFixed(1);
+  const avgDur = Math.round(mockStages.reduce((a,b)=>a+b.duration,0)/mockStages.length);
+  const emoji = (s) => s>=9?"😃":s>=8?"😊":s>=7?"🙂":"😐";
+
+  return (
+    <div>
+      <SectionHeader icon="🏅" title="Stages Équipe de France" subtitle="Suivez vos entraînements avec l'élite nationale 🇫🇷" color="#1D4ED8"
+        action={<Btn color="#fff" style={{ color:"#1D4ED8", fontSize:12 }}><Plus size={12}/> Nouveau stage</Btn>} />
+
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
+        {[{l:"Stages totaux",v:mockStages.length,c:"#1D4ED8"},{l:"Durée moyenne",v:avgDur+" min",c:C.orange},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.yellow}].map(s=>(
+          <div key={s.l} style={{ background:C.card, borderRadius:12, padding:12, border:"1px solid "+C.border, textAlign:"center" }}>
+            <div style={{ fontSize:11, color:C.muted }}>{s.l}</div>
+            <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.v}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Corrections récentes */}
+      <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:16 }}>
+        <div style={{ fontWeight:700, fontSize:13, marginBottom:10, color:C.orange }}>⚠ Corrections récentes à travailler</div>
+        {mockStages.filter(s=>s.corrections).slice(0,3).map(s=>(
+          <div key={s.id} style={{ background:C.orange+"11", borderRadius:8, padding:"8px 12px", marginBottom:8, borderLeft:"3px solid "+C.orange }}>
+            <div style={{ fontSize:11, color:C.orange, fontWeight:600, marginBottom:2 }}>{s.date}</div>
+            <div style={{ fontSize:12 }}>{s.corrections}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Liste des stages */}
+      {mockStages.map(s=>(
+        <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid #1D4ED833", padding:16, marginBottom:12 }}>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
+            <div>
+              <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                <span style={{ fontSize:16 }}>{emoji(s.satisfaction)}</span>
+                <span style={{ fontWeight:700, fontSize:14 }}>Stage Équipe de France</span>
+              </div>
+              <div style={{ color:C.muted, fontSize:11 }}>{s.date}</div>
+            </div>
+            <div style={{ display:"flex", gap:6 }}>
+              <button onClick={()=>setEditId(editId===s.id?null:s.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
+              <button style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
+            </div>
+          </div>
+          <div style={{ display:"flex", gap:16, marginBottom:8 }}>
+            <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
+            <span style={{ fontSize:12, color:C.muted }}>⭐ <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
+          </div>
+          {s.katas.length>0 && (
+            <div style={{ marginBottom:6 }}>
+              <div style={{ fontSize:11, fontWeight:600, marginBottom:4, color:C.muted }}>Katas pratiqués :</div>
+              <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>{s.katas.map(k=><Badge key={k} label={k} color="#1D4ED8"/>)}</div>
+            </div>
+          )}
+          {s.focus && (
+            <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.blue }}>
+              <div style={{ fontSize:11, color:C.blue }}>🎯 <strong>Focus :</strong> {s.focus}</div>
+            </div>
+          )}
+          {s.corrections && (
+            <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.orange }}>
+              <div style={{ fontSize:11, color:C.orange }}>⚠ <strong>Corrections :</strong> {s.corrections}</div>
+            </div>
+          )}
+          {s.retours && (
+            <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green }}>
+              <div style={{ fontSize:11, color:C.green }}>💬 <strong>Retours :</strong> {s.retours}</div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // ─── PRÉPA PHYSIQUE ─────────────────────────────────────────────────────────
 const PHYS_TYPES = ["Endurance","Force","Explosivité","Vitesse","Technique","Récupération","Compétition","Haltérophilie","PPG","Corps entier"];
@@ -795,14 +1023,77 @@ const PrepaPhysique = () => {
     </div>
   );
 
+  const counts = {
+    "Semaine": mockPhysique.filter(s=>{ const d=new Date(s.date); const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return d>=w; }).length,
+    "🏃 Endurance": mockPhysique.filter(s=>s.type==="Endurance").length,
+    "💪 Force": mockPhysique.filter(s=>s.type==="Force").length,
+    "⚡ Explosivité": mockPhysique.filter(s=>s.type==="Explosivité").length,
+    "🏋️ Haltéro": mockPhysique.filter(s=>s.type==="Haltérophilie").length,
+    "🔥 PPG": mockPhysique.filter(s=>s.type==="PPG").length,
+    "🔥 Full Body": mockPhysique.filter(s=>s.type==="Full Body").length,
+    "⚡ Vitesse": mockPhysique.filter(s=>s.type==="Vitesse").length,
+    "🎯 Technique": mockPhysique.filter(s=>s.type==="Technique").length,
+    "🧘 Récup": mockPhysique.filter(s=>s.type==="Récupération").length,
+    "🏆 Compét": mockPhysique.filter(s=>s.type==="Compétition").length,
+  };
+
+  const filtered = mockPhysique.filter(s => {
+    if (activeFilter === "Semaine") { const d=new Date(s.date); const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return d>=w; }
+    const typeMap = { "🏃 Endurance":"Endurance","💪 Force":"Force","⚡ Explosivité":"Explosivité","🏋️ Haltéro":"Haltérophilie","🔥 PPG":"PPG","🔥 Full Body":"Full Body","⚡ Vitesse":"Vitesse","🎯 Technique":"Technique","🧘 Récup":"Récupération","🏆 Compét":"Compétition" };
+    return !typeMap[activeFilter] || s.type === typeMap[activeFilter];
+  });
+
+  const avgDurPhys = mockPhysique.length ? Math.round(mockPhysique.reduce((a,b)=>a+b.duration,0)/mockPhysique.length) : 0;
+
+  const typeColor = (t) => ({ "PPG":C.red,"Full Body":C.red,"Haltérophilie":C.blue,"Endurance":C.green,"Explosivité":C.orange,"Technique":C.primary,"Compétition":C.yellow,"Vitesse":C.accent }[t] || C.primary);
+
   return (
     <div>
       <SectionHeader icon="💪" title="Préparation Physique" subtitle="Suivez toutes vos séances de préparation physique" color={C.blue}
         action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.blue, fontSize:12 }}><Plus size={12}/> Nouvelle séance</Btn>} />
-      <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:8, marginBottom:16 }}>
-        {TYPES_LABELS.map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} />)}
+
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:14 }}>
+        {[{l:"Séances totales",v:mockPhysique.length,c:C.blue},{l:"Durée moyenne",v:avgDurPhys+" min",c:C.orange},{l:"Cette semaine",v:counts["Semaine"],c:C.green}].map(s=>(
+          <div key={s.l} style={{ background:C.card, borderRadius:12, padding:12, border:"1px solid "+C.border, textAlign:"center" }}>
+            <div style={{ fontSize:11, color:C.muted }}>{s.l}</div>
+            <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.v}</div>
+          </div>
+        ))}
       </div>
-      <EmptyState icon={<Dumbbell size={24}/>} title="Aucune séance cette semaine" sub="Les séances de cette semaine apparaîtront ici" action={{ label:"Créer une séance", fn:()=>setShowForm(true) }} />
+
+      <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:8, marginBottom:16 }}>
+        {TYPES_LABELS.map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} count={counts[f]} />)}
+      </div>
+
+      <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{filtered.length} séance{filtered.length>1?"s":""}</div>
+
+      {filtered.length === 0 ? (
+        <EmptyState icon={<Dumbbell size={24}/>} title="Aucune séance cette semaine" sub="Les séances de cette semaine apparaîtront ici" action={{ label:"Créer une séance", fn:()=>setShowForm(true) }} />
+      ) : filtered.map(s=>(
+        <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid "+typeColor(s.type)+"33", padding:16, marginBottom:12 }}>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
+            <div>
+              <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                <Badge label={s.type} color={typeColor(s.type)}/>
+                {s.programme && <span style={{ fontSize:11, color:C.muted }}>{s.programme}</span>}
+              </div>
+              <div style={{ color:C.muted, fontSize:11, marginTop:2 }}>{s.date}{s.coach?" · "+s.coach:""}</div>
+            </div>
+            <div style={{ display:"flex", gap:6 }}>
+              <button style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
+              <button style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
+            </div>
+          </div>
+          <div style={{ display:"flex", gap:16, marginBottom:s.notes?8:0 }}>
+            <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
+            {s.distance && <span style={{ fontSize:12, color:C.muted }}>📏 <strong style={{ color:C.text }}>{s.distance}</strong></span>}
+            {s.intensite && <span style={{ fontSize:12, color:C.muted }}>⚡ <strong style={{ color:C.text }}>{s.intensite}</strong></span>}
+          </div>
+          {s.notes && <div style={{ background:typeColor(s.type)+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+typeColor(s.type) }}>
+            <div style={{ fontSize:11, color:typeColor(s.type) }}>{s.notes}</div>
+          </div>}
+        </div>
+      ))}
 
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
@@ -854,9 +1145,18 @@ const PrepaPhysique = () => {
 const COMP_COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Jérémie","Michel","Autre"];
 const COMP_MONTHS = ["Mai 2026","Avril 2026","Mars 2026","Janvier 2026","Décembre 2025","Novembre 2025","Octobre 2025","Septembre 2025"];
 
+const RESULT_COLOR = (r) => {
+  if (r.includes("Or")) return C.yellow;
+  if (r.includes("Argent")) return "#94A3B8";
+  if (r.includes("Bronze")) return "#CD7F32";
+  if (r.includes("Défaite") || r.includes("Perdu")) return C.red;
+  return C.orange;
+};
+
 const Competitions = () => {
   const [activeMois, setActiveMois] = useState("Mai 2026");
   const [showForm, setShowForm] = useState(false);
+  const [editComp, setEditComp] = useState(null);
   const [form, setForm] = useState({ nom:"", date:"", lieu:"", statut:"À venir", coach:"", resultat:"", recordPerso:false, tours:[], lienVideo:"", notes:"" });
   const [newTour, setNewTour] = useState({ nom:"", kata:"", score:"", ok:true, note:"" });
 
@@ -873,12 +1173,26 @@ const Competitions = () => {
       <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:8, marginBottom:16 }}>
         {COMP_MONTHS.map(m=><FilterPill key={m} label={m} active={activeMois===m} onClick={()=>setActiveMois(m)} />)}
       </div>
-      {mockCompetitions.map(c=>(
+      {mockCompetitions.filter(c => {
+        const d = new Date(c.date);
+        const moisMap = {"Mai 2026":"2026-05","Avril 2026":"2026-04","Mars 2026":"2026-03","Janvier 2026":"2026-01","Décembre 2025":"2025-12","Novembre 2025":"2025-11","Octobre 2025":"2025-10","Septembre 2025":"2025-09"};
+        return c.date.startsWith(moisMap[activeMois] || "");
+      }).map(c=>(
         <div key={c.id} style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12 }}>
-          <div style={{ fontWeight:700, fontSize:15, marginBottom:4 }}>{c.name}</div>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:4 }}>
+            <div style={{ fontWeight:700, fontSize:15 }}>{c.name}</div>
+            <div style={{ display:"flex", gap:6 }}>
+              {c.hasVideo && (
+                <button style={{ background:C.primary+"22", border:"1px solid "+C.primary+"44", borderRadius:8, padding:"4px 10px", fontSize:11, color:C.primary, cursor:"pointer", display:"flex", alignItems:"center", gap:4 }}>
+                  <Video size={12}/> Vidéo
+                </button>
+              )}
+              <button onClick={()=>setEditComp(editComp===c.id?null:c.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={14}/></button>
+            </div>
+          </div>
           <div style={{ color:C.muted, fontSize:11, marginBottom:10 }}>📅 {c.date} · 📍 {c.lieu} · 👤 {c.coach}</div>
-          <div style={{ background:C.yellow+"22", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+C.yellow, marginBottom:12 }}>
-            <span style={{ color:C.yellow, fontWeight:700, fontSize:13 }}>🏆 Résultat : {c.result}</span>
+          <div style={{ background:RESULT_COLOR(c.result)+"22", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+RESULT_COLOR(c.result), marginBottom:12 }}>
+            <span style={{ color:RESULT_COLOR(c.result), fontWeight:700, fontSize:13 }}>🏆 Résultat : {c.result}</span>
           </div>
           <div style={{ fontWeight:600, fontSize:12, marginBottom:8, color:C.muted }}>Tours de la compétition :</div>
           {c.tours.map(t=>(
@@ -889,11 +1203,34 @@ const Competitions = () => {
                 </div>
                 <div style={{ fontSize:12, color:C.muted }}>Kata: <strong style={{ color:C.text }}>{t.kata}</strong> · Score: <strong style={{ color:C.text }}>{t.score}</strong></div>
                 {t.note && <div style={{ fontSize:11, color:C.muted, marginTop:2, fontStyle:"italic" }}>{t.note}</div>}
-                <button style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, fontSize:11, marginTop:4, display:"flex", alignItems:"center", gap:3 }}><Video size={11}/> Voir la vidéo</button>
               </div>
               {t.ok ? <CheckCircle2 color={C.green} size={18}/> : <XCircle color={C.red} size={18}/>}
             </div>
           ))}
+          {c.notes && (
+            <div style={{ background:C.primary+"11", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.primary, marginTop:6 }}>
+              <div style={{ fontSize:11, color:C.primary }}>📝 {c.notes}</div>
+            </div>
+          )}
+
+          {/* Formulaire d'édition inline */}
+          {editComp === c.id && (
+            <div style={{ marginTop:12, background:C.bg, borderRadius:12, padding:14, border:"1px solid "+C.border }}>
+              <div style={{ fontWeight:600, fontSize:13, marginBottom:10 }}>✏️ Modifier la compétition</div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:10 }}>
+                {[["Nom","nom",c.name],["Lieu","lieu",c.lieu],["Résultat","resultat",c.result],["Coach","coach",c.coach]].map(([l,k,v])=>(
+                  <div key={k}>
+                    <label style={{ fontSize:11, fontWeight:600, display:"block", marginBottom:3 }}>{l}</label>
+                    <input defaultValue={v} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:6, padding:"7px 10px", fontSize:12, boxSizing:"border-box" }}/>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+                <button onClick={()=>setEditComp(null)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:6, padding:"6px 14px", fontSize:12, cursor:"pointer" }}>Annuler</button>
+                <button onClick={()=>setEditComp(null)} style={{ background:C.orange, border:"none", borderRadius:6, padding:"6px 14px", fontSize:12, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+              </div>
+            </div>
+          )}
         </div>
       ))}
 
