@@ -1693,13 +1693,16 @@ const Videos = ({ competitions, sessions }) => {
   const [videoLinks, setVideoLinks] = useState({});
 
   useEffect(() => {
+    // Charger localStorage en base (liens existants)
+    let localLinks = {};
+    try { localLinks = JSON.parse(localStorage.getItem("kp_video_links")||"{}"); } catch {}
+    // Puis fusionner avec Firestore (liens partagés entre utilisateurs)
     getDocs(collection(db, "video_links")).then(snap => {
-      const links = {};
-      snap.docs.forEach(d => { links[d.data().videoId] = d.data().lien; });
+      const links = { ...localLinks };
+      snap.docs.forEach(d => { if (d.data().videoId && d.data().lien) links[d.data().videoId] = d.data().lien; });
       setVideoLinks(links);
     }).catch(() => {
-      // Fallback localStorage si Firestore indisponible
-      try { setVideoLinks(JSON.parse(localStorage.getItem("kp_video_links")||"{}")); } catch {}
+      setVideoLinks(localLinks);
     });
   }, []);
 
