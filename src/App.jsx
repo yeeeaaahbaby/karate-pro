@@ -926,19 +926,46 @@ const mockStages = [
     retours:"" },
 ];
 
+const EMPTY_STAGE = { date: new Date().toISOString().split("T")[0], satisfaction:8, katas:[], duration:"", focus:"", corrections:"", retours:"" };
+
 const StageEquipe = () => {
-  const [editId, setEditId] = useState(null);
-  const avgSat = (mockStages.reduce((a,b)=>a+b.satisfaction,0)/mockStages.length).toFixed(1);
-  const avgDur = Math.round(mockStages.reduce((a,b)=>a+b.duration,0)/mockStages.length);
+  const [stages, setStages] = useState(mockStages);
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [form, setForm] = useState(EMPTY_STAGE);
+
+  const avgSat = stages.length ? (stages.reduce((a,b)=>a+b.satisfaction,0)/stages.length).toFixed(1) : 0;
+  const avgDur = stages.length ? Math.round(stages.reduce((a,b)=>a+b.duration,0)/stages.length) : 0;
   const emoji = (s) => s>=9?"😃":s>=8?"😊":s>=7?"🙂":"😐";
+
+  const openAdd = () => { setForm(EMPTY_STAGE); setEditingId(null); setShowForm(true); };
+  const openEdit = (s) => { setForm({...s, duration:String(s.duration), katas:s.katas||[]}); setEditingId(s.id); setShowForm(true); };
+  const openCopy = (s) => { setForm({...s, date:new Date().toISOString().split("T")[0], duration:String(s.duration), katas:s.katas||[]}); setEditingId(null); setShowForm(true); };
+  const handleDelete = (id) => { if (!window.confirm("Supprimer ce stage ?")) return; setStages(prev=>prev.filter(s=>s.id!==id)); };
+  const handleSave = () => {
+    if (!form.date || !form.duration) return;
+    const s = { ...form, duration: parseInt(form.duration), katas: form.katas||[] };
+    if (editingId) { setStages(prev=>prev.map(x=>x.id===editingId?{...x,...s}:x)); }
+    else { setStages(prev=>[{id:Date.now(),...s},...prev]); }
+    setShowForm(false);
+  };
+
+  const StageSF = ({ label, value, options, onChange }) => (
+    <div>
+      <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{label}</label>
+      <select value={value} onChange={e=>onChange(e.target.value)} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+        {options.map(o=><option key={o}>{o}</option>)}
+      </select>
+    </div>
+  );
 
   return (
     <div>
       <SectionHeader icon="🏅" title="Stages Équipe de France" subtitle="Suivez vos entraînements avec l'élite nationale 🇫🇷" color="#1D4ED8"
-        action={<Btn color="#fff" style={{ color:"#1D4ED8", fontSize:12 }}><Plus size={12}/> Nouveau stage</Btn>} />
+        action={<Btn onClick={openAdd} color="#fff" style={{ color:"#1D4ED8", fontSize:12 }}><Plus size={12}/> Nouveau stage</Btn>} />
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
-        {[{l:"Stages totaux",v:mockStages.length,c:"#1D4ED8"},{l:"Durée moyenne",v:avgDur+" min",c:C.orange},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.yellow}].map(s=>(
+        {[{l:"Stages totaux",v:stages.length,c:"#1D4ED8"},{l:"Durée moyenne",v:avgDur+" min",c:C.orange},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.yellow}].map(s=>(
           <div key={s.l} style={{ background:C.card, borderRadius:12, padding:12, border:"1px solid "+C.border, textAlign:"center" }}>
             <div style={{ fontSize:11, color:C.muted }}>{s.l}</div>
             <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.v}</div>
@@ -946,10 +973,9 @@ const StageEquipe = () => {
         ))}
       </div>
 
-      {/* Corrections récentes */}
       <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:16 }}>
         <div style={{ fontWeight:700, fontSize:13, marginBottom:10, color:C.orange }}>⚠ Corrections récentes à travailler</div>
-        {mockStages.filter(s=>s.corrections).slice(0,3).map(s=>(
+        {stages.filter(s=>s.corrections).slice(0,3).map(s=>(
           <div key={s.id} style={{ background:C.orange+"11", borderRadius:8, padding:"8px 12px", marginBottom:8, borderLeft:"3px solid "+C.orange }}>
             <div style={{ fontSize:11, color:C.orange, fontWeight:600, marginBottom:2 }}>{s.date}</div>
             <div style={{ fontSize:12 }}>{s.corrections}</div>
@@ -957,8 +983,7 @@ const StageEquipe = () => {
         ))}
       </div>
 
-      {/* Liste des stages */}
-      {mockStages.map(s=>(
+      {stages.map(s=>(
         <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid #1D4ED833", padding:16, marginBottom:12 }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
             <div>
@@ -968,38 +993,68 @@ const StageEquipe = () => {
               </div>
               <div style={{ color:C.muted, fontSize:11 }}>{s.date}</div>
             </div>
-            <div style={{ display:"flex", gap:6 }}>
-              <button onClick={()=>setEditId(editId===s.id?null:s.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
-              <button style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
+            <div style={{ display:"flex", gap:5 }}>
+              <button onClick={()=>openEdit(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={13}/></button>
+              <button onClick={()=>openCopy(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
+              <button onClick={()=>handleDelete(s.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={13}/></button>
             </div>
           </div>
           <div style={{ display:"flex", gap:16, marginBottom:8 }}>
             <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
             <span style={{ fontSize:12, color:C.muted }}>⭐ <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
           </div>
-          {s.katas.length>0 && (
+          {s.katas && s.katas.length>0 && (
             <div style={{ marginBottom:6 }}>
               <div style={{ fontSize:11, fontWeight:600, marginBottom:4, color:C.muted }}>Katas pratiqués :</div>
               <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>{s.katas.map(k=><Badge key={k} label={k} color="#1D4ED8"/>)}</div>
             </div>
           )}
-          {s.focus && (
-            <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.blue }}>
-              <div style={{ fontSize:11, color:C.blue }}>🎯 <strong>Focus :</strong> {s.focus}</div>
-            </div>
-          )}
-          {s.corrections && (
-            <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.orange }}>
-              <div style={{ fontSize:11, color:C.orange }}>⚠ <strong>Corrections :</strong> {s.corrections}</div>
-            </div>
-          )}
-          {s.retours && (
-            <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green }}>
-              <div style={{ fontSize:11, color:C.green }}>💬 <strong>Retours :</strong> {s.retours}</div>
-            </div>
-          )}
+          {s.focus && <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.blue }}><div style={{ fontSize:11, color:C.blue }}>🎯 <strong>Focus :</strong> {s.focus}</div></div>}
+          {s.corrections && <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.orange }}><div style={{ fontSize:11, color:C.orange }}>⚠ <strong>Corrections :</strong> {s.corrections}</div></div>}
+          {s.retours && <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green }}><div style={{ fontSize:11, color:C.green }}>💬 <strong>Retours :</strong> {s.retours}</div></div>}
         </div>
       ))}
+
+      {showForm && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
+          <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ background:"linear-gradient(135deg, #1D4ED8, #3B82F6)", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between", position:"sticky", top:0, zIndex:10 }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>{editingId?"Modifier":"Nouveau"} stage</div>
+              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+            </div>
+            <div style={{ padding:"20px 24px" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:14 }}>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date *</label>
+                  <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Durée (min) *</label>
+                  <input type="number" placeholder="240" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <div>
+                  <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Satisfaction</label>
+                  <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                    <input type="range" min={1} max={10} value={form.satisfaction} onChange={e=>setForm(f=>({...f,satisfaction:parseInt(e.target.value)}))} style={{ flex:1, accentColor:"#1D4ED8" }}/>
+                    <span style={{ fontWeight:800, color:"#1D4ED8", minWidth:30 }}>{form.satisfaction}/10</span>
+                  </div>
+                </div>
+              </div>
+              <MultiSelect label="Katas pratiqués" options={KATAS_LIST} selected={form.katas||[]}
+                onAdd={v=>setForm(f=>({...f,katas:[...(f.katas||[]),v]}))}
+                onRemove={v=>setForm(f=>({...f,katas:(f.katas||[]).filter(k=>k!==v)}))}
+                color="#1D4ED8" />
+              {[["Focus de la séance","focus","Points travaillés, objectifs..."],["Corrections","corrections","Points à corriger..."],["Retours de l'encadrement","retours","Feedback des coachs..."]].map(([l,k,p])=>(
+                <div key={k} style={{ marginBottom:14 }}>
+                  <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
+                  <textarea rows={3} placeholder={p} value={form[k]||""} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))}
+                    style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/>
+                </div>
+              ))}
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={handleSave} style={{ background:"#1D4ED8", border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 {editingId?"Modifier":"Enregistrer"}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -1012,10 +1067,26 @@ const STATUTS_PHYS = ["À venir","Terminée","Non réalisé"];
 const RESSENTIS_PHYS = ["😃 Excellent","😊 Très bon","🙂 Bon","😐 Moyen","😔 Fatigué","😩 Épuisé"];
 
 const PrepaPhysique = () => {
-  const [activeFilter, setActiveFilter] = useState("Semaine");
+  const [physique, setPhysique] = useState(mockPhysique);
+  const [activeFilter, setActiveFilter] = useState("Toutes");
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ date:new Date().toISOString().split("T")[0], type:"Endurance", duration:"", intensite:"Moyenne", statut:"À venir", programme:"", coach:"", distance:"", calories:"", fcMoy:"", fcMax:"", ressenti:"🙂 Bon", notes:"" });
-  const TYPES_LABELS = ["Semaine","🏃 Endurance","💪 Force","⚡ Explosivité","🏋️ Haltéro","🔥 PPG","🔥 Corps entier","⚡ Vitesse","🎯 Technique","🧘 Récup","🏆 Compét"];
+  const [editingPhys, setEditingPhys] = useState(null);
+  const [expandedId, setExpandedId] = useState(null);
+  const EMPTY_PHYS = { date:new Date().toISOString().split("T")[0], type:"Endurance", duration:"", intensite:"Moyenne", statut:"Terminée", programme:"", coach:"", distance:"", calories:"", fcMoy:"", fcMax:"", ressenti:"🙂 Bon", notes:"" };
+  const [form, setForm] = useState(EMPTY_PHYS);
+  const TYPES_LABELS = ["Toutes","Semaine","🏃 Endurance","💪 Force","⚡ Explosivité","🏋️ Haltéro","🔥 PPG","🔥 Full Body","⚡ Vitesse","🎯 Technique","🧘 Récup","🏆 Compét"];
+
+  const openAdd = () => { setForm(EMPTY_PHYS); setEditingPhys(null); setShowForm(true); };
+  const openEdit = (s) => { setForm({...s, duration: String(s.duration), distance: s.distance||"", calories: s.calories||"", fcMoy: s.fcMoy||"", fcMax: s.fcMax||""}); setEditingPhys(s.id); setShowForm(true); };
+  const openCopy = (s) => { setForm({...s, date: new Date().toISOString().split("T")[0], duration: String(s.duration), distance: s.distance||"", calories: s.calories||"", fcMoy: s.fcMoy||"", fcMax: s.fcMax||""}); setEditingPhys(null); setShowForm(true); };
+  const handleDelete = (id) => { if (!window.confirm("Supprimer ?")) return; setPhysique(prev=>prev.filter(p=>p.id!==id)); };
+  const handleSave = () => {
+    if (!form.date || !form.duration) return;
+    const s = { ...form, duration: parseInt(form.duration) };
+    if (editingPhys) { setPhysique(prev=>prev.map(p=>p.id===editingPhys?{...p,...s}:p)); }
+    else { setPhysique(prev=>[{ id:Date.now(), ...s }, ...prev]); }
+    setShowForm(false);
+  };
 
   const SelectF = ({ label, value, options, onChange }) => (
     <div style={{ marginBottom:14 }}>
@@ -1026,37 +1097,40 @@ const PrepaPhysique = () => {
     </div>
   );
 
+  const typeMap = { "🏃 Endurance":"Endurance","💪 Force":"Force","⚡ Explosivité":"Explosivité","🏋️ Haltéro":"Haltérophilie","🔥 PPG":"PPG","🔥 Full Body":"Full Body","⚡ Vitesse":"Vitesse","🎯 Technique":"Technique","🧘 Récup":"Récupération","🏆 Compét":"Compétition" };
+
   const counts = {
-    "Semaine": mockPhysique.filter(s=>{ const d=new Date(s.date); const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return d>=w; }).length,
-    "🏃 Endurance": mockPhysique.filter(s=>s.type==="Endurance").length,
-    "💪 Force": mockPhysique.filter(s=>s.type==="Force").length,
-    "⚡ Explosivité": mockPhysique.filter(s=>s.type==="Explosivité").length,
-    "🏋️ Haltéro": mockPhysique.filter(s=>s.type==="Haltérophilie").length,
-    "🔥 PPG": mockPhysique.filter(s=>s.type==="PPG").length,
-    "🔥 Full Body": mockPhysique.filter(s=>s.type==="Full Body").length,
-    "⚡ Vitesse": mockPhysique.filter(s=>s.type==="Vitesse").length,
-    "🎯 Technique": mockPhysique.filter(s=>s.type==="Technique").length,
-    "🧘 Récup": mockPhysique.filter(s=>s.type==="Récupération").length,
-    "🏆 Compét": mockPhysique.filter(s=>s.type==="Compétition").length,
+    "Toutes": physique.length,
+    "Semaine": physique.filter(s=>{ const d=new Date(s.date); const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return d>=w; }).length,
+    "🏃 Endurance": physique.filter(s=>s.type==="Endurance").length,
+    "💪 Force": physique.filter(s=>s.type==="Force").length,
+    "⚡ Explosivité": physique.filter(s=>s.type==="Explosivité").length,
+    "🏋️ Haltéro": physique.filter(s=>s.type==="Haltérophilie").length,
+    "🔥 PPG": physique.filter(s=>s.type==="PPG").length,
+    "🔥 Full Body": physique.filter(s=>s.type==="Full Body").length,
+    "⚡ Vitesse": physique.filter(s=>s.type==="Vitesse").length,
+    "🎯 Technique": physique.filter(s=>s.type==="Technique").length,
+    "🧘 Récup": physique.filter(s=>s.type==="Récupération").length,
+    "🏆 Compét": physique.filter(s=>s.type==="Compétition").length,
   };
 
-  const filtered = mockPhysique.filter(s => {
+  const filtered = physique.filter(s => {
+    if (activeFilter === "Toutes") return true;
     if (activeFilter === "Semaine") { const d=new Date(s.date); const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return d>=w; }
-    const typeMap = { "🏃 Endurance":"Endurance","💪 Force":"Force","⚡ Explosivité":"Explosivité","🏋️ Haltéro":"Haltérophilie","🔥 PPG":"PPG","🔥 Full Body":"Full Body","⚡ Vitesse":"Vitesse","🎯 Technique":"Technique","🧘 Récup":"Récupération","🏆 Compét":"Compétition" };
     return !typeMap[activeFilter] || s.type === typeMap[activeFilter];
   });
 
-  const avgDurPhys = mockPhysique.length ? Math.round(mockPhysique.reduce((a,b)=>a+b.duration,0)/mockPhysique.length) : 0;
+  const avgDurPhys = physique.length ? Math.round(physique.reduce((a,b)=>a+b.duration,0)/physique.length) : 0;
 
   const typeColor = (t) => ({ "PPG":C.red,"Full Body":C.red,"Haltérophilie":C.blue,"Endurance":C.green,"Explosivité":C.orange,"Technique":C.primary,"Compétition":C.yellow,"Vitesse":C.accent }[t] || C.primary);
 
   return (
     <div>
       <SectionHeader icon="💪" title="Préparation Physique" subtitle="Suivez toutes vos séances de préparation physique" color={C.blue}
-        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.blue, fontSize:12 }}><Plus size={12}/> Nouvelle séance</Btn>} />
+        action={<Btn onClick={openAdd} color="#fff" style={{ color:C.blue, fontSize:12 }}><Plus size={12}/> Nouvelle séance</Btn>} />
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:14 }}>
-        {[{l:"Séances totales",v:mockPhysique.length,c:C.blue},{l:"Durée moyenne",v:avgDurPhys+" min",c:C.orange},{l:"Cette semaine",v:counts["Semaine"],c:C.green}].map(s=>(
+        {[{l:"Séances totales",v:physique.length,c:C.blue},{l:"Durée moyenne",v:avgDurPhys+" min",c:C.orange},{l:"Cette semaine",v:counts["Semaine"],c:C.green}].map(s=>(
           <div key={s.l} style={{ background:C.card, borderRadius:12, padding:12, border:"1px solid "+C.border, textAlign:"center" }}>
             <div style={{ fontSize:11, color:C.muted }}>{s.l}</div>
             <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.v}</div>
@@ -1075,26 +1149,38 @@ const PrepaPhysique = () => {
       ) : filtered.map(s=>(
         <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid "+typeColor(s.type)+"33", padding:16, marginBottom:12 }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
-            <div>
+            <div style={{ cursor:"pointer", flex:1 }} onClick={()=>setExpandedId(expandedId===s.id?null:s.id)}>
               <div style={{ display:"flex", alignItems:"center", gap:6 }}>
                 <Badge label={s.type} color={typeColor(s.type)}/>
+                {s.subType && s.subType!==s.type && <span style={{ fontSize:11, color:C.muted }}>{s.subType}</span>}
                 {s.programme && <span style={{ fontSize:11, color:C.muted }}>{s.programme}</span>}
               </div>
               <div style={{ color:C.muted, fontSize:11, marginTop:2 }}>{s.date}{s.coach?" · "+s.coach:""}</div>
             </div>
-            <div style={{ display:"flex", gap:6 }}>
-              <button style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
-              <button style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
+            <div style={{ display:"flex", gap:5, flexShrink:0 }}>
+              <button onClick={()=>openEdit(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={13}/></button>
+              <button onClick={()=>openCopy(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
+              <button onClick={()=>handleDelete(s.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={13}/></button>
             </div>
           </div>
-          <div style={{ display:"flex", gap:16, marginBottom:s.notes?8:0 }}>
+          <div style={{ display:"flex", gap:16, marginBottom:s.notes?8:0, flexWrap:"wrap" }}>
             <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
             {s.distance && <span style={{ fontSize:12, color:C.muted }}>📏 <strong style={{ color:C.text }}>{s.distance}</strong></span>}
             {s.intensite && <span style={{ fontSize:12, color:C.muted }}>⚡ <strong style={{ color:C.text }}>{s.intensite}</strong></span>}
+            {s.satisfaction && <span style={{ fontSize:12, color:C.muted }}>⭐ <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>}
           </div>
           {s.notes && <div style={{ background:typeColor(s.type)+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+typeColor(s.type) }}>
             <div style={{ fontSize:11, color:typeColor(s.type) }}>{s.notes}</div>
           </div>}
+          {expandedId===s.id && (
+            <div style={{ marginTop:10, borderTop:"1px solid "+C.border, paddingTop:10, fontSize:12, color:C.muted, display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
+              {s.ressenti && <span>😊 Ressenti: <strong style={{color:C.text}}>{s.ressenti}</strong></span>}
+              {s.statut && <span>📌 Statut: <strong style={{color:C.text}}>{s.statut}</strong></span>}
+              {s.fcMoy && <span>❤️ FC moy: <strong style={{color:C.text}}>{s.fcMoy} bpm</strong></span>}
+              {s.fcMax && <span>❤️ FC max: <strong style={{color:C.text}}>{s.fcMax} bpm</strong></span>}
+              {s.calories && <span>🔥 Calories: <strong style={{color:C.text}}>{s.calories}</strong></span>}
+            </div>
+          )}
         </div>
       ))}
 
@@ -1134,7 +1220,7 @@ const PrepaPhysique = () => {
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={()=>setShowForm(false)} style={{ background:C.blue, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}>💾 Enregistrer</button>
+                <button onClick={handleSave} style={{ background:C.blue, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}>💾 {editingPhys?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
@@ -1146,9 +1232,11 @@ const PrepaPhysique = () => {
 
 // ─── COMPÉTITIONS ─────────────────────────────────────────────────────────────
 const COMP_COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Jérémie","Michel","Autre"];
-const COMP_MONTHS = ["Mai 2026","Avril 2026","Mars 2026","Janvier 2026","Décembre 2025","Novembre 2025","Octobre 2025","Septembre 2025"];
+const TOUR_NOMS = ["1er tour","2ème tour","3ème tour","Huitième de Finale","Quart de Finale","Demi Finale","Finale","Finale de Bronze","1er tour de repêchage","2ème tour de repêchage"];
+const FLAG_SCORES = ["5-0","4-1","3-2","2-3","1-4","0-5","7-0","6-1","5-2","4-3","3-4","2-5","1-6","0-7"];
 
 const RESULT_COLOR = (r) => {
+  if (!r) return C.muted;
   if (r.includes("Or")) return C.yellow;
   if (r.includes("Argent")) return "#94A3B8";
   if (r.includes("Bronze")) return "#CD7F32";
@@ -1156,82 +1244,124 @@ const RESULT_COLOR = (r) => {
   return C.orange;
 };
 
-const Competitions = () => {
-  const [activeMois, setActiveMois] = useState("Mai 2026");
+const EMPTY_COMP = { nom:"", date:"", lieu:"", statut:"À venir", coach:"", resultat:"", recordPerso:false, tours:[], lienVideo:"", notes:"" };
+const EMPTY_TOUR = { nom:"1er tour", kata:"Gojūshiho Shō", scoreType:"Drapeaux", score:"5-0", ok:true, note:"" };
+
+const Competitions = ({ competitions, setCompetitions }) => {
+  const allMonths = [...new Set(competitions.map(c => {
+    const d = new Date(c.date);
+    return d.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+  }))];
+  const [activeMois, setActiveMois] = useState(allMonths[0] || "");
   const [showForm, setShowForm] = useState(false);
-  const [editComp, setEditComp] = useState(null);
-  const [form, setForm] = useState({ nom:"", date:"", lieu:"", statut:"À venir", coach:"", resultat:"", recordPerso:false, tours:[], lienVideo:"", notes:"" });
-  const [newTour, setNewTour] = useState({ nom:"", kata:"", score:"", ok:true, note:"" });
+  const [editId, setEditId] = useState(null);
+  const [form, setForm] = useState(EMPTY_COMP);
+  const [newTour, setNewTour] = useState(EMPTY_TOUR);
+
+  const openAdd = () => { setForm(EMPTY_COMP); setEditId(null); setShowForm(true); };
+  const openEdit = (c) => { setForm({...c}); setEditId(c.id); setShowForm(true); };
+  const openCopy = (c) => { setForm({...c, nom: c.nom+" (copie)", date: new Date().toISOString().split("T")[0]}); setEditId(null); setShowForm(true); };
 
   const addTour = () => {
+    if (!newTour.nom || !newTour.kata) return;
     setForm(f=>({...f, tours:[...f.tours, { ...newTour, num: f.tours.length+1 }]}));
-    setNewTour({ nom:"", kata:"", score:"", ok:true, note:"" });
+    setNewTour(EMPTY_TOUR);
   };
+
+  const removeTour = (idx) => setForm(f=>({...f, tours: f.tours.filter((_,i)=>i!==idx).map((t,i)=>({...t,num:i+1}))}));
+
+  const handleSave = () => {
+    if (!form.nom || !form.date) return;
+    if (editId) {
+      setCompetitions(prev => prev.map(c => c.id === editId ? { ...c, ...form } : c));
+    } else {
+      setCompetitions(prev => [{ id: Date.now(), ...form, hasVideo: !!form.lienVideo }, ...prev]);
+    }
+    setShowForm(false);
+  };
+
+  const handleDelete = (id) => {
+    if (!window.confirm("Supprimer cette compétition ?")) return;
+    setCompetitions(prev => prev.filter(c => c.id !== id));
+  };
+
+  const filteredComps = competitions.filter(c => {
+    const d = new Date(c.date);
+    const mois = d.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+    return mois === activeMois;
+  });
+
+  const CompSF = ({ label, value, options, onChange }) => (
+    <div>
+      <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{label}</label>
+      <select value={value} onChange={e=>onChange(e.target.value)} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+        {options.map(o=><option key={o}>{o}</option>)}
+      </select>
+    </div>
+  );
 
   return (
     <div>
       <SectionHeader icon="🏆" title="Compétitions" subtitle="Suivez vos performances et résultats 🥇" color={C.orange}
-        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle compétition</Btn>} />
+        action={<Btn onClick={openAdd} color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle compétition</Btn>} />
+
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:14 }}>
+        {[{l:"Compétitions",v:competitions.length,c:C.orange},{l:"Victoires",v:competitions.filter(c=>c.result?.includes("Or")||c.result?.includes("1er")).length,c:C.yellow},{l:"Avec vidéo",v:competitions.filter(c=>c.lienVideo||c.hasVideo).length,c:C.primary}].map(s=>(
+          <div key={s.l} style={{ background:C.card, borderRadius:12, padding:12, border:"1px solid "+C.border, textAlign:"center" }}>
+            <div style={{ fontSize:11, color:C.muted }}>{s.l}</div>
+            <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.v}</div>
+          </div>
+        ))}
+      </div>
+
       <div style={{ fontWeight:700, marginBottom:10, fontSize:14 }}>Historique</div>
       <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:8, marginBottom:16 }}>
-        {COMP_MONTHS.map(m=><FilterPill key={m} label={m} active={activeMois===m} onClick={()=>setActiveMois(m)} />)}
+        {allMonths.map(m=><FilterPill key={m} label={m} active={activeMois===m} onClick={()=>setActiveMois(m)} />)}
       </div>
-      {mockCompetitions.filter(c => {
-        const d = new Date(c.date);
-        const moisMap = {"Mai 2026":"2026-05","Avril 2026":"2026-04","Mars 2026":"2026-03","Janvier 2026":"2026-01","Décembre 2025":"2025-12","Novembre 2025":"2025-11","Octobre 2025":"2025-10","Septembre 2025":"2025-09"};
-        return c.date.startsWith(moisMap[activeMois] || "");
-      }).map(c=>(
+
+      {filteredComps.length === 0 && <EmptyState icon={<Trophy size={24}/>} title="Aucune compétition ce mois" sub="Essayez un autre mois" action={{ label:"Ajouter", fn:openAdd }}/>}
+
+      {filteredComps.map(c=>(
         <div key={c.id} style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12 }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:4 }}>
-            <div style={{ fontWeight:700, fontSize:15 }}>{c.name}</div>
-            <div style={{ display:"flex", gap:6 }}>
-              {c.hasVideo && (
-                <button style={{ background:C.primary+"22", border:"1px solid "+C.primary+"44", borderRadius:8, padding:"4px 10px", fontSize:11, color:C.primary, cursor:"pointer", display:"flex", alignItems:"center", gap:4 }}>
+            <div style={{ fontWeight:700, fontSize:15, flex:1, marginRight:8 }}>{c.name || c.nom}</div>
+            <div style={{ display:"flex", gap:5, flexShrink:0 }}>
+              {(c.lienVideo || c.hasVideo) && (
+                <button onClick={()=>c.lienVideo&&window.open(c.lienVideo,"_blank")} style={{ background:C.primary+"22", border:"1px solid "+C.primary+"44", borderRadius:8, padding:"4px 8px", fontSize:11, color:C.primary, cursor:"pointer", display:"flex", alignItems:"center", gap:4 }}>
                   <Video size={12}/> Vidéo
                 </button>
               )}
-              <button onClick={()=>setEditComp(editComp===c.id?null:c.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={14}/></button>
+              <button onClick={()=>openEdit(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={13}/></button>
+              <button onClick={()=>openCopy(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
+              <button onClick={()=>handleDelete(c.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={13}/></button>
             </div>
           </div>
           <div style={{ color:C.muted, fontSize:11, marginBottom:10 }}>📅 {c.date} · 📍 {c.lieu} · 👤 {c.coach}</div>
-          <div style={{ background:RESULT_COLOR(c.result)+"22", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+RESULT_COLOR(c.result), marginBottom:12 }}>
-            <span style={{ color:RESULT_COLOR(c.result), fontWeight:700, fontSize:13 }}>🏆 Résultat : {c.result}</span>
-          </div>
-          <div style={{ fontWeight:600, fontSize:12, marginBottom:8, color:C.muted }}>Tours de la compétition :</div>
-          {c.tours.map(t=>(
-            <div key={t.num} style={{ background:C.bg, borderRadius:10, padding:"12px", marginBottom:8, display:"flex", alignItems:"flex-start", gap:10 }}>
-              <div style={{ flex:1 }}>
-                <div style={{ display:"flex", gap:6, marginBottom:4, flexWrap:"wrap" }}>
-                  <Badge label={"Tour "+t.num} color={C.orange}/><span style={{ fontWeight:600, fontSize:13 }}>{t.name}</span>
-                </div>
-                <div style={{ fontSize:12, color:C.muted }}>Kata: <strong style={{ color:C.text }}>{t.kata}</strong> · Score: <strong style={{ color:C.text }}>{t.score}</strong></div>
-                {t.note && <div style={{ fontSize:11, color:C.muted, marginTop:2, fontStyle:"italic" }}>{t.note}</div>}
-              </div>
-              {t.ok ? <CheckCircle2 color={C.green} size={18}/> : <XCircle color={C.red} size={18}/>}
-            </div>
-          ))}
-          {c.notes && (
-            <div style={{ background:C.primary+"11", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.primary, marginTop:6 }}>
-              <div style={{ fontSize:11, color:C.primary }}>📝 {c.notes}</div>
+          {(c.result||c.resultat) && (
+            <div style={{ background:RESULT_COLOR(c.result||c.resultat)+"22", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+RESULT_COLOR(c.result||c.resultat), marginBottom:12 }}>
+              <span style={{ color:RESULT_COLOR(c.result||c.resultat), fontWeight:700, fontSize:13 }}>🏆 Résultat : {c.result||c.resultat}</span>
             </div>
           )}
-
-          {/* Formulaire d'édition inline */}
-          {editComp === c.id && (
-            <div style={{ marginTop:12, background:C.bg, borderRadius:12, padding:14, border:"1px solid "+C.border }}>
-              <div style={{ fontWeight:600, fontSize:13, marginBottom:10 }}>✏️ Modifier la compétition</div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:10 }}>
-                {[["Nom","nom",c.name],["Lieu","lieu",c.lieu],["Résultat","resultat",c.result],["Coach","coach",c.coach]].map(([l,k,v])=>(
-                  <div key={k}>
-                    <label style={{ fontSize:11, fontWeight:600, display:"block", marginBottom:3 }}>{l}</label>
-                    <input defaultValue={v} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:6, padding:"7px 10px", fontSize:12, boxSizing:"border-box" }}/>
+          {c.tours && c.tours.length > 0 && (
+            <>
+              <div style={{ fontWeight:600, fontSize:12, marginBottom:8, color:C.muted }}>Tours de la compétition :</div>
+              {c.tours.map((t,i)=>(
+                <div key={i} style={{ background:C.bg, borderRadius:10, padding:"10px 12px", marginBottom:8, display:"flex", alignItems:"flex-start", gap:10 }}>
+                  <div style={{ flex:1 }}>
+                    <div style={{ display:"flex", gap:6, marginBottom:4, flexWrap:"wrap" }}>
+                      <Badge label={"Tour "+t.num} color={C.orange}/><span style={{ fontWeight:600, fontSize:13 }}>{t.name||t.nom}</span>
+                    </div>
+                    <div style={{ fontSize:12, color:C.muted }}>Kata: <strong style={{ color:C.text }}>{t.kata}</strong> · Score: <strong style={{ color:C.text }}>{t.score}</strong></div>
+                    {t.note && <div style={{ fontSize:11, color:C.muted, marginTop:2, fontStyle:"italic" }}>{t.note}</div>}
                   </div>
-                ))}
-              </div>
-              <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
-                <button onClick={()=>setEditComp(null)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:6, padding:"6px 14px", fontSize:12, cursor:"pointer" }}>Annuler</button>
-                <button onClick={()=>setEditComp(null)} style={{ background:C.orange, border:"none", borderRadius:6, padding:"6px 14px", fontSize:12, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
-              </div>
+                  {t.ok ? <CheckCircle2 color={C.green} size={18}/> : <XCircle color={C.red} size={18}/>}
+                </div>
+              ))}
+            </>
+          )}
+          {(c.notes||c.note) && (
+            <div style={{ background:C.primary+"11", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.primary, marginTop:6 }}>
+              <div style={{ fontSize:11, color:C.primary }}>📝 {c.notes||c.note}</div>
             </div>
           )}
         </div>
@@ -1240,8 +1370,8 @@ const Competitions = () => {
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
           <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
-            <div style={{ background:"linear-gradient(135deg, "+C.orange+", "+C.yellow+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
-              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle compétition</div>
+            <div style={{ background:"linear-gradient(135deg, "+C.orange+", "+C.yellow+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between", position:"sticky", top:0, zIndex:10 }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>{editId ? "Modifier" : "Nouvelle"} compétition</div>
               <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
             </div>
             <div style={{ padding:"20px 24px" }}>
@@ -1254,54 +1384,65 @@ const Competitions = () => {
                   <input type="text" value={form.lieu} onChange={e=>setForm(f=>({...f,lieu:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Statut *</label>
-                  <select value={form.statut} onChange={e=>setForm(f=>({...f,statut:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
-                    {["À venir","Terminée","Annulée"].map(o=><option key={o}>{o}</option>)}
-                  </select></div>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Nom du coach</label>
-                  <select value={form.coach} onChange={e=>setForm(f=>({...f,coach:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
-                    <option>Sélectionner un coach</option>
-                    {COMP_COACHES.map(o=><option key={o}>{o}</option>)}
-                  </select></div>
+                <CompSF label="Statut" value={form.statut} options={["À venir","Terminée","Annulée"]} onChange={v=>setForm(f=>({...f,statut:v}))} />
+                <CompSF label="Coach" value={form.coach} options={["Sélectionner...", ...COMP_COACHES]} onChange={v=>setForm(f=>({...f,coach:v}))} />
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Résultat</label>
-                  <input type="text" placeholder="Médaille d'or, 1ère place..." value={form.resultat} onChange={e=>setForm(f=>({...f,resultat:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                  <input type="text" placeholder="Médaille d'or..." value={form.resultat} onChange={e=>setForm(f=>({...f,resultat:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
                 <div style={{ display:"flex", alignItems:"center", gap:8, paddingTop:22 }}>
                   <input type="checkbox" checked={form.recordPerso} onChange={e=>setForm(f=>({...f,recordPerso:e.target.checked}))} style={{ width:16, height:16 }}/>
-                  <label style={{ fontSize:13 }}>Record personnel battu</label>
+                  <label style={{ fontSize:13 }}>Record personnel</label>
                 </div>
               </div>
 
+              {/* Tours */}
               <div style={{ marginBottom:14 }}>
                 <div style={{ fontWeight:600, fontSize:13, marginBottom:10 }}>Tours de la compétition</div>
                 {form.tours.map((t,i)=>(
-                  <div key={i} style={{ background:C.bg, borderRadius:10, padding:12, marginBottom:8, fontSize:12 }}>
-                    Tour {t.num} · {t.nom} · Kata: {t.kata} · Score: {t.score}
+                  <div key={i} style={{ background:C.bg, borderRadius:10, padding:"10px 12px", marginBottom:8, display:"flex", justifyContent:"space-between", alignItems:"center", fontSize:12 }}>
+                    <span>Tour {t.num} · <strong>{t.nom}</strong> · {t.kata} · <strong>{t.score}</strong> · {t.ok?"✅":"❌"}</span>
+                    <button onClick={()=>removeTour(i)} style={{ background:"none", border:"none", color:C.red, cursor:"pointer", fontSize:16 }}>×</button>
                   </div>
                 ))}
-                <div style={{ background:C.bg, borderRadius:10, padding:12, border:"1px dashed "+C.border }}>
-                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:8 }}>
-                    {[["Nom du tour","nom"],["Kata","kata"],["Score","score"]].map(([l,k])=>(
-                      <div key={k}><label style={{ fontSize:11, display:"block", marginBottom:3 }}>{l}</label>
-                        <input type="text" placeholder={l} value={newTour[k]} onChange={e=>setNewTour(t=>({...t,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:6, padding:"7px 10px", fontSize:12, boxSizing:"border-box" }}/></div>
-                    ))}
+                <div style={{ background:C.bg, borderRadius:10, padding:14, border:"1px dashed "+C.border }}>
+                  <div style={{ fontWeight:600, fontSize:12, marginBottom:10, color:C.orange }}>+ Ajouter un tour</div>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
+                    <CompSF label="Nom du tour" value={newTour.nom} options={TOUR_NOMS} onChange={v=>setNewTour(t=>({...t,nom:v}))} />
+                    <CompSF label="Kata" value={newTour.kata} options={KATAS_LIST} onChange={v=>setNewTour(t=>({...t,kata:v}))} />
                   </div>
-                  <div style={{ display:"flex", gap:8, alignItems:"center", marginBottom:8 }}>
-                    <input type="checkbox" checked={newTour.ok} onChange={e=>setNewTour(t=>({...t,ok:e.target.checked}))}/>
-                    <label style={{ fontSize:12 }}>Qualifié / Victoire</label>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:10 }}>
+                    <CompSF label="Type de score" value={newTour.scoreType} options={["Drapeaux","Chiffré"]} onChange={v=>setNewTour(t=>({...t,scoreType:v,score:v==="Drapeaux"?"5-0":""}))} />
+                    <div>
+                      <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Score</label>
+                      {newTour.scoreType === "Drapeaux" ? (
+                        <select value={newTour.score} onChange={e=>setNewTour(t=>({...t,score:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
+                          {FLAG_SCORES.map(s=><option key={s}>{s}</option>)}
+                        </select>
+                      ) : (
+                        <input type="text" placeholder="Ex: 23.3" value={newTour.score} onChange={e=>setNewTour(t=>({...t,score:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/>
+                      )}
+                    </div>
                   </div>
-                  <button onClick={addTour} style={{ background:C.orange+"22", border:"1px solid "+C.orange, borderRadius:8, padding:"6px 14px", fontSize:12, color:C.orange, cursor:"pointer" }}>+ Ajouter ce tour</button>
+                  <div style={{ marginBottom:10 }}>
+                    <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Note (optionnel)</label>
+                    <input type="text" placeholder="Ressenti, observation..." value={newTour.note} onChange={e=>setNewTour(t=>({...t,note:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/>
+                  </div>
+                  <div style={{ display:"flex", gap:8, alignItems:"center", marginBottom:10 }}>
+                    <input type="checkbox" checked={newTour.ok} onChange={e=>setNewTour(t=>({...t,ok:e.target.checked}))} style={{ width:16, height:16 }}/>
+                    <label style={{ fontSize:13 }}>Qualifié / Victoire</label>
+                  </div>
+                  <button onClick={addTour} style={{ background:C.orange+"22", border:"1px solid "+C.orange, borderRadius:8, padding:"8px 16px", fontSize:12, color:C.orange, cursor:"pointer", fontWeight:600 }}>+ Ajouter ce tour</button>
                 </div>
               </div>
 
-              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Lien vidéo</label>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>🎬 Lien vidéo (Google Drive, YouTube…)</label>
                 <input type="text" placeholder="https://..." value={form.lienVideo} onChange={e=>setForm(f=>({...f,lienVideo:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Notes</label>
                 <textarea rows={3} value={form.notes} onChange={e=>setForm(f=>({...f,notes:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={()=>setShowForm(false)} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+                <button onClick={handleSave} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 {editId?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
@@ -1318,36 +1459,100 @@ const CORR_CATEGORIES = ["Technique","Position","Rythme","Kimé","Autre"];
 const Corrections = ({ sessions }) => {
   const [activeFilter, setActiveFilter] = useState("Toutes");
   const [showForm, setShowForm] = useState(false);
+  const [editingCorr, setEditingCorr] = useState(null);
   const [form, setForm] = useState({ kata:"", entraineur:"", date:"", categorie:"Technique", commentaires:"", coachFeedback:"" });
 
-  const allCorrections = [
-    ...mockCorrections,
-    ...sessions.filter(s=>s.notes&&s.notes.length>0).slice(0,20).map((s,i)=>({ id:1000+i, date:s.date, trainer:s.coach||"Entraîneur", kata:s.katas?.[0]||"", content:s.notes }))
-  ];
+  const sessionCorrs = sessions.filter(s=>s.notes&&s.notes.length>0).map((s,i)=>({
+    id:1000+i, date:s.date, trainer:s.coach||"Entraîneur", kata:s.katas?.[0]||"", content:s.notes
+  }));
+
+  const [extraCorrs, setExtraCorrs] = useState([]);
+  const allCorrections = [...mockCorrections, ...sessionCorrs, ...extraCorrs];
+
+  const openEdit = (c) => {
+    setEditingCorr(c.id);
+    setForm({ kata:c.kata||"", entraineur:c.trainer||"", date:c.date||"", categorie:c.categorie||"Technique", commentaires:c.content||"", coachFeedback:"" });
+    setShowForm(true);
+  };
+  const openCopy = (c) => {
+    setEditingCorr(null);
+    setForm({ kata:c.kata||"", entraineur:c.trainer||"", date:new Date().toISOString().split("T")[0], categorie:c.categorie||"Technique", commentaires:c.content||"", coachFeedback:"" });
+    setShowForm(true);
+  };
+  const handleSave = () => {
+    if (!form.commentaires) return;
+    const newC = { id: editingCorr || Date.now(), date:form.date, trainer:form.entraineur, kata:form.kata, content:form.commentaires, categorie:form.categorie };
+    if (editingCorr && editingCorr >= 1000 && editingCorr < 2000) {
+      // can't edit session-derived corrections
+    } else if (editingCorr) {
+      setExtraCorrs(prev => prev.map(c=>c.id===editingCorr?newC:c));
+      // also update mockCorrections if needed
+    } else {
+      setExtraCorrs(prev => [newC, ...prev]);
+    }
+    setShowForm(false);
+    setEditingCorr(null);
+  };
+
+  const getWeekKey = (dateStr) => {
+    const d = new Date(dateStr);
+    const day = d.getDay() || 7;
+    const monday = new Date(d); monday.setDate(d.getDate() - day + 1);
+    return monday.toISOString().split("T")[0];
+  };
+
+  const renderList = (list) => list.map((c,i)=>(
+    <div key={i} style={{ background:C.card, borderRadius:12, border:"1px solid "+C.border, padding:14, marginBottom:10, display:"flex", gap:12 }}>
+      <div style={{ width:3, borderRadius:4, background:C.orange, flexShrink:0 }} />
+      <div style={{ flex:1 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4, flexWrap:"wrap" }}>
+          <Avatar name={c.trainer||"?"} size={26} bg={C.primary} />
+          <strong style={{ fontSize:13 }}>{c.trainer}</strong>
+          {c.kata && <Badge label={c.kata} color={C.blue}/>}
+          <span style={{ color:C.muted, fontSize:11 }}>{c.date}</span>
+        </div>
+        <div style={{ fontSize:12, color:C.text }}>{c.content}</div>
+      </div>
+      <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
+        <button onClick={()=>openEdit(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={12}/></button>
+        <button onClick={()=>openCopy(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
+      </div>
+    </div>
+  ));
+
+  const renderGrouped = (groupFn, labelFn) => {
+    const groups = {};
+    allCorrections.forEach(c => { const k = groupFn(c); if (!groups[k]) groups[k]=[]; groups[k].push(c); });
+    return Object.entries(groups).sort((a,b)=>b[0].localeCompare(a[0])).map(([key,list])=>(
+      <div key={key} style={{ marginBottom:20 }}>
+        <div style={{ background:C.orange+"22", borderRadius:8, padding:"6px 12px", marginBottom:10, fontWeight:700, fontSize:12, color:C.orange, border:"1px solid "+C.orange+"44" }}>{labelFn(key, list)}</div>
+        {renderList(list)}
+      </div>
+    ));
+  };
 
   return (
     <div>
       <SectionHeader icon="⏱" title="Corrections" subtitle="Points techniques à travailler" color={C.orange}
-        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle correction</Btn>} />
+        action={<Btn onClick={()=>{setEditingCorr(null);setForm({kata:"",entraineur:"",date:new Date().toISOString().split("T")[0],categorie:"Technique",commentaires:"",coachFeedback:""});setShowForm(true);}} color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle correction</Btn>} />
       <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap" }}>
         {["Toutes","Par semaine","Par entraîneur","Par kata"].map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} />)}
       </div>
       <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{allCorrections.length} corrections</div>
-      {allCorrections.slice(0,25).map((c,i)=>(
-        <div key={i} style={{ background:C.card, borderRadius:12, border:"1px solid "+C.border, padding:14, marginBottom:10, display:"flex", gap:12 }}>
-          <div style={{ width:3, borderRadius:4, background:C.orange, flexShrink:0 }} />
-          <div style={{ flex:1 }}>
-            <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4, flexWrap:"wrap" }}>
-              <Avatar name={c.trainer||"?"} size={26} bg={C.primary} />
-              <strong style={{ fontSize:13 }}>{c.trainer}</strong>
-              {c.kata && <Badge label={c.kata} color={C.blue}/>}
-              <span style={{ color:C.muted, fontSize:11 }}>{c.date}</span>
-            </div>
-            <div style={{ fontSize:12, color:C.text }}>{c.content}</div>
-          </div>
-          <button style={{ background:"none", border:"none", cursor:"pointer", color:C.muted }}><X size={14}/></button>
-        </div>
-      ))}
+
+      {activeFilter === "Toutes" && renderList(allCorrections)}
+      {activeFilter === "Par semaine" && renderGrouped(
+        c => getWeekKey(c.date),
+        (key, list) => { const d = new Date(key); const end = new Date(d); end.setDate(d.getDate()+6); return `Semaine du ${d.toLocaleDateString("fr-FR")} au ${end.toLocaleDateString("fr-FR")} (${list.length})`; }
+      )}
+      {activeFilter === "Par entraîneur" && renderGrouped(
+        c => c.trainer || "Non renseigné",
+        (key, list) => `${key} — ${list.length} correction${list.length>1?"s":""}`
+      )}
+      {activeFilter === "Par kata" && renderGrouped(
+        c => c.kata || "Non renseigné",
+        (key, list) => `${key} — ${list.length} correction${list.length>1?"s":""}`
+      )}
 
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
@@ -1423,37 +1628,65 @@ const mockVideos = {
   ],
 };
 
-const Videos = () => {
+const Videos = ({ competitions }) => {
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ titre:"", categorie:"Kata", date:"", uploadePar:"", description:"" });
+  const [extraVideos, setExtraVideos] = useState([]);
+  const [form, setForm] = useState({ titre:"", categorie:"Kata", date:"", lien:"", description:"" });
+
+  // Competitions videos from state
+  const compVideos = (competitions || []).filter(c => c.lienVideo || c.hasVideo).map(c => ({
+    id: "comp_"+c.id,
+    titre: (new Date(c.date).toLocaleDateString("fr-FR", {day:"2-digit",month:"short",year:"numeric"})) + " – " + (c.name||c.nom),
+    date: c.date,
+    cat: "Compét.",
+    lien: c.lienVideo || null,
+  }));
+
+  const handleSave = () => {
+    if (!form.titre) return;
+    setExtraVideos(prev => [{ id: Date.now(), ...form, cat: form.categorie }, ...prev]);
+    setShowForm(false);
+  };
+
+  const openVideo = (v) => {
+    if (v.lien) window.open(v.lien, "_blank");
+    else if (v.url) window.open(v.url, "_blank");
+  };
+
+  const PERSO_VIDEOS = [...mockVideos["💪 Cours Persos"], ...extraVideos.filter(v=>v.cat!=="Compét.")];
+
+  const renderGrid = (videos) => (
+    <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12 }}>
+      {videos.map(v=>(
+        <div key={v.id} onClick={()=>openVideo(v)} style={{ background:"#1a1a2e", borderRadius:12, overflow:"hidden", cursor: (v.lien||v.url) ? "pointer" : "default", opacity:(v.lien||v.url)?1:0.7 }}>
+          <div style={{ height:90, display:"flex", alignItems:"center", justifyContent:"center", color: (v.lien||v.url) ? "#ffffff88" : "#ffffff33", position:"relative" }}>
+            <Video size={28}/>
+            {(v.lien||v.url) && <div style={{ position:"absolute", bottom:6, right:6, background:"#ffffff22", borderRadius:4, padding:"2px 6px", fontSize:9, color:"#fff" }}>▶ Ouvrir</div>}
+          </div>
+          <div style={{ padding:"8px 10px", background:C.card, borderTop:"1px solid "+C.border }}>
+            <div style={{ fontSize:11, fontWeight:600, marginBottom:3, color:C.text, lineHeight:1.3 }}>{v.titre}</div>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+              <span style={{ fontSize:10, color:C.muted }}>{v.date}</span>
+              <Badge label={v.cat} color={C.orange}/>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div>
       <SectionHeader icon="🎬" title="Vidéos" subtitle="Bibliothèque de vidéos d'entraînement" color="#DC2626"
         action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:"#DC2626", fontSize:12 }}><Plus size={12}/> Ajouter une vidéo</Btn>} />
 
-      {Object.entries(mockVideos).map(([section, videos])=>(
+      {[["🏆 Compétitions", compVideos], ["💪 Cours Persos", PERSO_VIDEOS]].map(([section, videos])=>(
         <div key={section} style={{ marginBottom:24 }}>
           <div style={{ background:C.yellow+"22", borderRadius:12, padding:"12px 16px", marginBottom:12, display:"flex", justifyContent:"space-between", alignItems:"center", border:"1px solid "+C.yellow+"44" }}>
             <span style={{ fontWeight:700, fontSize:14, color:C.orange }}>{section}</span>
             <span style={{ background:C.yellow+"44", borderRadius:"50%", width:28, height:28, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:700 }}>{videos.length}</span>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12 }}>
-            {videos.map(v=>(
-              <div key={v.id} style={{ background:"#1a1a2e", borderRadius:12, overflow:"hidden", cursor:"pointer" }}>
-                <div style={{ height:100, display:"flex", alignItems:"center", justifyContent:"center", color:"#ffffff44" }}>
-                  <Video size={32}/>
-                </div>
-                <div style={{ padding:"10px 12px", background:C.card, borderTop:"1px solid "+C.border }}>
-                  <div style={{ fontSize:12, fontWeight:600, marginBottom:4, color:C.text }}>{v.titre}</div>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                    <span style={{ fontSize:10, color:C.muted }}>{v.date}</span>
-                    <Badge label={v.cat} color={C.orange}/>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {videos.length > 0 ? renderGrid(videos) : <div style={{ color:C.muted, fontSize:12, padding:"12px 0" }}>Aucune vidéo — ajoutez un lien vidéo dans une compétition.</div>}
         </div>
       ))}
 
@@ -1467,25 +1700,21 @@ const Videos = () => {
             <div style={{ padding:"20px 24px" }}>
               <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Titre *</label>
                 <input type="text" value={form.titre} onChange={e=>setForm(f=>({...f,titre:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:14 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Catégorie</label>
                   <select value={form.categorie} onChange={e=>setForm(f=>({...f,categorie:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
                     {VIDEOS_CATEGORIES.map(c=><option key={c}>{c}</option>)}
                   </select></div>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date</label>
                   <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Uploadé par</label>
-                  <input type="text" value={form.uploadePar} onChange={e=>setForm(f=>({...f,uploadePar:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               </div>
-              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Description</label>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>🔗 Lien vidéo (Google Drive, YouTube…)</label>
+                <input type="text" placeholder="https://..." value={form.lien} onChange={e=>setForm(f=>({...f,lien:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Description</label>
                 <textarea rows={3} value={form.description} onChange={e=>setForm(f=>({...f,description:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
-              <div style={{ marginBottom:14 }}>
-                <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Vidéo *</label>
-                <div style={{ border:"2px dashed "+C.border, borderRadius:10, padding:"24px", textAlign:"center", color:C.muted, fontSize:13 }}>🎬 Cliquez pour ajouter une vidéo</div>
-              </div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={()=>setShowForm(false)} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+                <button onClick={handleSave} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
               </div>
             </div>
           </div>
@@ -1692,6 +1921,8 @@ const Equipe = ({ currentUser, onIdentify }) => {
   const [saving, setSaving] = useState(false);
   const APP_URL = "https://karate-pro.vercel.app";
 
+  const [, forceUpdate] = useState(0);
+
   useEffect(() => {
     getDocs(collection(db, "team_members")).then(snap => {
       if (!snap.empty) {
@@ -1699,6 +1930,12 @@ const Equipe = ({ currentUser, onIdentify }) => {
       }
       setLoading(false);
     }).catch(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const handler = () => forceUpdate(n=>n+1);
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
   }, []);
 
   const openAdd = () => { setForm(EMPTY_FORM); setEditingMember(null); setShowForm(true); };
@@ -1768,8 +2005,8 @@ const Equipe = ({ currentUser, onIdentify }) => {
         const emoji = ROLE_EMOJI[m.role] || "👤";
         return (
           <div key={m.firestoreId} style={{ background:C.card, borderRadius:12, border:"2px solid "+(isMe?C.primary:C.border), padding:14, marginBottom:10, display:"flex", alignItems:"flex-start", gap:12 }}>
-            <div style={{ width:44, height:44, borderRadius:"50%", background:isMe?C.primary:C.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, flexShrink:0 }}>
-              {emoji}
+            <div style={{ width:44, height:44, borderRadius:"50%", background:isMe?C.primary:C.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, flexShrink:0, overflow:"hidden", position:"relative" }}>
+              {(() => { const photo = localStorage.getItem("kp_member_photo_"+m.firestoreId); return photo ? <img src={photo} style={{ width:"100%", height:"100%", objectFit:"cover" }}/> : emoji; })()}
             </div>
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{ fontWeight:700, fontSize:14 }}>{m.prenom} {m.nom}</div>
@@ -1790,6 +2027,9 @@ const Equipe = ({ currentUser, onIdentify }) => {
                 style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:"2px 0" }}>
                 <Edit2 size={13}/>
               </button>
+              <label style={{ cursor:"pointer", color:C.muted, padding:"2px 0", fontSize:13 }}>
+                📷<input type="file" accept="image/*" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{localStorage.setItem("kp_member_photo_"+m.firestoreId,ev.target.result);window.dispatchEvent(new Event("storage"));};r.readAsDataURL(f);}}/>
+              </label>
               <button onClick={() => handleDelete(m)}
                 style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:"2px 0" }}>
                 <Trash2 size={13}/>
@@ -1834,26 +2074,91 @@ const Equipe = ({ currentUser, onIdentify }) => {
 };
 
 // ─── PROFIL ───────────────────────────────────────────────────────────────────
-const Profil = ({ sessions }) => {
+const Profil = ({ sessions, competitions }) => {
+  const [showEdit, setShowEdit] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState(() => localStorage.getItem("kp_profile_photo") || null);
+  const [profile, setProfile] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("kp_profile") || "null") || { prenom:"Iliana", nom:"Voratovic", email:"ilianavoratovic@gmail.com", sport:"Karaté Kata", club:"SKB Elite", dateNaissance:"", ville:"" }; }
+    catch { return { prenom:"Iliana", nom:"Voratovic", email:"ilianavoratovic@gmail.com", sport:"Karaté Kata", club:"SKB Elite", dateNaissance:"", ville:"" }; }
+  });
+  const [editForm, setEditForm] = useState(profile);
+
   const avgSat = sessions.length ? (sessions.reduce((a,b)=>a+b.satisfaction,0)/sessions.length).toFixed(1) : 0;
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => { const b64 = ev.target.result; setProfilePhoto(b64); localStorage.setItem("kp_profile_photo", b64); };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSaveProfile = () => {
+    setProfile(editForm);
+    localStorage.setItem("kp_profile", JSON.stringify(editForm));
+    setShowEdit(false);
+  };
+
   return (
     <div>
       <SectionHeader icon="👤" title="Profil" subtitle="Vos informations personnelles" color={C.primary} />
       <div style={{ background:C.card, borderRadius:16, border:"1px solid "+C.border, padding:24, textAlign:"center", marginBottom:16 }}>
-        <Avatar name="Iliana Voratovic" size={80} bg={C.primary} />
-        <div style={{ fontWeight:800, fontSize:20, marginTop:12 }}>Iliana Voratovic</div>
-        <Badge label="Karaté Kata" color={C.primary} />
-        <div style={{ color:C.muted, fontSize:12, marginTop:6 }}>ilianavoratovic@gmail.com</div>
-        <Btn color={C.primary} style={{ marginTop:14 }}><Edit2 size={13}/> Modifier le profil</Btn>
+        <div style={{ position:"relative", display:"inline-block", marginBottom:12 }}>
+          {profilePhoto
+            ? <img src={profilePhoto} alt="Profil" style={{ width:80, height:80, borderRadius:"50%", objectFit:"cover", border:"3px solid "+C.primary }}/>
+            : <Avatar name={profile.prenom+" "+profile.nom} size={80} bg={C.primary} />
+          }
+          <label style={{ position:"absolute", bottom:0, right:0, background:C.primary, borderRadius:"50%", width:26, height:26, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", border:"2px solid #fff" }}>
+            <input type="file" accept="image/*" onChange={handlePhotoChange} style={{ display:"none" }}/>
+            <span style={{ color:"#fff", fontSize:14 }}>📷</span>
+          </label>
+        </div>
+        <div style={{ fontWeight:800, fontSize:20 }}>{profile.prenom} {profile.nom}</div>
+        <Badge label={profile.sport} color={C.primary} />
+        {profile.club && <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>🏛️ {profile.club}</div>}
+        <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>{profile.email}</div>
+        {profile.ville && <div style={{ color:C.muted, fontSize:12 }}>📍 {profile.ville}</div>}
+        <Btn onClick={()=>{ setEditForm(profile); setShowEdit(true); }} color={C.primary} style={{ marginTop:14 }}><Edit2 size={13}/> Modifier le profil</Btn>
       </div>
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10 }}>
-        {[{l:"Séances totales",v:sessions.length,c:C.red},{l:"Compétitions",v:"9",c:C.yellow},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.green}].map(s=>(
+        {[{l:"Séances totales",v:sessions.length,c:C.red},{l:"Compétitions",v:(competitions||[]).length,c:C.yellow},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.green}].map(s=>(
           <div key={s.l} style={{ background:C.card, borderRadius:12, border:"1px solid "+C.border, padding:14, textAlign:"center" }}>
             <div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.v}</div>
             <div style={{ fontSize:10, color:C.muted, marginTop:2 }}>{s.l}</div>
           </div>
         ))}
       </div>
+
+      {showEdit && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowEdit(false)}>
+          <div style={{ background:"#fff", width:"100%", maxHeight:"90vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ background:"linear-gradient(135deg, "+C.primary+", "+C.accent+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Modifier le profil</div>
+              <button onClick={()=>setShowEdit(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+            </div>
+            <div style={{ padding:"20px 24px" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+                {[["Prénom","prenom"],["Nom","nom"],["Email","email"],["Club","club"],["Sport / Discipline","sport"],["Ville","ville"]].map(([l,k])=>(
+                  <div key={k}>
+                    <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
+                    <input type="text" value={editForm[k]||""} onChange={e=>setEditForm(f=>({...f,[k]:e.target.value}))}
+                      style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginBottom:20 }}>
+                <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date de naissance</label>
+                <input type="date" value={editForm.dateNaissance||""} onChange={e=>setEditForm(f=>({...f,dateNaissance:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/>
+              </div>
+              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+                <button onClick={()=>setShowEdit(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={handleSaveProfile} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -1861,12 +2166,38 @@ const Profil = ({ sessions }) => {
 // ─── PLANNING ─────────────────────────────────────────────────────────────────
 const Planning = () => {
   const [showForm, setShowForm] = useState(false);
+  const [activeTab, setActiveTab] = useState("planning");
   const [form, setForm] = useState({ debut:"", club:0, prepa:0, perso:0, compet:0, objectif:"", commentaireCoach:"" });
 
   return (
     <div>
       <SectionHeader icon="📅" title="Planning" subtitle="Organisez vos entraînements et planifiez vos semaines 📅" color={C.primary}
         action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Planifier semaine</Btn>} />
+
+      <div style={{ display:"flex", gap:8, marginBottom:16 }}>
+        {[["planning","📋 Planification"],["calendar","📅 Calendrier"]].map(([id,label])=>(
+          <button key={id} onClick={()=>setActiveTab(id)} style={{ flex:1, padding:"10px", borderRadius:10, border:"1.5px solid "+(activeTab===id?C.primary:C.border), background:activeTab===id?C.primary+"15":"#fff", color:activeTab===id?C.primary:C.text, fontWeight:activeTab===id?700:400, cursor:"pointer", fontSize:13 }}>{label}</button>
+        ))}
+      </div>
+
+      {activeTab === "calendar" && (
+        <div>
+          <div style={{ background:C.primary+"11", border:"1px solid "+C.primary+"33", borderRadius:10, padding:"10px 14px", marginBottom:12, fontSize:12, color:C.primary }}>
+            📅 Agenda Google de <strong>ilianavoratovic@gmail.com</strong> — Le calendrier doit être défini comme public dans les paramètres Google Calendar pour s'afficher.
+          </div>
+          <div style={{ borderRadius:14, overflow:"hidden", border:"1px solid "+C.border }}>
+            <iframe
+              src="https://calendar.google.com/calendar/embed?src=ilianavoratovic%40gmail.com&ctz=Europe%2FParis&bgcolor=%237C3AED&color=%237C3AED&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&mode=MONTH"
+              style={{ border:0, width:"100%", height:480, display:"block" }}
+              frameBorder="0"
+              scrolling="no"
+              title="Agenda Iliana"
+            />
+          </div>
+        </div>
+      )}
+
+      {activeTab === "planning" && (<div>
 
       {/* Récapitulatif S-1 */}
       <div style={{ background:C.card, borderRadius:16, border:"1px solid "+C.border, padding:16, marginBottom:16 }}>
@@ -1918,6 +2249,8 @@ const Planning = () => {
           <span style={{ fontSize:12, color:C.green }}>🎯 <strong>Objectif :</strong> Prépa Porec</span>
         </div>
       </div>
+
+      </div>)}
 
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
@@ -1988,6 +2321,7 @@ const TEAM_USERS = [
 export default function App() {
   const [page, setPage] = useState("dashboard");
   const [sessions, setSessions] = useState(ALL_SESSIONS);
+  const [competitions, setCompetitions] = useState(mockCompetitions);
   const [currentUser, setCurrentUserState] = useState(() => { try { return JSON.parse(localStorage.getItem("kp_user")||"null"); } catch { return null; } });
   const [splashVisible, setSplashVisible] = useState(true);
   const [splashOpacity, setSplashOpacity] = useState(1);
@@ -2039,14 +2373,14 @@ export default function App() {
       case "karate": return <SeancesKarate sessions={sessions} setSessions={setSessions} showToast={showToast}/>;
       case "stage": return <StageEquipe/>;
       case "physique": return <PrepaPhysique/>;
-      case "competitions": return <Competitions/>;
+      case "competitions": return <Competitions competitions={competitions} setCompetitions={setCompetitions}/>;
       case "corrections": return <Corrections sessions={sessions}/>;
-      case "videos": return <Videos/>;
+      case "videos": return <Videos competitions={competitions}/>;
       case "nutrition": return <Nutrition/>;
       case "sommeil": return <Sommeil/>;
       case "chat": return <Chat/>;
       case "equipe": return <Equipe currentUser={currentUser} onIdentify={(u)=>{setCurrentUser(u);setCurrentUserState(u);}}/>;
-      case "profil": return <Profil sessions={sessions}/>;
+      case "profil": return <Profil sessions={sessions} competitions={competitions}/>;
       default: return <EmptyState icon={<LayoutDashboard size={24}/>} title="Section à venir"/>;
     }
   };
