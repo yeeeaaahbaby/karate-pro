@@ -369,7 +369,7 @@ const Toast = ({ message, onClose }) => (
 );
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
-const Dashboard = ({ sessions }) => {
+const Dashboard = ({ sessions, competitions }) => {
   const thisWeek = sessions.filter(s => {
     const d = new Date(s.date);
     const now = new Date();
@@ -419,6 +419,26 @@ const Dashboard = ({ sessions }) => {
           </div>
         ))}
       </div>
+
+      {/* Stats semaine */}
+      {(() => {
+        const now = new Date(); const startW = new Date(now); startW.setDate(now.getDate()-now.getDay());
+        const karateW = thisWeek.length;
+        const physiqueW = mockPhysique.filter(s=>new Date(s.date)>=startW).length;
+        const corrW = mockCorrections.filter(c=>new Date(c.date)>=startW).length;
+        const compAVenir = (competitions||[]).filter(c=>c.statut==="À venir"||(!c.statut&&new Date(c.date)>=now)).length;
+        return (
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10, marginBottom:16 }}>
+            {[{icon:"🥋",label:"Karaté",val:karateW,c:C.red},{icon:"💪",label:"Prépa",val:physiqueW,c:C.blue},{icon:"📝",label:"Corrections",val:corrW,c:C.primary},{icon:"🏆",label:"Compét. à venir",val:compAVenir,c:C.yellow}].map(s=>(
+              <div key={s.label} style={{ background:s.c+"11", border:"1px solid "+s.c+"44", borderRadius:12, padding:"10px 8px", textAlign:"center" }}>
+                <div style={{ fontSize:22 }}>{s.icon}</div>
+                <div style={{ fontSize:20, fontWeight:800, color:s.c }}>{s.val}</div>
+                <div style={{ fontSize:9, color:s.c, fontWeight:600, lineHeight:1.2, marginTop:2 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
 
       <div style={{ background:C.card, borderRadius:16, padding:16, marginBottom:16, border:"1px solid "+C.border }}>
         <div style={{ fontWeight:700, marginBottom:12, fontSize:14 }}>Activité de la semaine</div>
@@ -1174,11 +1194,15 @@ const PrepaPhysique = () => {
           </div>}
           {expandedId===s.id && (
             <div style={{ marginTop:10, borderTop:"1px solid "+C.border, paddingTop:10, fontSize:12, color:C.muted, display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
+              {s.satisfaction && <span>⭐ Satisfaction: <strong style={{color:C.text}}>{s.satisfaction}/10</strong></span>}
+              {s.coach && <span>👤 Coach: <strong style={{color:C.text}}>{s.coach}</strong></span>}
+              {s.programme && s.programme!==s.type && <span style={{gridColumn:"span 2"}}>📋 Programme: <strong style={{color:C.text}}>{s.programme}</strong></span>}
               {s.ressenti && <span>😊 Ressenti: <strong style={{color:C.text}}>{s.ressenti}</strong></span>}
               {s.statut && <span>📌 Statut: <strong style={{color:C.text}}>{s.statut}</strong></span>}
               {s.fcMoy && <span>❤️ FC moy: <strong style={{color:C.text}}>{s.fcMoy} bpm</strong></span>}
               {s.fcMax && <span>❤️ FC max: <strong style={{color:C.text}}>{s.fcMax} bpm</strong></span>}
               {s.calories && <span>🔥 Calories: <strong style={{color:C.text}}>{s.calories}</strong></span>}
+              {s.subType && s.subType!==s.type && <span>🏷️ Sous-type: <strong style={{color:C.text}}>{s.subType}</strong></span>}
             </div>
           )}
         </div>
@@ -1632,15 +1656,21 @@ const Videos = ({ competitions }) => {
   const [showForm, setShowForm] = useState(false);
   const [extraVideos, setExtraVideos] = useState([]);
   const [form, setForm] = useState({ titre:"", categorie:"Kata", date:"", lien:"", description:"" });
+  const [editLinkId, setEditLinkId] = useState(null);
+  const [linkInput, setLinkInput] = useState("");
+  const [videoLinks, setVideoLinks] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("kp_video_links") || "{}"); } catch { return {}; }
+  });
 
-  // Competitions videos from state
-  const compVideos = (competitions || []).filter(c => c.lienVideo || c.hasVideo).map(c => ({
-    id: "comp_"+c.id,
-    titre: (new Date(c.date).toLocaleDateString("fr-FR", {day:"2-digit",month:"short",year:"numeric"})) + " – " + (c.name||c.nom),
-    date: c.date,
-    cat: "Compét.",
-    lien: c.lienVideo || null,
-  }));
+  // Merge old mock comp entries + new competitions with lienVideo
+  const compVideos = [
+    ...mockVideos["🏆 Compétitions"].map(v => ({ ...v, lien: v.lien || videoLinks[v.id] || null })),
+    ...(competitions || []).filter(c => (c.lienVideo || c.hasVideo) && !mockVideos["🏆 Compétitions"].find(m=>m.titre.includes(c.nom||c.name||""))).map(c => ({
+      id: "comp_"+c.id,
+      titre: (new Date(c.date).toLocaleDateString("fr-FR", {day:"2-digit",month:"short",year:"numeric"})) + " – " + (c.name||c.nom),
+      date: c.date, cat: "Compét.", lien: c.lienVideo || videoLinks["comp_"+c.id] || null,
+    }))
+  ];
 
   const handleSave = () => {
     if (!form.titre) return;
@@ -1649,11 +1679,19 @@ const Videos = ({ competitions }) => {
   };
 
   const openVideo = (v) => {
-    if (v.lien) window.open(v.lien, "_blank");
-    else if (v.url) window.open(v.url, "_blank");
+    const lien = v.lien || v.url || videoLinks[v.id];
+    if (lien) { window.open(lien, "_blank"); }
+    else { setEditLinkId(v.id); setLinkInput(""); }
   };
 
-  const PERSO_VIDEOS = [...mockVideos["💪 Cours Persos"], ...extraVideos.filter(v=>v.cat!=="Compét.")];
+  const saveVideoLink = () => {
+    if (!linkInput.trim()) return;
+    const updated = { ...videoLinks, [editLinkId]: linkInput.trim() };
+    setVideoLinks(updated); localStorage.setItem("kp_video_links", JSON.stringify(updated));
+    window.open(linkInput.trim(), "_blank"); setEditLinkId(null);
+  };
+
+  const PERSO_VIDEOS = [...mockVideos["💪 Cours Persos"].map(v=>({...v, lien: v.lien||videoLinks[v.id]||null})), ...extraVideos.filter(v=>v.cat!=="Compét.")];
 
   const renderGrid = (videos) => (
     <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12 }}>
@@ -1689,6 +1727,21 @@ const Videos = ({ competitions }) => {
           {videos.length > 0 ? renderGrid(videos) : <div style={{ color:C.muted, fontSize:12, padding:"12px 0" }}>Aucune vidéo — ajoutez un lien vidéo dans une compétition.</div>}
         </div>
       ))}
+
+      {editLinkId !== null && (
+        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:300, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }} onClick={()=>setEditLinkId(null)}>
+          <div style={{ background:"#fff", borderRadius:16, padding:24, width:"100%", maxWidth:420 }} onClick={e=>e.stopPropagation()}>
+            <div style={{ fontWeight:800, fontSize:16, marginBottom:8 }}>🔗 Ajouter un lien vidéo</div>
+            <div style={{ fontSize:12, color:C.muted, marginBottom:12 }}>Coller le lien Google Drive ou YouTube</div>
+            <input type="url" placeholder="https://drive.google.com/..." value={linkInput} onChange={e=>setLinkInput(e.target.value)}
+              style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", marginBottom:14 }}/>
+            <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+              <button onClick={()=>setEditLinkId(null)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"8px 16px", fontSize:13, cursor:"pointer" }}>Annuler</button>
+              <button onClick={saveVideoLink} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"8px 20px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>Ouvrir ▶</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
@@ -1917,6 +1970,7 @@ const Equipe = ({ currentUser, onIdentify }) => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
+  const [viewMember, setViewMember] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const APP_URL = "https://karate-pro.vercel.app";
@@ -2027,17 +2081,73 @@ const Equipe = ({ currentUser, onIdentify }) => {
                 style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:"2px 0" }}>
                 <Edit2 size={13}/>
               </button>
-              <label style={{ cursor:"pointer", color:C.muted, padding:"2px 0", fontSize:13 }}>
-                📷<input type="file" accept="image/*" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{localStorage.setItem("kp_member_photo_"+m.firestoreId,ev.target.result);window.dispatchEvent(new Event("storage"));};r.readAsDataURL(f);}}/>
-              </label>
+
               <button onClick={() => handleDelete(m)}
                 style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:"2px 0" }}>
                 <Trash2 size={13}/>
+              </button>
+              <button onClick={() => setViewMember(m)}
+                style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:"2px 0", fontSize:11, fontWeight:600 }}>
+                Fiche
               </button>
             </div>
           </div>
         );
       })}
+
+      {viewMember && (() => {
+        const m = viewMember;
+        const photo = localStorage.getItem("kp_member_photo_"+m.firestoreId);
+        const emoji = ROLE_EMOJI[m.role] || "👤";
+        return (
+          <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:300, display:"flex", alignItems:"flex-end" }} onClick={()=>setViewMember(null)}>
+            <div style={{ background:"#fff", width:"100%", maxHeight:"85vh", overflowY:"auto", borderRadius:"20px 20px 0 0", padding:"24px 20px" }} onClick={e=>e.stopPropagation()}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
+                <div style={{ fontWeight:800, fontSize:18 }}>Fiche membre</div>
+                <button onClick={()=>setViewMember(null)} style={{ background:"none", border:"none", fontSize:20, cursor:"pointer" }}>✕</button>
+              </div>
+              <div style={{ textAlign:"center", marginBottom:20 }}>
+                <div style={{ position:"relative", display:"inline-block" }}>
+                  <div style={{ width:90, height:90, borderRadius:"50%", border:"3px solid "+C.primary, overflow:"hidden", display:"flex", alignItems:"center", justifyContent:"center", background:C.bg, fontSize:40, margin:"0 auto 8px" }}>
+                    {photo ? <img src={photo} style={{ width:"100%", height:"100%", objectFit:"cover" }}/> : emoji}
+                  </div>
+                  <label style={{ position:"absolute", bottom:8, right:0, background:C.primary, borderRadius:"50%", width:30, height:30, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", border:"2px solid #fff" }}>
+                    <span style={{ color:"#fff", fontSize:14 }}>📷</span>
+                    <input type="file" accept="image/*" style={{ display:"none" }} onChange={e=>{
+                      const f=e.target.files[0]; if(!f)return;
+                      const r=new FileReader(); r.onload=ev=>{
+                        localStorage.setItem("kp_member_photo_"+m.firestoreId, ev.target.result);
+                        window.dispatchEvent(new Event("storage"));
+                        setViewMember({...m}); // force re-render
+                      }; r.readAsDataURL(f);
+                    }}/>
+                  </label>
+                </div>
+                <div style={{ fontWeight:800, fontSize:18 }}>{m.prenom} {m.nom}</div>
+                <Badge label={m.role} color={C.primary}/>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:20 }}>
+                {[["✉ Email",m.email],["📞 Téléphone",m.telephone]].map(([l,v])=>v?(
+                  <div key={l} style={{ background:C.bg, borderRadius:10, padding:"10px 12px" }}>
+                    <div style={{ fontSize:10, color:C.muted, marginBottom:2 }}>{l.split(" ")[0]+" "+l.split(" ").slice(1).join(" ")}</div>
+                    <div style={{ fontSize:13, fontWeight:600, wordBreak:"break-all" }}>{v}</div>
+                  </div>
+                ):null)}
+              </div>
+              <div style={{ display:"flex", gap:10 }}>
+                <button onClick={()=>{openEdit(m); setViewMember(null);}}
+                  style={{ flex:1, background:C.primary, border:"none", borderRadius:10, padding:"12px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>
+                  ✏️ Modifier
+                </button>
+                <button onClick={()=>handleInvite(m)}
+                  style={{ flex:1, background:"none", border:"1.5px solid "+C.border, borderRadius:10, padding:"12px", fontSize:13, fontWeight:600, cursor:"pointer" }}>
+                  📧 Inviter
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:200, display:"flex", alignItems:"flex-end", justifyContent:"center" }}>
@@ -2085,11 +2195,17 @@ const Profil = ({ sessions, competitions }) => {
 
   const avgSat = sessions.length ? (sessions.reduce((a,b)=>a+b.satisfaction,0)/sessions.length).toFixed(1) : 0;
 
+  useEffect(() => {
+    const handler = () => setProfilePhoto(localStorage.getItem("kp_profile_photo") || null);
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => { const b64 = ev.target.result; setProfilePhoto(b64); localStorage.setItem("kp_profile_photo", b64); };
+    reader.onload = (ev) => { const b64 = ev.target.result; setProfilePhoto(b64); localStorage.setItem("kp_profile_photo", b64); window.dispatchEvent(new Event("storage")); };
     reader.readAsDataURL(file);
   };
 
@@ -2297,8 +2413,8 @@ const NAV = [
   { id:"visionboard", label:"Tableau de visualisation", icon:<BarChart2 size={16}/> },
   { id:"karate", label:"Séances Karaté", icon:<Shield size={16}/>, bottomIcon:<Shield size={20}/>, bottomLabel:"Séances" },
   { id:"stage", label:"Stage Équipe de F...", icon:<Users size={16}/> },
-  { id:"physique", label:"Prépa Physique", icon:<Dumbbell size={16}/> },
-  { id:"competitions", label:"Compétitions", icon:<Trophy size={16}/>, bottomIcon:<Trophy size={20}/>, bottomLabel:"Compét." },
+  { id:"physique", label:"Prépa Physique", icon:<Dumbbell size={16}/>, bottomIcon:<Dumbbell size={20}/>, bottomLabel:"Prépa" },
+  { id:"competitions", label:"Compétitions", icon:<Trophy size={16}/> },
   { id:"corrections", label:"Corrections", icon:<Clock size={16}/>, bottomIcon:<Clock size={20}/>, bottomLabel:"Corrections" },
   { id:"videos", label:"Vidéos", icon:<Video size={16}/> },
   { id:"nutrition", label:"Nutrition", icon:<Apple size={16}/> },
@@ -2367,7 +2483,7 @@ export default function App() {
 
   const renderPage = () => {
     switch(page) {
-      case "dashboard": return <Dashboard sessions={sessions}/>;
+      case "dashboard": return <Dashboard sessions={sessions} competitions={competitions}/>;
       case "planning": return <Planning/>;
       case "visionboard": return <VisionBoard sessions={sessions}/>;
       case "karate": return <SeancesKarate sessions={sessions} setSessions={setSessions} showToast={showToast}/>;
