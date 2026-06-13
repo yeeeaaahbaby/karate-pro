@@ -1654,34 +1654,53 @@ const Videos = ({ competitions, sessions }) => {
   const [showForm, setShowForm] = useState(false);
   const [extraVideos, setExtraVideos] = useState([]);
   const [form, setForm] = useState({ titre:"", categorie:"Kata", date:"", lien:"", description:"" });
+  const [editLinkId, setEditLinkId] = useState(null);
+  const [linkInput, setLinkInput] = useState("");
+  // Liens saisis manuellement depuis l'onglet Vidéos (persistés)
+  const [videoLinks, setVideoLinks] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("kp_video_links")||"{}"); } catch { return {}; }
+  });
 
-  // Cours Persos = séances type Perso avec lienVideo renseigné
+  // Toutes les séances Perso — lien depuis la séance OU depuis videoLinks local
   const persoVideos = (sessions || [])
-    .filter(s => s.type === "Perso" && s.lienVideo)
+    .filter(s => s.type === "Perso")
+    .sort((a,b) => b.date.localeCompare(a.date))
     .map(s => ({
       id: "perso_"+s.id,
-      titre: new Date(s.date).toLocaleDateString("fr-FR", {day:"2-digit",month:"short",year:"numeric"})
-             + " – " + (s.katas && s.katas.length ? s.katas.join(", ") : s.notes||"Séance perso"),
-      date: s.date, cat: "Perso", lien: s.lienVideo,
+      titre: new Date(s.date).toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"})
+             + " – " + (s.katas&&s.katas.length ? s.katas.join(", ") : "Séance perso"),
+      date: s.date, cat: "Perso",
+      lien: s.lienVideo || videoLinks["perso_"+s.id] || null,
     }));
 
-  // Compétitions = compétitions avec lienVideo renseigné
+  // Toutes les compétitions — lien depuis la compét OU depuis videoLinks local
   const compVideos = (competitions || [])
-    .filter(c => c.lienVideo)
+    .sort((a,b) => b.date.localeCompare(a.date))
     .map(c => ({
       id: "comp_"+c.id,
-      titre: new Date(c.date).toLocaleDateString("fr-FR", {day:"2-digit",month:"short",year:"numeric"})
+      titre: new Date(c.date).toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"})
              + " – " + (c.name||c.nom||"Compétition"),
-      date: c.date, cat: "Compét.", lien: c.lienVideo,
+      date: c.date, cat: "Compét.",
+      lien: c.lienVideo || videoLinks["comp_"+c.id] || null,
     }));
 
   const handleSave = () => {
     if (!form.titre) return;
-    setExtraVideos(prev => [{ id: Date.now(), ...form, cat: form.categorie }, ...prev]);
+    setExtraVideos(prev => [{ id:Date.now(), ...form, cat:form.categorie }, ...prev]);
     setShowForm(false);
   };
 
-  const openVideo = (v) => { if (v.lien) window.open(v.lien, "_blank"); };
+  const openVideo = (v) => {
+    if (v.lien) { window.open(v.lien, "_blank"); }
+    else { setEditLinkId(v.id); setLinkInput(""); }
+  };
+
+  const saveVideoLink = () => {
+    if (!linkInput.trim()) return;
+    const updated = { ...videoLinks, [editLinkId]: linkInput.trim() };
+    setVideoLinks(updated); localStorage.setItem("kp_video_links", JSON.stringify(updated));
+    window.open(linkInput.trim(), "_blank"); setEditLinkId(null);
+  };
 
   const PERSO_VIDEOS = [...persoVideos, ...extraVideos.filter(v=>v.cat!=="Compét.")];
 
@@ -1726,6 +1745,22 @@ const Videos = ({ competitions, sessions }) => {
           )}
         </div>
       ))}
+
+      {editLinkId && (
+        <div style={{ position:"fixed", inset:0, background:"#00000099", zIndex:300, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }} onClick={()=>setEditLinkId(null)}>
+          <div style={{ background:"#fff", borderRadius:16, padding:24, width:"100%", maxWidth:420 }} onClick={e=>e.stopPropagation()}>
+            <div style={{ fontWeight:800, fontSize:16, marginBottom:6 }}>🔗 Lien vidéo</div>
+            <div style={{ fontSize:12, color:C.muted, marginBottom:12 }}>Colle le lien Google Drive ou YouTube.<br/>Tu peux aussi l'ajouter directement dans la fiche séance ou compétition.</div>
+            <input autoFocus type="url" placeholder="https://drive.google.com/..." value={linkInput} onChange={e=>setLinkInput(e.target.value)}
+              onKeyDown={e=>e.key==="Enter"&&saveVideoLink()}
+              style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", marginBottom:14 }}/>
+            <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+              <button onClick={()=>setEditLinkId(null)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"8px 16px", fontSize:13, cursor:"pointer" }}>Annuler</button>
+              <button onClick={saveVideoLink} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"8px 20px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>Ouvrir ▶</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
