@@ -1281,8 +1281,8 @@ const Competitions = ({ competitions, setCompetitions }) => {
   const [newTour, setNewTour] = useState(EMPTY_TOUR);
 
   const openAdd = () => { setForm(EMPTY_COMP); setEditId(null); setShowForm(true); };
-  const openEdit = (c) => { setForm({...c}); setEditId(c.id); setShowForm(true); };
-  const openCopy = (c) => { setForm({...c, nom: c.nom+" (copie)", date: new Date().toISOString().split("T")[0]}); setEditId(null); setShowForm(true); };
+  const openEdit = (c) => { setForm({...c, nom: c.nom||c.name||"", resultat: c.resultat||c.result||""}); setEditId(c.id); setShowForm(true); };
+  const openCopy = (c) => { setForm({...c, nom:(c.nom||c.name||"")+" (copie)", resultat:c.resultat||c.result||"", date: new Date().toISOString().split("T")[0]}); setEditId(null); setShowForm(true); };
 
   const addTour = () => {
     if (!newTour.nom || !newTour.kata) return;
@@ -1612,7 +1612,7 @@ const Corrections = ({ sessions }) => {
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={()=>setShowForm(false)} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+                <button onClick={handleSave} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
               </div>
             </div>
           </div>
@@ -1942,7 +1942,7 @@ const Sommeil = () => {
               ))}
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end", marginTop:6 }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={()=>setShowForm(false)} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+                <button onClick={handleSave} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 {editingPlan?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
@@ -2303,6 +2303,20 @@ const Planning = () => {
   const [showForm, setShowForm] = useState(false);
   const [activeTab, setActiveTab] = useState("planning");
   const [form, setForm] = useState({ debut:"", club:0, prepa:0, perso:0, compet:0, objectif:"", commentaireCoach:"" });
+  const [plannings, setPlannings] = useState([]);
+  const [editingPlan, setEditingPlan] = useState(null);
+
+  const handleSave = () => {
+    if (!form.debut) return;
+    if (editingPlan) {
+      setPlannings(prev => prev.map(p => p.id===editingPlan ? {...p,...form} : p));
+    } else {
+      setPlannings(prev => [{ id:Date.now(), ...form }, ...prev]);
+    }
+    setForm({ debut:"", club:0, prepa:0, perso:0, compet:0, objectif:"", commentaireCoach:"" });
+    setEditingPlan(null);
+    setShowForm(false);
+  };
 
   return (
     <div>
@@ -2414,8 +2428,8 @@ const Planning = () => {
               <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Commentaire du coach</label>
                 <textarea rows={3} value={form.commentaireCoach} onChange={e=>setForm(f=>({...f,commentaireCoach:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
-                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={()=>setShowForm(false)} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+                <button onClick={()=>{ setShowForm(false); setEditingPlan(null); }} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
+                <button onClick={handleSave} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 {editingPlan?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
