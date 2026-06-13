@@ -8,6 +8,8 @@ import {
   Bed, Search, Filter, ChevronDown
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { db } from "./firebase";
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
 import { requestNotificationPermission, onForegroundMessage } from "./firebase";
 import { enregistrerSeance, getCurrentUser, setCurrentUser, saveUserToken, subscribeToNotifications, notifyNewChatMessage } from "./notifications";
 
@@ -1669,67 +1671,164 @@ const Chat = () => {
 };
 
 // ─── ÉQUIPE ───────────────────────────────────────────────────────────────────
-const TEAM_DETAILS = [
-  { id:"iliana",    name:"Iliana Voratovic",   role:"Athlète",     emoji:"🥋", email:"ilianavoratovic@gmail.com",     phone:"06 36 49 01 70" },
-  { id:"isabelle",  name:"Isabelle Voratovic", role:"Parent",      emoji:"👩", email:"isaphoenix@hotmail.fr",         phone:"06 10 03 68 28" },
-  { id:"alexandre", name:"Alexandre Voratovic",role:"Parent",      emoji:"👨", email:"a.voratovic@isipatrimoine.com", phone:"07 77 05 93 23" },
-  { id:"helvetia",  name:"Helvétia Taily",     role:"Entraîneur",  emoji:"🏆", email:"helvetiataily@gmail.com",       phone:"07 67 64 20 15" },
+const ROLES = ["Athlète","Coach","Préparateur physique","Préparateur mental","Parent"];
+const ROLE_EMOJI = { "Athlète":"🥋","Coach":"🏆","Préparateur physique":"💪","Préparateur mental":"🧠","Parent":"👨‍👩‍👧" };
+
+const MEMBERS_DEFAULT = [
+  { firestoreId:"default_iliana",    prenom:"Iliana",    nom:"Voratovic", role:"Athlète",  email:"ilianavoratovic@gmail.com",     telephone:"06 36 49 01 70" },
+  { firestoreId:"default_isabelle",  prenom:"Isabelle",  nom:"Voratovic", role:"Parent",   email:"isaphoenix@hotmail.fr",         telephone:"06 10 03 68 28" },
+  { firestoreId:"default_alexandre", prenom:"Alexandre", nom:"Voratovic", role:"Parent",   email:"a.voratovic@isipatrimoine.com", telephone:"07 77 05 93 23" },
+  { firestoreId:"default_helvetia",  prenom:"Helvétia",  nom:"Taily",     role:"Coach",    email:"helvetiataily@gmail.com",       telephone:"07 67 64 20 15" },
 ];
 
+const EMPTY_FORM = { prenom:"", nom:"", role:"Athlète", email:"", telephone:"" };
+
 const Equipe = ({ currentUser, onIdentify }) => {
-  const [copied, setCopied] = useState(null);
+  const [members, setMembers] = useState(MEMBERS_DEFAULT);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingMember, setEditingMember] = useState(null);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [saving, setSaving] = useState(false);
   const APP_URL = "https://karate-pro.vercel.app";
 
-  const handleInvite = async (member) => {
-    const msg = member.name + " — Accède à l'app Karaté Pro ici : " + APP_URL;
-    if (navigator.share) {
-      await navigator.share({ title:"Karaté Pro", text:msg, url:APP_URL });
-    } else {
-      await navigator.clipboard.writeText(msg);
-      setCopied(member.id);
-      setTimeout(() => setCopied(null), 2500);
-    }
+  useEffect(() => {
+    getDocs(collection(db, "team_members")).then(snap => {
+      if (!snap.empty) {
+        setMembers(snap.docs.map(d => ({ firestoreId:d.id, ...d.data() })));
+      }
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  const openAdd = () => { setForm(EMPTY_FORM); setEditingMember(null); setShowForm(true); };
+  const openEdit = (m) => { setForm({ prenom:m.prenom, nom:m.nom, role:m.role, email:m.email, telephone:m.telephone }); setEditingMember(m); setShowForm(true); };
+
+  const handleSave = async () => {
+    if (!form.prenom || !form.nom || !form.email) return;
+    setSaving(true);
+    try {
+      if (editingMember && !editingMember.firestoreId.startsWith("default_")) {
+        await updateDoc(doc(db, "team_members", editingMember.firestoreId), form);
+        setMembers(prev => prev.map(m => m.firestoreId === editingMember.firestoreId ? { ...m, ...form } : m));
+      } else {
+        const ref = await addDoc(collection(db, "team_members"), { ...form, createdAt: serverTimestamp() });
+        const newMember = { firestoreId:ref.id, ...form };
+        if (editingMember) {
+          setMembers(prev => prev.map(m => m.firestoreId === editingMember.firestoreId ? newMember : m));
+        } else {
+          setMembers(prev => [...prev, newMember]);
+        }
+      }
+      setShowForm(false);
+    } catch(e) { console.error(e); }
+    setSaving(false);
   };
+
+  const handleDelete = async (m) => {
+    if (!window.confirm("Supprimer " + m.prenom + " " + m.nom + " ?")) return;
+    if (!m.firestoreId.startsWith("default_")) {
+      await deleteDoc(doc(db, "team_members", m.firestoreId));
+    }
+    setMembers(prev => prev.filter(x => x.firestoreId !== m.firestoreId));
+  };
+
+  const handleInvite = (m) => {
+    const subject = encodeURIComponent("Invitation – Karaté Pro SKB Elite");
+    const body = encodeURIComponent(
+      "Bonjour " + m.prenom + ",\n\n" +
+      "Tu es invité·e à accéder à l'application Karaté Pro SKB Elite.\n\n" +
+      "🔗 Lien : " + APP_URL + "\n\n" +
+      "Une fois sur l'application, rends-toi dans l'onglet « Équipe » et appuie sur « C'est moi » pour t'identifier.\n\n" +
+      "À bientôt !"
+    );
+    window.location.href = "mailto:" + m.email + "?subject=" + subject + "&body=" + body;
+  };
+
+  const getIdentityId = (m) => m.firestoreId.replace("default_","");
 
   return (
     <div>
-      <SectionHeader icon="👥" title="L'équipe" subtitle="Personnes ayant accès à l'application" color={C.primary} />
-      {currentUser && (
+      <SectionHeader icon="👥" title="L'équipe" subtitle="Personnes ayant accès à l'application" color={C.primary}
+        action={<Btn onClick={openAdd} color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Ajouter</Btn>} />
+
+      {currentUser ? (
         <div style={{ background:C.primary+"15", border:"1px solid "+C.primary+"33", borderRadius:10, padding:"10px 14px", marginBottom:16, fontSize:13, color:C.primary, fontWeight:600 }}>
-          ✅ Vous êtes identifié·e en tant que <strong>{currentUser.fullName || currentUser.name}</strong>
+          ✅ Identifié·e en tant que <strong>{currentUser.fullName || currentUser.name}</strong>
         </div>
-      )}
-      {!currentUser && (
-        <div style={{ background:"#FEF3C7", border:"1px solid #F59E0B44", borderRadius:10, padding:"10px 14px", marginBottom:16, fontSize:13, color:"#92400E" }}>
+      ) : (
+        <div style={{ background:"#FEF3C7", border:"1px solid #F59E0B55", borderRadius:10, padding:"10px 14px", marginBottom:16, fontSize:13, color:"#92400E" }}>
           👤 Appuyez sur <strong>"C'est moi"</strong> pour vous identifier
         </div>
       )}
-      {TEAM_DETAILS.map(m => {
-        const isMe = currentUser?.id === m.id;
+
+      {loading ? <div style={{ textAlign:"center", color:C.muted, padding:20 }}>Chargement…</div> : members.map(m => {
+        const identId = getIdentityId(m);
+        const isMe = currentUser?.id === identId || currentUser?.firestoreId === m.firestoreId;
+        const emoji = ROLE_EMOJI[m.role] || "👤";
         return (
-          <div key={m.id} style={{ background:C.card, borderRadius:12, border:"2px solid "+(isMe ? C.primary : C.border), padding:14, marginBottom:10, display:"flex", alignItems:"flex-start", gap:12 }}>
-            <div style={{ width:42, height:42, borderRadius:"50%", background:isMe ? C.primary : C.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:20, flexShrink:0 }}>
-              {m.emoji}
+          <div key={m.firestoreId} style={{ background:C.card, borderRadius:12, border:"2px solid "+(isMe?C.primary:C.border), padding:14, marginBottom:10, display:"flex", alignItems:"flex-start", gap:12 }}>
+            <div style={{ width:44, height:44, borderRadius:"50%", background:isMe?C.primary:C.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, flexShrink:0 }}>
+              {emoji}
             </div>
             <div style={{ flex:1, minWidth:0 }}>
-              <div style={{ fontWeight:700, fontSize:14 }}>{m.name}</div>
+              <div style={{ fontWeight:700, fontSize:14 }}>{m.prenom} {m.nom}</div>
               <Badge label={m.role} color={C.primary} />
-              <div style={{ marginTop:6, fontSize:11, color:C.muted }}>✉ {m.email}</div>
-              <div style={{ fontSize:11, color:C.muted }}>📞 {m.phone}</div>
+              <div style={{ marginTop:5, fontSize:11, color:C.muted }}>✉ {m.email}</div>
+              <div style={{ fontSize:11, color:C.muted }}>📞 {m.telephone}</div>
             </div>
-            <div style={{ display:"flex", flexDirection:"column", gap:6, flexShrink:0 }}>
-              <button onClick={() => onIdentify(TEAM_USERS.find(u=>u.id===m.id) || m)}
-                style={{ background:isMe ? C.primary : C.bg, color:isMe ? "#fff" : C.primary, border:"1.5px solid "+C.primary, borderRadius:8, padding:"6px 10px", fontSize:11, fontWeight:700, cursor:"pointer", whiteSpace:"nowrap" }}>
-                {isMe ? "✓ C'est moi" : "C'est moi"}
+            <div style={{ display:"flex", flexDirection:"column", gap:5, flexShrink:0 }}>
+              <button onClick={() => onIdentify({ id:identId, name:m.prenom, fullName:m.prenom+" "+m.nom, role:m.role })}
+                style={{ background:isMe?C.primary:C.bg, color:isMe?"#fff":C.primary, border:"1.5px solid "+C.primary, borderRadius:8, padding:"5px 9px", fontSize:11, fontWeight:700, cursor:"pointer" }}>
+                {isMe ? "✓ Moi" : "C'est moi"}
               </button>
               <button onClick={() => handleInvite(m)}
-                style={{ background:"none", color:C.muted, border:"1.5px solid "+C.border, borderRadius:8, padding:"6px 10px", fontSize:11, cursor:"pointer", whiteSpace:"nowrap" }}>
-                {copied === m.id ? "✓ Copié !" : "📨 Inviter"}
+                style={{ background:"none", color:C.muted, border:"1.5px solid "+C.border, borderRadius:8, padding:"5px 9px", fontSize:11, cursor:"pointer" }}>
+                📧 Inviter
+              </button>
+              <button onClick={() => openEdit(m)}
+                style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:"2px 0" }}>
+                <Edit2 size={13}/>
+              </button>
+              <button onClick={() => handleDelete(m)}
+                style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:"2px 0" }}>
+                <Trash2 size={13}/>
               </button>
             </div>
           </div>
         );
       })}
+
+      {showForm && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:200, display:"flex", alignItems:"flex-end", justifyContent:"center" }}>
+          <div style={{ background:"#fff", borderRadius:"20px 20px 0 0", padding:24, width:"100%", maxWidth:480 }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
+              <div style={{ fontWeight:800, fontSize:17 }}>{editingMember ? "Modifier" : "Ajouter"} un membre</div>
+              <button onClick={() => setShowForm(false)} style={{ background:"none", border:"none", cursor:"pointer" }}><X size={20}/></button>
+            </div>
+            {[["Prénom *","prenom","text"],["Nom *","nom","text"],["Email *","email","email"],["Téléphone","telephone","tel"]].map(([label,key,type]) => (
+              <div key={key} style={{ marginBottom:14 }}>
+                <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:5 }}>{label}</label>
+                <input type={type} value={form[key]} onChange={e => setForm(f=>({...f,[key]:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:14, boxSizing:"border-box" }}/>
+              </div>
+            ))}
+            <div style={{ marginBottom:20 }}>
+              <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:5 }}>Rôle</label>
+              <select value={form.role} onChange={e => setForm(f=>({...f,role:e.target.value}))}
+                style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:14, background:"#fff" }}>
+                {ROLES.map(r => <option key={r} value={r}>{ROLE_EMOJI[r]} {r}</option>)}
+              </select>
+            </div>
+            <div style={{ display:"flex", gap:10 }}>
+              <button onClick={() => setShowForm(false)} style={{ flex:1, padding:12, borderRadius:10, border:"1.5px solid "+C.border, background:"none", fontSize:14, cursor:"pointer" }}>Annuler</button>
+              <button onClick={handleSave} disabled={saving} style={{ flex:2, padding:12, borderRadius:10, border:"none", background:C.primary, color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer", opacity:saving?0.7:1 }}>
+                {saving ? "Enregistrement…" : "Enregistrer"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
