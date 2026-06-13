@@ -1658,10 +1658,19 @@ const Videos = ({ competitions, sessions }) => {
   const [form, setForm] = useState({ titre:"", categorie:"Kata", date:"", lien:"", description:"" });
   const [editLinkId, setEditLinkId] = useState(null);
   const [linkInput, setLinkInput] = useState("");
-  // Liens saisis manuellement depuis l'onglet Vidéos (persistés)
-  const [videoLinks, setVideoLinks] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("kp_video_links")||"{}"); } catch { return {}; }
-  });
+  // Liens stockés dans Firestore (partagés entre tous les utilisateurs)
+  const [videoLinks, setVideoLinks] = useState({});
+
+  useEffect(() => {
+    getDocs(collection(db, "video_links")).then(snap => {
+      const links = {};
+      snap.docs.forEach(d => { links[d.data().videoId] = d.data().lien; });
+      setVideoLinks(links);
+    }).catch(() => {
+      // Fallback localStorage si Firestore indisponible
+      try { setVideoLinks(JSON.parse(localStorage.getItem("kp_video_links")||"{}")); } catch {}
+    });
+  }, []);
 
   // Toutes les séances Perso — lien depuis la séance OU depuis videoLinks local
   const persoVideos = (sessions || [])
@@ -1697,11 +1706,27 @@ const Videos = ({ competitions, sessions }) => {
     else { setEditLinkId(v.id); setLinkInput(""); }
   };
 
-  const saveVideoLink = () => {
+  const saveVideoLink = async () => {
     if (!linkInput.trim()) return;
-    const updated = { ...videoLinks, [editLinkId]: linkInput.trim() };
-    setVideoLinks(updated); localStorage.setItem("kp_video_links", JSON.stringify(updated));
-    window.open(linkInput.trim(), "_blank"); setEditLinkId(null);
+    const lien = linkInput.trim();
+    const videoId = editLinkId;
+    // Sauvegarder dans Firestore
+    try {
+      const q = query(collection(db, "video_links"), where("videoId", "==", videoId));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        await addDoc(collection(db, "video_links"), { videoId, lien, updatedAt: serverTimestamp() });
+      } else {
+        await updateDoc(doc(db, "video_links", snap.docs[0].id), { lien, updatedAt: serverTimestamp() });
+      }
+    } catch(e) {
+      // Fallback localStorage
+      const updated = { ...videoLinks, [videoId]: lien };
+      localStorage.setItem("kp_video_links", JSON.stringify(updated));
+    }
+    setVideoLinks(prev => ({ ...prev, [videoId]: lien }));
+    window.open(lien, "_blank");
+    setEditLinkId(null);
   };
 
   const PERSO_VIDEOS = [...persoVideos, ...extraVideos.filter(v=>v.cat!=="Compét.")];
