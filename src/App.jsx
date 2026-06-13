@@ -8,8 +8,8 @@ import {
   Bed, Search, Filter, ChevronDown
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
-import { db } from "./firebase";
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
+import { db, auth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "./firebase";
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, where } from "firebase/firestore";
 import { requestNotificationPermission, onForegroundMessage } from "./firebase";
 import { enregistrerSeance, getCurrentUser, setCurrentUser, saveUserToken, subscribeToNotifications, notifyNewChatMessage } from "./notifications";
 
@@ -2205,7 +2205,7 @@ const Equipe = ({ currentUser, onIdentify }) => {
 };
 
 // ─── PROFIL ───────────────────────────────────────────────────────────────────
-const Profil = ({ sessions, competitions }) => {
+const Profil = ({ sessions, competitions, authUser }) => {
   const [showEdit, setShowEdit] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(() => localStorage.getItem("kp_profile_photo") || null);
   const [profile, setProfile] = useState(() => {
@@ -2265,6 +2265,8 @@ const Profil = ({ sessions, competitions }) => {
           </div>
         ))}
       </div>
+
+      {authUser?.email === ADMIN_EMAIL && <AdminUsers currentUserEmail={authUser.email} />}
 
       {showEdit && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowEdit(false)}>
@@ -2469,7 +2471,209 @@ const TEAM_USERS = [
   { id:"helvetia",  fullName:"Helvetia",            name:"Helvetia", role:"Coach",    emoji:"🏆" },
 ];
 
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+const ADMIN_EMAIL = "a.voratovic@gmail.com";
+
+const LoginScreen = ({ onEmailLink }) => {
+  const [tab, setTab] = useState("main"); // "main" | "email" | "link_sent"
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleGoogle = async () => {
+    setLoading(true); setError("");
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch(e) {
+      setError(e.code === "auth/popup-closed-by-user" ? "" : "Erreur Google : " + e.message);
+    }
+    setLoading(false);
+  };
+
+  const handleEmailPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true); setError("");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch(er) {
+      const codes = { "auth/user-not-found":"Email introuvable.", "auth/wrong-password":"Mot de passe incorrect.", "auth/invalid-credential":"Email ou mot de passe incorrect.", "auth/too-many-requests":"Trop de tentatives. Réessayez plus tard." };
+      setError(codes[er.code] || "Erreur : " + er.message);
+    }
+    setLoading(false);
+  };
+
+  const handleMagicLink = async (e) => {
+    e.preventDefault();
+    setLoading(true); setError("");
+    try {
+      await sendSignInLinkToEmail(auth, email, { url: window.location.origin, handleCodeInApp: true });
+      localStorage.setItem("kp_signin_email", email);
+      setTab("link_sent");
+    } catch(er) {
+      setError("Erreur : " + er.message);
+    }
+    setLoading(false);
+  };
+
+  const inp = { width:"100%", border:"1.5px solid #E2E8F0", borderRadius:10, padding:"12px 14px", fontSize:14, boxSizing:"border-box", marginBottom:10, outline:"none" };
+  const btnPrimary = { width:"100%", background:"#7C3AED", border:"none", borderRadius:10, padding:"13px 20px", fontSize:14, fontWeight:700, color:"#fff", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:8, marginBottom:10 };
+  const btnSecondary = { width:"100%", background:"#fff", border:"1.5px solid #E2E8F0", borderRadius:10, padding:"12px 20px", fontSize:14, fontWeight:600, color:"#1E293B", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:8, marginBottom:10 };
+
+  return (
+    <div style={{ minHeight:"100vh", background:"linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+      <div style={{ background:"#fff", borderRadius:20, padding:32, width:"100%", maxWidth:400, boxShadow:"0 20px 60px rgba(0,0,0,0.2)" }}>
+        <div style={{ textAlign:"center", marginBottom:28 }}>
+          <img src="/iliana.png" alt="Karaté Pro" style={{ width:72, height:72, borderRadius:"50%", objectFit:"cover", objectPosition:"top", marginBottom:12, border:"3px solid #7C3AED" }}/>
+          <div style={{ fontWeight:900, fontSize:22, color:"#1E293B" }}>Karaté Pro</div>
+          <div style={{ color:"#94A3B8", fontSize:13, marginTop:4 }}>SKB Elite — Accès privé</div>
+        </div>
+
+        {tab === "link_sent" && (
+          <div style={{ textAlign:"center" }}>
+            <div style={{ fontSize:40, marginBottom:12 }}>📬</div>
+            <div style={{ fontWeight:700, fontSize:16, marginBottom:8 }}>Lien envoyé !</div>
+            <div style={{ color:"#64748B", fontSize:13, marginBottom:20 }}>Vérifiez votre boîte mail <strong>{email}</strong> et cliquez sur le lien pour vous connecter.</div>
+            <button onClick={()=>setTab("main")} style={{ ...btnSecondary }}>← Retour</button>
+          </div>
+        )}
+
+        {tab === "main" && (
+          <>
+            <button onClick={handleGoogle} disabled={loading} style={btnSecondary}>
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              Continuer avec Google
+            </button>
+
+            <div style={{ display:"flex", alignItems:"center", gap:10, margin:"16px 0" }}>
+              <div style={{ flex:1, height:1, background:"#E2E8F0" }}/>
+              <span style={{ color:"#94A3B8", fontSize:12 }}>ou</span>
+              <div style={{ flex:1, height:1, background:"#E2E8F0" }}/>
+            </div>
+
+            <button onClick={()=>setTab("email")} style={{ ...btnSecondary, borderColor:"#7C3AED", color:"#7C3AED" }}>
+              ✉️ Connexion par email
+            </button>
+
+            {error && <div style={{ background:"#FEF2F2", border:"1px solid #FCA5A5", borderRadius:8, padding:"10px 14px", color:"#DC2626", fontSize:13, marginTop:8 }}>{error}</div>}
+
+            <div style={{ textAlign:"center", color:"#CBD5E1", fontSize:11, marginTop:20 }}>
+              Accès sur invitation uniquement
+            </div>
+          </>
+        )}
+
+        {tab === "email" && (
+          <>
+            <div style={{ display:"flex", gap:8, marginBottom:20 }}>
+              <button onClick={()=>setTab("password_form")} style={{ flex:1, padding:"9px 0", borderRadius:8, border:"none", background:tab==="password_form"?"#7C3AED":"#F1F5F9", color:tab==="password_form"?"#fff":"#64748B", fontWeight:600, fontSize:13, cursor:"pointer" }}>Mot de passe</button>
+              <button onClick={()=>setTab("magic_link")} style={{ flex:1, padding:"9px 0", borderRadius:8, border:"none", background:tab==="magic_link"?"#7C3AED":"#F1F5F9", color:tab==="magic_link"?"#fff":"#64748B", fontWeight:600, fontSize:13, cursor:"pointer" }}>Lien magique</button>
+            </div>
+
+            <form onSubmit={handleEmailPassword}>
+              <input type="email" placeholder="Adresse email" value={email} onChange={e=>setEmail(e.target.value)} style={inp} required autoFocus/>
+              <input type="password" placeholder="Mot de passe" value={password} onChange={e=>setPassword(e.target.value)} style={inp} required/>
+              {error && <div style={{ background:"#FEF2F2", border:"1px solid #FCA5A5", borderRadius:8, padding:"10px 14px", color:"#DC2626", fontSize:13, marginBottom:10 }}>{error}</div>}
+              <button type="submit" disabled={loading} style={btnPrimary}>{loading ? "Connexion…" : "🔐 Se connecter"}</button>
+            </form>
+
+            <div style={{ textAlign:"center", margin:"8px 0", color:"#94A3B8", fontSize:12 }}>Pas de mot de passe ?</div>
+            <button onClick={()=>setTab("magic_link")} style={{ ...btnSecondary, fontSize:12, padding:"10px 20px" }}>📧 Recevoir un lien de connexion</button>
+            <button onClick={()=>setTab("main")} style={{ background:"none", border:"none", color:"#94A3B8", fontSize:12, cursor:"pointer", width:"100%", marginTop:6 }}>← Retour</button>
+          </>
+        )}
+
+        {tab === "magic_link" && (
+          <>
+            <div style={{ color:"#64748B", fontSize:13, marginBottom:16, textAlign:"center" }}>Entrez votre email. Vous recevrez un lien pour vous connecter instantanément, sans mot de passe.</div>
+            <form onSubmit={handleMagicLink}>
+              <input type="email" placeholder="Adresse email" value={email} onChange={e=>setEmail(e.target.value)} style={inp} required autoFocus/>
+              {error && <div style={{ background:"#FEF2F2", border:"1px solid #FCA5A5", borderRadius:8, padding:"10px 14px", color:"#DC2626", fontSize:13, marginBottom:10 }}>{error}</div>}
+              <button type="submit" disabled={loading} style={btnPrimary}>{loading ? "Envoi…" : "📧 Envoyer le lien"}</button>
+            </form>
+            <button onClick={()=>setTab("main")} style={{ background:"none", border:"none", color:"#94A3B8", fontSize:12, cursor:"pointer", width:"100%", marginTop:6 }}>← Retour</button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const AdminUsers = ({ currentUserEmail }) => {
+  const [users, setUsers] = useState([]);
+  const [newEmail, setNewEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  useEffect(() => { loadUsers(); }, []);
+
+  const loadUsers = async () => {
+    const snap = await getDocs(collection(db, "allowed_emails"));
+    setUsers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+  };
+
+  const invite = async () => {
+    if (!newEmail.trim()) return;
+    setLoading(true); setMsg("");
+    try {
+      const q = query(collection(db, "allowed_emails"), where("email", "==", newEmail.trim()));
+      const existing = await getDocs(q);
+      if (existing.empty) {
+        await addDoc(collection(db, "allowed_emails"), { email: newEmail.trim(), invitedBy: currentUserEmail, invitedAt: serverTimestamp() });
+      }
+      await sendSignInLinkToEmail(auth, newEmail.trim(), { url: window.location.origin, handleCodeInApp: true });
+      setMsg("✅ Invitation envoyée à " + newEmail.trim());
+      setNewEmail("");
+      loadUsers();
+    } catch(e) {
+      setMsg("❌ Erreur : " + e.message);
+    }
+    setLoading(false);
+  };
+
+  const remove = async (id, email) => {
+    if (!window.confirm("Supprimer l'accès de " + email + " ?")) return;
+    await deleteDoc(doc(db, "allowed_emails", id));
+    loadUsers();
+  };
+
+  return (
+    <div style={{ background:"#F8F7FF", border:"2px solid #7C3AED33", borderRadius:16, padding:20, marginTop:20 }}>
+      <div style={{ fontWeight:800, fontSize:15, color:"#7C3AED", marginBottom:4 }}>🛡️ Gestion des accès</div>
+      <div style={{ fontSize:12, color:"#94A3B8", marginBottom:16 }}>Invitez des personnes à accéder à l'app</div>
+
+      <div style={{ display:"flex", gap:8, marginBottom:12 }}>
+        <input type="email" placeholder="Email à inviter…" value={newEmail} onChange={e=>setNewEmail(e.target.value)}
+          onKeyDown={e=>e.key==="Enter"&&invite()}
+          style={{ flex:1, border:"1.5px solid #E2E8F0", borderRadius:8, padding:"10px 12px", fontSize:13 }}/>
+        <button onClick={invite} disabled={loading || !newEmail.trim()} style={{ background:"#7C3AED", border:"none", borderRadius:8, padding:"10px 16px", color:"#fff", fontWeight:700, fontSize:13, cursor:"pointer" }}>
+          {loading ? "…" : "Inviter"}
+        </button>
+      </div>
+
+      {msg && <div style={{ fontSize:12, color:msg.startsWith("✅")?"#10B981":"#EF4444", marginBottom:10 }}>{msg}</div>}
+
+      <div style={{ borderTop:"1px solid #E2E8F0", paddingTop:12 }}>
+        {users.length === 0 && <div style={{ color:"#94A3B8", fontSize:12, textAlign:"center" }}>Aucun utilisateur invité</div>}
+        {users.map(u => (
+          <div key={u.id} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #F1F5F9" }}>
+            <div>
+              <div style={{ fontSize:13, fontWeight:600 }}>{u.email}</div>
+              <div style={{ fontSize:11, color:"#94A3B8" }}>Invité par {u.invitedBy}</div>
+            </div>
+            <button onClick={()=>remove(u.id, u.email)} style={{ background:"#FEF2F2", border:"1px solid #FCA5A5", borderRadius:6, padding:"4px 10px", color:"#DC2626", fontSize:11, cursor:"pointer" }}>Retirer</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
+  const [authUser, setAuthUser] = useState(undefined); // undefined=chargement, null=non connecté
+  const [authAllowed, setAuthAllowed] = useState(false);
   const [page, setPage] = useState("dashboard");
   const [sessions, setSessions] = useState(ALL_SESSIONS);
   const [competitions, setCompetitions] = useState(mockCompetitions);
@@ -2480,6 +2684,31 @@ export default function App() {
   const [toast, setToast] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    // Détecter si l'URL contient un lien de connexion Firebase (invitation)
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      let email = localStorage.getItem("kp_signin_email");
+      if (!email) email = window.prompt("Confirmez votre adresse email pour terminer la connexion :");
+      if (email) {
+        signInWithEmailLink(auth, email, window.location.href)
+          .then(() => { localStorage.removeItem("kp_signin_email"); window.history.replaceState({}, document.title, "/"); })
+          .catch(e => console.error("Erreur lien email:", e));
+      }
+    }
+    // Écouter les changements d'authentification
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (!user) { setAuthUser(null); setAuthAllowed(false); return; }
+      if (user.email === ADMIN_EMAIL) { setAuthUser(user); setAuthAllowed(true); return; }
+      try {
+        const q = query(collection(db, "allowed_emails"), where("email", "==", user.email));
+        const snap = await getDocs(q);
+        if (!snap.empty) { setAuthUser(user); setAuthAllowed(true); }
+        else { await signOut(auth); setAuthUser(null); setAuthAllowed(false); alert("Accès non autorisé. Contactez l'administrateur."); }
+      } catch(e) { setAuthUser(user); setAuthAllowed(true); }
+    });
+    return () => unsub();
+  }, []);
 
   useEffect(() => {
     if ("Notification" in window) setNotifPermission(Notification.permission);
@@ -2499,6 +2728,20 @@ export default function App() {
     const hideT = setTimeout(() => setSplashVisible(false), 2800);
     return () => { clearTimeout(fadeT); clearTimeout(hideT); };
   }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setAuthUser(null);
+    setAuthAllowed(false);
+  };
+
+  // Auth guards
+  if (authUser === undefined) return (
+    <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"linear-gradient(135deg,#7C3AED,#EC4899)" }}>
+      <div style={{ color:"#fff", fontWeight:700, fontSize:16 }}>Chargement…</div>
+    </div>
+  );
+  if (!authUser || !authAllowed) return <LoginScreen />;
 
   const handleEnableNotifications = async () => {
     const token = await requestNotificationPermission();
@@ -2531,7 +2774,7 @@ export default function App() {
       case "sommeil": return <Sommeil/>;
       case "chat": return <Chat/>;
       case "equipe": return <Equipe currentUser={currentUser} onIdentify={(u)=>{setCurrentUser(u);setCurrentUserState(u);}}/>;
-      case "profil": return <Profil sessions={sessions} competitions={competitions}/>;
+      case "profil": return <Profil sessions={sessions} competitions={competitions} authUser={authUser}/>;
       default: return <EmptyState icon={<LayoutDashboard size={24}/>} title="Section à venir"/>;
     }
   };
@@ -2585,11 +2828,11 @@ export default function App() {
         <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
           <Avatar name="Alexandre Voratovic" size={30} bg={C.muted} />
           <div style={{ fontSize:11 }}>
-            <div style={{ fontWeight:600 }}>Alexandre Vorat...</div>
-            <div style={{ color:C.muted }}>Karatéka</div>
+            <div style={{ fontWeight:600 }}>{authUser?.displayName || authUser?.email?.split("@")[0] || "Utilisateur"}</div>
+            <div style={{ color:C.muted }}>{authUser?.email === ADMIN_EMAIL ? "Administrateur" : "Membre"}</div>
           </div>
         </div>
-        <button style={{ width:"100%", background:"none", border:"none", cursor:"pointer", color:C.red, fontSize:12, fontWeight:600, display:"flex", alignItems:"center", gap:6, padding:"4px 2px" }}>
+        <button onClick={handleLogout} style={{ width:"100%", background:"none", border:"none", cursor:"pointer", color:C.red, fontSize:12, fontWeight:600, display:"flex", alignItems:"center", gap:6, padding:"4px 2px" }}>
           <LogOut size={13}/> Déconnexion
         </button>
       </div>

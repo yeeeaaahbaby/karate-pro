@@ -1,6 +1,20 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  sendSignInLinkToEmail,
+  isSignInWithEmailLink,
+  signInWithEmailLink,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyALTS-8rZh8muVN6eucdyyXq0ZM48ZumuU",
@@ -15,11 +29,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const messaging = getMessaging(app);
+export const auth = getAuth(app);
 
-// VAPID Key pour les notifications Web Push
+export {
+  onAuthStateChanged,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  sendSignInLinkToEmail,
+  isSignInWithEmailLink,
+  signInWithEmailLink,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+};
+
 const VAPID_KEY = "BNFtRNp0YAuLAgJb4h73D4W8jjzV15ol9Rl1cZazcveUZioryx_LWj7nfcy";
 
-// Demander la permission et obtenir le token FCM
 export async function requestNotificationPermission() {
   try {
     const permission = await Notification.requestPermission();
@@ -34,7 +61,6 @@ export async function requestNotificationPermission() {
   }
 }
 
-// Écouter les messages en foreground
 export function onForegroundMessage(callback) {
   return onMessage(messaging, callback);
 }
