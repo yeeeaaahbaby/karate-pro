@@ -804,14 +804,16 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
               </div>
 
-              {/* Lien vidéo */}
-              <div style={{ marginBottom:16 }}>
-                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>🔗 Lien Vidéo (Google Drive, YouTube…)</label>
-                <input type="text" placeholder="https://drive.google.com/..."
-                  value={form.lienVideo||""}
-                  onChange={e=>setForm(f=>({...f,lienVideo:e.target.value}))}
-                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box" }} />
-              </div>
+              {/* Lien vidéo — Type Perso + coach Perso ou Helvétia */}
+              {form.type === "Perso" && form.coaches.some(c => c === "Perso" || c === "Helvétia") && (
+                <div style={{ marginBottom:16 }}>
+                  <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>🔗 Lien Vidéo (Google Drive, YouTube…)</label>
+                  <input type="text" placeholder="https://drive.google.com/..."
+                    value={form.lienVideo||""}
+                    onChange={e=>setForm(f=>({...f,lienVideo:e.target.value}))}
+                    style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box" }} />
+                </div>
+              )}
 
               {/* Notes additionnelles */}
               <div style={{ marginBottom:24 }}>
