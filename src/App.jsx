@@ -2050,11 +2050,16 @@ const Equipe = ({ currentUser, onIdentify }) => {
     const body = encodeURIComponent(
       "Bonjour " + m.prenom + ",\n\n" +
       "Tu es invité·e à accéder à l'application Karaté Pro SKB Elite.\n\n" +
-      "🔗 Lien : " + APP_URL + "\n\n" +
-      "Une fois sur l'application, rends-toi dans l'onglet « Équipe » et appuie sur « C'est moi » pour t'identifier.\n\n" +
-      "À bientôt !"
+      "🔗 Accéder à l'app : " + APP_URL + "\n\n" +
+      "Pour créer ton compte :\n" +
+      "• Clique sur « Continuer avec Google » si tu as un compte Google\n" +
+      "• Ou clique sur « Connexion par email » pour créer un mot de passe\n\n" +
+      "⚠️ Utilise bien cette adresse email : " + m.email + "\n\n" +
+      "À bientôt !\n" +
+      "Alexandre"
     );
-    window.location.href = "mailto:" + m.email + "?subject=" + subject + "&body=" + body;
+    const gmailUrl = "https://mail.google.com/mail/?view=cm&to=" + encodeURIComponent(m.email) + "&su=" + subject + "&body=" + body;
+    window.open(gmailUrl, "_blank");
   };
 
   const getIdentityId = (m) => m.firestoreId.replace("default_","");
@@ -2618,13 +2623,29 @@ const AdminUsers = ({ currentUserEmail }) => {
     if (!newEmail.trim()) return;
     setLoading(true); setMsg("");
     try {
+      // 1. Ajouter à la liste blanche Firestore
       const q = query(collection(db, "allowed_emails"), where("email", "==", newEmail.trim()));
       const existing = await getDocs(q);
       if (existing.empty) {
         await addDoc(collection(db, "allowed_emails"), { email: newEmail.trim(), invitedBy: currentUserEmail, invitedAt: serverTimestamp() });
       }
-      await sendSignInLinkToEmail(auth, newEmail.trim(), { url: window.location.origin, handleCodeInApp: true });
-      setMsg("✅ Invitation envoyée à " + newEmail.trim());
+      // 2. Ouvrir Gmail dans le navigateur avec l'email pré-rempli
+      const appUrl = window.location.origin;
+      const subject = encodeURIComponent("Invitation — Karaté Pro SKB Elite");
+      const body = encodeURIComponent(
+        "Bonjour,\n\n" +
+        "Tu es invité(e) à accéder à l'application Karaté Pro de l'équipe SKB Elite.\n\n" +
+        "🔗 Accéder à l'app : " + appUrl + "\n\n" +
+        "Une fois sur l'app :\n" +
+        "• Clique sur « Continuer avec Google » si tu as un compte Google\n" +
+        "• Ou clique sur « Connexion par email » pour créer un mot de passe\n\n" +
+        "⚠️ Utilise bien cette adresse email pour te connecter : " + newEmail.trim() + "\n\n" +
+        "À bientôt !\n" +
+        "Alexandre"
+      );
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(newEmail.trim())}&su=${subject}&body=${body}`;
+      window.open(gmailUrl, "_blank");
+      setMsg("✅ " + newEmail.trim() + " ajouté. Gmail s'est ouvert — clique Envoyer.");
       setNewEmail("");
       loadUsers();
     } catch(e) {
