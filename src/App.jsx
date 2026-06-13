@@ -804,16 +804,14 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
               </div>
 
-              {/* Lien vidéo — visible si type=Perso ET coach=Perso ou Autres */}
-              {form.type === "Perso" && (form.coaches.length === 0 || form.coaches.some(c => c === "Perso" || c === "Autres")) && (
-                <div style={{ marginBottom:16 }}>
-                  <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>🔗 Lien Vidéo</label>
-                  <input type="text" placeholder="https://youtube.com/... ou lien de votre vidéo"
-                    value={form.lienVideo||""}
-                    onChange={e=>setForm(f=>({...f,lienVideo:e.target.value}))}
-                    style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box" }} />
-                </div>
-              )}
+              {/* Lien vidéo */}
+              <div style={{ marginBottom:16 }}>
+                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>🔗 Lien Vidéo (Google Drive, YouTube…)</label>
+                <input type="text" placeholder="https://drive.google.com/..."
+                  value={form.lienVideo||""}
+                  onChange={e=>setForm(f=>({...f,lienVideo:e.target.value}))}
+                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box" }} />
+              </div>
 
               {/* Notes additionnelles */}
               <div style={{ marginBottom:24 }}>
@@ -1652,25 +1650,30 @@ const mockVideos = {
   ],
 };
 
-const Videos = ({ competitions }) => {
+const Videos = ({ competitions, sessions }) => {
   const [showForm, setShowForm] = useState(false);
   const [extraVideos, setExtraVideos] = useState([]);
   const [form, setForm] = useState({ titre:"", categorie:"Kata", date:"", lien:"", description:"" });
-  const [editLinkId, setEditLinkId] = useState(null);
-  const [linkInput, setLinkInput] = useState("");
-  const [videoLinks, setVideoLinks] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("kp_video_links") || "{}"); } catch { return {}; }
-  });
 
-  // Merge old mock comp entries + new competitions with lienVideo
-  const compVideos = [
-    ...mockVideos["🏆 Compétitions"].map(v => ({ ...v, lien: v.lien || videoLinks[v.id] || null })),
-    ...(competitions || []).filter(c => (c.lienVideo || c.hasVideo) && !mockVideos["🏆 Compétitions"].find(m=>m.titre.includes(c.nom||c.name||""))).map(c => ({
+  // Cours Persos = séances type Perso avec lienVideo renseigné
+  const persoVideos = (sessions || [])
+    .filter(s => s.type === "Perso" && s.lienVideo)
+    .map(s => ({
+      id: "perso_"+s.id,
+      titre: new Date(s.date).toLocaleDateString("fr-FR", {day:"2-digit",month:"short",year:"numeric"})
+             + " – " + (s.katas && s.katas.length ? s.katas.join(", ") : s.notes||"Séance perso"),
+      date: s.date, cat: "Perso", lien: s.lienVideo,
+    }));
+
+  // Compétitions = compétitions avec lienVideo renseigné
+  const compVideos = (competitions || [])
+    .filter(c => c.lienVideo)
+    .map(c => ({
       id: "comp_"+c.id,
-      titre: (new Date(c.date).toLocaleDateString("fr-FR", {day:"2-digit",month:"short",year:"numeric"})) + " – " + (c.name||c.nom),
-      date: c.date, cat: "Compét.", lien: c.lienVideo || videoLinks["comp_"+c.id] || null,
-    }))
-  ];
+      titre: new Date(c.date).toLocaleDateString("fr-FR", {day:"2-digit",month:"short",year:"numeric"})
+             + " – " + (c.name||c.nom||"Compétition"),
+      date: c.date, cat: "Compét.", lien: c.lienVideo,
+    }));
 
   const handleSave = () => {
     if (!form.titre) return;
@@ -1678,20 +1681,9 @@ const Videos = ({ competitions }) => {
     setShowForm(false);
   };
 
-  const openVideo = (v) => {
-    const lien = v.lien || v.url || videoLinks[v.id];
-    if (lien) { window.open(lien, "_blank"); }
-    else { setEditLinkId(v.id); setLinkInput(""); }
-  };
+  const openVideo = (v) => { if (v.lien) window.open(v.lien, "_blank"); };
 
-  const saveVideoLink = () => {
-    if (!linkInput.trim()) return;
-    const updated = { ...videoLinks, [editLinkId]: linkInput.trim() };
-    setVideoLinks(updated); localStorage.setItem("kp_video_links", JSON.stringify(updated));
-    window.open(linkInput.trim(), "_blank"); setEditLinkId(null);
-  };
-
-  const PERSO_VIDEOS = [...mockVideos["💪 Cours Persos"].map(v=>({...v, lien: v.lien||videoLinks[v.id]||null})), ...extraVideos.filter(v=>v.cat!=="Compét.")];
+  const PERSO_VIDEOS = [...persoVideos, ...extraVideos.filter(v=>v.cat!=="Compét.")];
 
   const renderGrid = (videos) => (
     <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12 }}>
@@ -1724,24 +1716,16 @@ const Videos = ({ competitions }) => {
             <span style={{ fontWeight:700, fontSize:14, color:C.orange }}>{section}</span>
             <span style={{ background:C.yellow+"44", borderRadius:"50%", width:28, height:28, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:700 }}>{videos.length}</span>
           </div>
-          {videos.length > 0 ? renderGrid(videos) : <div style={{ color:C.muted, fontSize:12, padding:"12px 0" }}>Aucune vidéo — ajoutez un lien vidéo dans une compétition.</div>}
+          {videos.length > 0 ? renderGrid(videos) : (
+            <div style={{ background:C.bg, borderRadius:10, padding:"14px 16px", border:"1px dashed "+C.border }}>
+              <div style={{ color:C.muted, fontSize:12 }}>Aucune vidéo pour l'instant.</div>
+              <div style={{ color:C.muted, fontSize:11, marginTop:4 }}>
+                {section.includes("Compét") ? "→ Ajoutez un lien vidéo dans la fiche d'une compétition (onglet Compétitions)." : "→ Ajoutez un lien vidéo dans la fiche d'une séance Perso (onglet Séances Karaté)."}
+              </div>
+            </div>
+          )}
         </div>
       ))}
-
-      {editLinkId !== null && (
-        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:300, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }} onClick={()=>setEditLinkId(null)}>
-          <div style={{ background:"#fff", borderRadius:16, padding:24, width:"100%", maxWidth:420 }} onClick={e=>e.stopPropagation()}>
-            <div style={{ fontWeight:800, fontSize:16, marginBottom:8 }}>🔗 Ajouter un lien vidéo</div>
-            <div style={{ fontSize:12, color:C.muted, marginBottom:12 }}>Coller le lien Google Drive ou YouTube</div>
-            <input type="url" placeholder="https://drive.google.com/..." value={linkInput} onChange={e=>setLinkInput(e.target.value)}
-              style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", marginBottom:14 }}/>
-            <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
-              <button onClick={()=>setEditLinkId(null)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"8px 16px", fontSize:13, cursor:"pointer" }}>Annuler</button>
-              <button onClick={saveVideoLink} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"8px 20px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>Ouvrir ▶</button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
@@ -2491,7 +2475,7 @@ export default function App() {
       case "physique": return <PrepaPhysique/>;
       case "competitions": return <Competitions competitions={competitions} setCompetitions={setCompetitions}/>;
       case "corrections": return <Corrections sessions={sessions}/>;
-      case "videos": return <Videos competitions={competitions}/>;
+      case "videos": return <Videos competitions={competitions} sessions={sessions}/>;
       case "nutrition": return <Nutrition/>;
       case "sommeil": return <Sommeil/>;
       case "chat": return <Chat/>;
