@@ -612,12 +612,26 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
       if (editingSession) {
         // Modifier séance existante
         setSessions(prev => prev.map(s => s.id === editingSession ? { ...s, ...seance } : s));
+        // Sync lienVideo dans Firestore si présent
+        if (seance.lienVideo) {
+          const videoId = "perso_" + editingSession;
+          const q = query(collection(db, "video_links"), where("videoId", "==", videoId));
+          const snap = await getDocs(q);
+          if (snap.empty) await addDoc(collection(db, "video_links"), { videoId, lien: seance.lienVideo, updatedAt: serverTimestamp() });
+          else await updateDoc(doc(db, "video_links", snap.docs[0].id), { lien: seance.lienVideo, updatedAt: serverTimestamp() });
+        }
         showToast("Séance modifiée avec succès ✓");
       } else {
         // Nouvelle séance
         const uid = getCurrentUser()?.id;
+        const newId = Date.now();
         await enregistrerSeance(seance, uid);
-        setSessions(prev => [{ id: Date.now(), ...seance }, ...prev]);
+        setSessions(prev => [{ id: newId, ...seance }, ...prev]);
+        // Sync lienVideo dans Firestore si présent
+        if (seance.lienVideo) {
+          const videoId = "perso_" + newId;
+          await addDoc(collection(db, "video_links"), { videoId, lien: seance.lienVideo, updatedAt: serverTimestamp() });
+        }
         showToast("Séance "+form.type+" — "+form.duration+" min enregistrée ✓");
       }
       closeForm();
@@ -1294,12 +1308,29 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
   const removeTour = (idx) => setForm(f=>({...f, tours: f.tours.filter((_,i)=>i!==idx).map((t,i)=>({...t,num:i+1}))}));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.nom || !form.date) return;
     if (editId) {
       setCompetitions(prev => prev.map(c => c.id === editId ? { ...c, ...form } : c));
+      // Sync lienVideo dans Firestore si présent
+      if (form.lienVideo) {
+        try {
+          const videoId = "comp_" + editId;
+          const q = query(collection(db, "video_links"), where("videoId", "==", videoId));
+          const snap = await getDocs(q);
+          if (snap.empty) await addDoc(collection(db, "video_links"), { videoId, lien: form.lienVideo, updatedAt: serverTimestamp() });
+          else await updateDoc(doc(db, "video_links", snap.docs[0].id), { lien: form.lienVideo, updatedAt: serverTimestamp() });
+        } catch(e) { console.error("Erreur sync vidéo compét:", e); }
+      }
     } else {
-      setCompetitions(prev => [{ id: Date.now(), ...form, hasVideo: !!form.lienVideo }, ...prev]);
+      const newId = Date.now();
+      setCompetitions(prev => [{ id: newId, ...form, hasVideo: !!form.lienVideo }, ...prev]);
+      // Sync lienVideo dans Firestore si présent
+      if (form.lienVideo) {
+        try {
+          await addDoc(collection(db, "video_links"), { videoId: "comp_" + newId, lien: form.lienVideo, updatedAt: serverTimestamp() });
+        } catch(e) { console.error("Erreur sync vidéo compét:", e); }
+      }
     }
     setShowForm(false);
   };
