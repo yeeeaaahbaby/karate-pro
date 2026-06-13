@@ -1669,37 +1669,70 @@ const Chat = () => {
 };
 
 // ─── ÉQUIPE ───────────────────────────────────────────────────────────────────
-const Equipe = () => (
-  <div>
-    <SectionHeader icon="👥" title="L'équipe" subtitle="Personnes ayant accès à l'application" color={C.primary}
-      action={<Btn color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Ajouter</Btn>} />
-    {Object.entries(mockTeam).map(([role, members])=>(
-      <div key={role} style={{ marginBottom:20 }}>
-        <div style={{ fontWeight:700, fontSize:14, marginBottom:10 }}>{role}</div>
-        {members.map(m=>(
-          <div key={m.name} style={{ background:C.card, borderRadius:12, border:"1px solid "+C.border, padding:14, marginBottom:8, display:"flex", alignItems:"flex-start", gap:10 }}>
-            <Avatar name={m.name} size={38} bg={C.primary} />
-            <div style={{ flex:1 }}>
-              <div style={{ fontWeight:700, fontSize:13, marginBottom:2 }}>{m.name}</div>
-              <Badge label={role} color={C.primary} />
-              <div style={{ marginTop:6, fontSize:11, color:C.muted }}>✉ {m.email}</div>
-              <div style={{ fontSize:11, color:C.muted, display:"flex", alignItems:"center", gap:4 }}>
-                📞 {m.phone} <span style={{ width:7, height:7, borderRadius:"50%", background:m.online?C.green:C.muted, display:"inline-block" }} />
-              </div>
+const TEAM_DETAILS = [
+  { id:"iliana",    name:"Iliana Voratovic",   role:"Athlète",     emoji:"🥋", email:"ilianavoratovic@gmail.com",     phone:"06 36 49 01 70" },
+  { id:"isabelle",  name:"Isabelle Voratovic", role:"Parent",      emoji:"👩", email:"isaphoenix@hotmail.fr",         phone:"06 10 03 68 28" },
+  { id:"alexandre", name:"Alexandre Voratovic",role:"Parent",      emoji:"👨", email:"a.voratovic@isipatrimoine.com", phone:"07 77 05 93 23" },
+  { id:"helvetia",  name:"Helvétia Taily",     role:"Entraîneur",  emoji:"🏆", email:"helvetiataily@gmail.com",       phone:"07 67 64 20 15" },
+];
+
+const Equipe = ({ currentUser, onIdentify }) => {
+  const [copied, setCopied] = useState(null);
+  const APP_URL = "https://karate-pro.vercel.app";
+
+  const handleInvite = async (member) => {
+    const msg = member.name + " — Accède à l'app Karaté Pro ici : " + APP_URL;
+    if (navigator.share) {
+      await navigator.share({ title:"Karaté Pro", text:msg, url:APP_URL });
+    } else {
+      await navigator.clipboard.writeText(msg);
+      setCopied(member.id);
+      setTimeout(() => setCopied(null), 2500);
+    }
+  };
+
+  return (
+    <div>
+      <SectionHeader icon="👥" title="L'équipe" subtitle="Personnes ayant accès à l'application" color={C.primary} />
+      {currentUser && (
+        <div style={{ background:C.primary+"15", border:"1px solid "+C.primary+"33", borderRadius:10, padding:"10px 14px", marginBottom:16, fontSize:13, color:C.primary, fontWeight:600 }}>
+          ✅ Vous êtes identifié·e en tant que <strong>{currentUser.fullName || currentUser.name}</strong>
+        </div>
+      )}
+      {!currentUser && (
+        <div style={{ background:"#FEF3C7", border:"1px solid #F59E0B44", borderRadius:10, padding:"10px 14px", marginBottom:16, fontSize:13, color:"#92400E" }}>
+          👤 Appuyez sur <strong>"C'est moi"</strong> pour vous identifier
+        </div>
+      )}
+      {TEAM_DETAILS.map(m => {
+        const isMe = currentUser?.id === m.id;
+        return (
+          <div key={m.id} style={{ background:C.card, borderRadius:12, border:"2px solid "+(isMe ? C.primary : C.border), padding:14, marginBottom:10, display:"flex", alignItems:"flex-start", gap:12 }}>
+            <div style={{ width:42, height:42, borderRadius:"50%", background:isMe ? C.primary : C.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:20, flexShrink:0 }}>
+              {m.emoji}
             </div>
-            <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
-              <Btn small outlined color={C.muted} style={{ fontSize:10 }}>Inviter</Btn>
-              <div style={{ display:"flex", gap:4 }}>
-                <button style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={12}/></button>
-                <button style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={12}/></button>
-              </div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontWeight:700, fontSize:14 }}>{m.name}</div>
+              <Badge label={m.role} color={C.primary} />
+              <div style={{ marginTop:6, fontSize:11, color:C.muted }}>✉ {m.email}</div>
+              <div style={{ fontSize:11, color:C.muted }}>📞 {m.phone}</div>
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:6, flexShrink:0 }}>
+              <button onClick={() => onIdentify(TEAM_USERS.find(u=>u.id===m.id) || m)}
+                style={{ background:isMe ? C.primary : C.bg, color:isMe ? "#fff" : C.primary, border:"1.5px solid "+C.primary, borderRadius:8, padding:"6px 10px", fontSize:11, fontWeight:700, cursor:"pointer", whiteSpace:"nowrap" }}>
+                {isMe ? "✓ C'est moi" : "C'est moi"}
+              </button>
+              <button onClick={() => handleInvite(m)}
+                style={{ background:"none", color:C.muted, border:"1.5px solid "+C.border, borderRadius:8, padding:"6px 10px", fontSize:11, cursor:"pointer", whiteSpace:"nowrap" }}>
+                {copied === m.id ? "✓ Copié !" : "📨 Inviter"}
+              </button>
             </div>
           </div>
-        ))}
-      </div>
-    ))}
-  </div>
-);
+        );
+      })}
+    </div>
+  );
+};
 
 // ─── PROFIL ───────────────────────────────────────────────────────────────────
 const Profil = ({ sessions }) => {
@@ -1913,7 +1946,7 @@ export default function App() {
       case "nutrition": return <Nutrition/>;
       case "sommeil": return <Sommeil/>;
       case "chat": return <Chat/>;
-      case "equipe": return <Equipe/>;
+      case "equipe": return <Equipe currentUser={currentUser} onIdentify={(u)=>{setCurrentUser(u);setCurrentUserState(u);}}/>;
       case "profil": return <Profil sessions={sessions}/>;
       default: return <EmptyState icon={<LayoutDashboard size={24}/>} title="Section à venir"/>;
     }
@@ -1987,20 +2020,7 @@ export default function App() {
             <img src="/iliana.png" alt="Iliana" onError={e=>{e.target.style.display="none"}} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}}/>
           </div>
         )}
-        {!currentUser && (
-          <div style={{position:"fixed",top:0,left:0,width:"100%",height:"100%",background:"rgba(0,0,0,0.88)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <div style={{background:"#fff",borderRadius:16,padding:"32px 40px",textAlign:"center",width:320}}>
-              <div style={{fontSize:40,marginBottom:8}}>&#x1F94B;</div>
-              <h2 style={{margin:"0 0 4px",fontSize:20}}>Karate Pro</h2>
-              <p style={{color:"#666",marginBottom:24,fontSize:14,margin:"4px 0 20px"}}>Qui etes-vous ?</p>
-              {TEAM_USERS.map(u=>(
-                <button key={u.id} onClick={()=>{setCurrentUser(u);setCurrentUserState(u);}} style={{display:"block",width:"100%",padding:"11px 16px",marginBottom:10,borderRadius:10,border:"1px solid #e5e7eb",background:"#f9f9f9",cursor:"pointer",fontSize:15,textAlign:"left"}}>
-                  {u.emoji} {u.fullName} <span style={{color:"#999",fontSize:12}}>({u.role})</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+
         <div style={{ background:"#fff", borderBottom:"1px solid "+C.border, padding:"0 16px", height:56,
           display:"flex", alignItems:"center", gap:12, flexShrink:0, position:"sticky", top:0, zIndex:50 }}>
           <button onClick={()=>setSidebarOpen(true)} style={{ background:"none", border:"none", cursor:"pointer", color:C.text, padding:4 }}>
