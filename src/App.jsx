@@ -2045,7 +2045,18 @@ const Equipe = ({ currentUser, onIdentify }) => {
     setMembers(prev => prev.filter(x => x.firestoreId !== m.firestoreId));
   };
 
-  const handleInvite = (m) => {
+  const handleInvite = async (m) => {
+    const emailNorm = (m.email || "").trim().toLowerCase();
+    if (!emailNorm) return;
+    // Ajouter à la liste blanche Firestore si pas déjà présent
+    try {
+      const q = query(collection(db, "allowed_emails"), where("email", "==", emailNorm));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        await addDoc(collection(db, "allowed_emails"), { email: emailNorm, invitedBy: "alexandre", invitedAt: serverTimestamp() });
+      }
+    } catch(e) { console.error("Erreur ajout allowlist:", e); }
+    // Ouvrir Gmail
     const subject = encodeURIComponent("Invitation – Karaté Pro SKB Elite");
     const body = encodeURIComponent(
       "Bonjour " + m.prenom + ",\n\n" +
@@ -2054,11 +2065,11 @@ const Equipe = ({ currentUser, onIdentify }) => {
       "Pour créer ton compte :\n" +
       "• Clique sur « Continuer avec Google » si tu as un compte Google\n" +
       "• Ou clique sur « Connexion par email » pour créer un mot de passe\n\n" +
-      "⚠️ Utilise bien cette adresse email : " + m.email + "\n\n" +
+      "⚠️ Utilise bien cette adresse email : " + emailNorm + "\n\n" +
       "À bientôt !\n" +
       "Alexandre"
     );
-    const gmailUrl = "https://mail.google.com/mail/?view=cm&to=" + encodeURIComponent(m.email) + "&su=" + subject + "&body=" + body;
+    const gmailUrl = "https://mail.google.com/mail/?view=cm&to=" + encodeURIComponent(emailNorm) + "&su=" + subject + "&body=" + body;
     window.open(gmailUrl, "_blank");
   };
 
@@ -2627,7 +2638,7 @@ const AdminUsers = ({ currentUserEmail }) => {
       const q = query(collection(db, "allowed_emails"), where("email", "==", newEmail.trim()));
       const existing = await getDocs(q);
       if (existing.empty) {
-        await addDoc(collection(db, "allowed_emails"), { email: newEmail.trim(), invitedBy: currentUserEmail, invitedAt: serverTimestamp() });
+        await addDoc(collection(db, "allowed_emails"), { email: newEmail.trim().toLowerCase(), invitedBy: currentUserEmail, invitedAt: serverTimestamp() });
       }
       // 2. Ouvrir Gmail dans le navigateur avec l'email pré-rempli
       const appUrl = window.location.origin;
@@ -2722,7 +2733,7 @@ export default function App() {
       if (!user) { setAuthUser(null); setAuthAllowed(false); return; }
       if (user.email === ADMIN_EMAIL) { setAuthUser(user); setAuthAllowed(true); return; }
       try {
-        const q = query(collection(db, "allowed_emails"), where("email", "==", user.email));
+        const q = query(collection(db, "allowed_emails"), where("email", "==", user.email.toLowerCase()));
         const snap = await getDocs(q);
         if (!snap.empty) { setAuthUser(user); setAuthAllowed(true); }
         else { await signOut(auth); setAuthUser(null); setAuthAllowed(false); alert("Accès non autorisé. Contactez l'administrateur."); }
