@@ -10,8 +10,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { db, auth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "./firebase";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, where, onSnapshot, orderBy, limit } from "firebase/firestore";
-import { requestNotificationPermission, onForegroundMessage } from "./firebase";
-import { enregistrerSeance, getCurrentUser, setCurrentUser, saveUserToken, subscribeToNotifications, notifyNewChatMessage } from "./notifications";
+import { enregistrerSeance, getCurrentUser, setCurrentUser, subscribeToNotifications, notifyNewChatMessage, saveOneSignalPlayerId } from "./notifications";
 
 const C = {
   primary: "#7C3AED", accent: "#EC4899", red: "#EF4444",
@@ -2870,23 +2869,37 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if ("Notification" in window) {
-      setNotifPermission(Notification.permission);
-      // Auto-refresh token si permission déjà accordée
-      if (Notification.permission === "granted" && authUser) {
-        requestNotificationPermission().then(token => {
-          if (token) {
-            saveUserToken(authUser.uid, token);
-            showToast("✅ Token FCM OK: " + token.substring(0,15) + "...");
-          } else {
-            showToast("⚠️ Token FCM null (VAPID ou SW?)");
-          }
-        }).catch(err => {
-          showToast("❌ FCM: " + (err.message || err.code || String(err)).substring(0, 80));
+    if (!authUser) return;
+    // Initialiser OneSignal
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async (OneSignal) => {
+      try {
+        await OneSignal.init({
+          appId: "0e17a9d1-8c6e-4131-9644-7ab407e46c75",
+          notifyButton: { enable: false },
         });
+        // Vérifier si déjà abonné
+        const optedIn = OneSignal.User.PushSubscription.optedIn;
+        if (optedIn) {
+          setNotifPermission("granted");
+          const playerId = OneSignal.User.PushSubscription.id;
+          if (playerId) await saveOneSignalPlayerId(authUser.uid, playerId);
+        }
+        // Écouter les changements d'abonnement
+        OneSignal.User.PushSubscription.addEventListener("change", async (event) => {
+          if (event.current.optedIn) {
+            setNotifPermission("granted");
+            const playerId = event.current.id;
+            if (playerId) await saveOneSignalPlayerId(authUser.uid, playerId);
+            showToast("✅ Notifications push activées");
+          } else {
+            setNotifPermission("default");
+          }
+        });
+      } catch (err) {
+        console.error("OneSignal init error:", err);
       }
-    }
-    onForegroundMessage(payload => setToast(payload.notification?.body || "Nouvelle notification"));
+    });
   }, [authUser]);
 
   // Notif in-app : nouveau message chat (hors onglet chat)
@@ -2929,8 +2942,15 @@ export default function App() {
   if (!authUser || !authAllowed) return <LoginScreen />;
 
   const handleEnableNotifications = async () => {
-    const token = await requestNotificationPermission();
-    if (token) { setNotifPermission("granted"); saveUserToken(authUser?.uid, token); }
+    try {
+      if (window.OneSignal) {
+        await window.OneSignal.User.PushSubscription.optIn();
+      } else {
+        showToast("OneSignal en cours de chargement, réessayez dans un instant");
+      }
+    } catch (err) {
+      showToast("Erreur activation notifications: " + (err.message || String(err)).substring(0, 60));
+    }
   };
 
   const showToast = (message) => {
