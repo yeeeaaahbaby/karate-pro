@@ -2870,9 +2870,17 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if ("Notification" in window) setNotifPermission(Notification.permission);
+    if ("Notification" in window) {
+      setNotifPermission(Notification.permission);
+      // Auto-refresh token si permission déjà accordée
+      if (Notification.permission === "granted" && authUser) {
+        requestNotificationPermission().then(token => {
+          if (token) saveUserToken(authUser.uid, token);
+        }).catch(() => {});
+      }
+    }
     onForegroundMessage(payload => setToast(payload.notification?.body || "Nouvelle notification"));
-  }, []);
+  }, [authUser]);
 
   // Notif in-app : nouveau message chat (hors onglet chat)
   useEffect(() => {
