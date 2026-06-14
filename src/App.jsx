@@ -2874,13 +2874,24 @@ export default function App() {
     onForegroundMessage(payload => setToast(payload.notification?.body || "Nouvelle notification"));
   }, []);
 
+  // Notif in-app : nouveau message chat (hors onglet chat)
   useEffect(() => {
     if (!authUser) return;
-    const unsub = subscribeToNotifications(({title, body}) => {
-      showToast(title + (body ? " — " + body : ""));
-    }, authUser.uid);
+    let initialized = false;
+    const q = query(collection(db, "chat_messages"), orderBy("createdAt", "desc"), limit(1));
+    const unsub = onSnapshot(q, (snap) => {
+      if (!initialized) { initialized = true; return; }
+      snap.docChanges().forEach(change => {
+        if (change.type === "added") {
+          const d = change.doc.data();
+          if (d.senderId !== authUser.uid && page !== "chat") {
+            showToast("💬 " + (d.sender || "Message") + " — " + (d.text || ""));
+          }
+        }
+      });
+    });
     return () => unsub();
-  }, [authUser]);
+  }, [authUser, page]);
 
   useEffect(() => {
     const fadeT = setTimeout(() => setSplashOpacity(0), 2200);

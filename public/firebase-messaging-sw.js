@@ -34,6 +34,6 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
-    clients.openWindow('https://app.skb-elite.fr')
+    clients.openWindow('https://karate-pro.vercel.app')
   );
 });
