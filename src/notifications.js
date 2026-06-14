@@ -29,19 +29,16 @@ export function setCurrentUser(user) {
 // ─── SAUVEGARDER TOKEN FCM ────────────────────────────────────────────────────
 export async function saveUserToken(userId, token) {
   try {
-    const user = TEAM_USERS.find(u => u.id === userId);
-    if (!user || !token) return;
+    if (!userId || !token) return;
     const q = query(collection(db, "fcm_tokens"), where("token", "==", token));
     const existing = await getDocs(q);
     if (!existing.empty) return;
     await addDoc(collection(db, "fcm_tokens"), {
       userId,
       token,
-      role: user.role,
-      name: user.fullName,
       createdAt: serverTimestamp(),
     });
-    console.log("✅ Token FCM enregistré pour", user.name);
+    console.log("✅ Token FCM enregistré pour", userId);
   } catch (error) {
     console.error("Erreur sauvegarde token:", error);
   }
@@ -64,8 +61,8 @@ export async function notifyNewContent({ type, title, body, createdBy }) {
 }
 
 // ─── ÉCOUTER LES NOTIFICATIONS ENTRANTES (in-app) ────────────────────────────
-export function subscribeToNotifications(onNewNotif) {
-  const userId = getUserId();
+export function subscribeToNotifications(onNewNotif, userId) {
+  if (!userId) userId = getUserId();
   if (!userId) return () => {};
 
   const q = query(

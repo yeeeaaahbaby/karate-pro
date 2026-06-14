@@ -2042,7 +2042,7 @@ const Chat = ({ authUser }) => {
     const text = msg.trim();
     setMsg("");
     try {
-      const senderName = authUser?.displayName || authUser?.email?.split("@")[0] || "Équipe";
+      const senderName = (authUser?.displayName?.split(" ")[0]) || authUser?.email?.split("@")[0] || "Équipe";
       await addDoc(collection(db, "chat_messages"), {
         text,
         sender: senderName,
@@ -2875,12 +2875,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!authUser) return;
     const unsub = subscribeToNotifications(({title, body}) => {
       showToast(title + (body ? " — " + body : ""));
-    });
+    }, authUser.uid);
     return () => unsub();
-  }, [currentUser]);
+  }, [authUser]);
 
   useEffect(() => {
     const fadeT = setTimeout(() => setSplashOpacity(0), 2200);
@@ -2904,7 +2904,7 @@ export default function App() {
 
   const handleEnableNotifications = async () => {
     const token = await requestNotificationPermission();
-    if (token) { setNotifPermission("granted"); saveUserToken(getCurrentUser()?.id, token); }
+    if (token) { setNotifPermission("granted"); saveUserToken(authUser?.uid, token); }
   };
 
   const showToast = (message) => {
