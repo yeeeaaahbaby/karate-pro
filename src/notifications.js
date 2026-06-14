@@ -170,8 +170,8 @@ export async function notifyNewCorrection(correction, createdBy) {
 export async function notifyNewChatMessage(message, senderName, createdBy) {
   await notifyNewContent({
     type: "nouveau_message",
-    title: `💬 ${senderName}`,
-    body: message,
+    title: `💬 Nouveau message`,
+    body: `${senderName} : ${message}`,
     createdBy,
   });
 }

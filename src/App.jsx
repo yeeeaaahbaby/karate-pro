@@ -2885,7 +2885,7 @@ export default function App() {
         if (change.type === "added") {
           const d = change.doc.data();
           if (d.senderId !== authUser.uid && page !== "chat") {
-            showToast("💬 " + (d.sender || "Message") + " — " + (d.text || ""));
+            showToast("💬 Nouveau message de " + (d.sender || "?") + " — " + (d.text || ""));
           }
         }
       });
