@@ -45,7 +45,7 @@ export {
   reauthenticateWithCredential,
 };
 
-const VAPID_KEY = "BNFtRNp0YAuLAgJb4h73D4W8jjzV15ol9Rl1cZazcveUZioryx_LWj7nfcy";
+const VAPID_KEY = "BNFtRNp0YAuLAgJb4h73D4W8jjzV15ol9Rl1cZazcveUZioryxl_Wj7npfcyTxKz5BkOm6DsP2w8oQBBHB9sGQo";
 
 export async function requestNotificationPermission() {
   try {
