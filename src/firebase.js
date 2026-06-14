@@ -52,18 +52,11 @@ export async function requestNotificationPermission() {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") return null;
     const swReg = await navigator.serviceWorker.ready;
-    // Vérifier si pushManager est dispo (iOS PWA 16.4+)
-    if (!swReg.pushManager) throw new Error("pushManager non disponible - PWA requis sur iOS");
-    // Essayer de souscrire directement pour voir l'erreur iOS
+    if (!swReg.pushManager) throw new Error("pushManager non disponible");
+    // Supprimer l'ancienne souscription (mauvaise VAPID key)
     const existing = await swReg.pushManager.getSubscription();
-    if (!existing) {
-      const sub = await swReg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: VAPID_KEY,
-      }).catch(e => { throw new Error("pushManager.subscribe: " + e.message); });
-      if (!sub) throw new Error("Subscribe retourné null");
-    }
-    // Maintenant getToken Firebase
+    if (existing) await existing.unsubscribe();
+    // getToken recrée la souscription avec la bonne VAPID key
     const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg });
     return token;
   } catch (error) {
