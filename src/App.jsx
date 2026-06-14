@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { db, auth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "./firebase";
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, where } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, where, onSnapshot, orderBy, limit } from "firebase/firestore";
 import { requestNotificationPermission, onForegroundMessage } from "./firebase";
 import { enregistrerSeance, getCurrentUser, setCurrentUser, saveUserToken, subscribeToNotifications, notifyNewChatMessage } from "./notifications";
 
@@ -622,17 +622,18 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
         }
         showToast("Séance modifiée avec succès ✓");
       } else {
-        // Nouvelle séance
-        const uid = getCurrentUser()?.id;
+        // Nouvelle séance — sauvegarder localement d'abord (non-bloquant)
         const newId = Date.now();
-        await enregistrerSeance(seance, uid);
         setSessions(prev => [{ id: newId, ...seance }, ...prev]);
-        // Sync lienVideo dans Firestore si présent
-        if (seance.lienVideo) {
-          const videoId = "perso_" + newId;
-          await addDoc(collection(db, "video_links"), { videoId, lien: seance.lienVideo, updatedAt: serverTimestamp() });
-        }
         showToast("Séance "+form.type+" — "+form.duration+" min enregistrée ✓");
+        // Firestore en arrière-plan (ne bloque pas si permission refusée)
+        try {
+          const uid = getCurrentUser()?.id;
+          await enregistrerSeance(seance, uid);
+          if (seance.lienVideo) {
+            await addDoc(collection(db, "video_links"), { videoId: "perso_"+newId, lien: seance.lienVideo, updatedAt: serverTimestamp() });
+          }
+        } catch(fe) { console.warn("Firestore write skipped:", fe.code); }
       }
       closeForm();
     } catch(e) { console.error(e); }
@@ -694,6 +695,11 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
               <div style={{ color:C.muted, fontSize:11 }}>{s.date}{s.coach?" · "+s.coach:""}</div>
             </div>
             <div style={{ display:"flex", gap:6 }}>
+              {s.lienVideo && (
+                <button onClick={()=>window.open(s.lienVideo,"_blank")} title="Voir la vidéo" style={{ background:C.primary+"22", border:"1px solid "+C.primary+"44", borderRadius:6, padding:"3px 8px", cursor:"pointer", color:C.primary, fontSize:11, display:"flex", alignItems:"center", gap:3 }}>
+                  <Video size={12}/> Vidéo
+                </button>
+              )}
               <button onClick={()=>openEdit(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
               <button onClick={()=>setSessions(prev=>prev.filter(p=>p.id!==s.id))} style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
             </div>
@@ -2014,19 +2020,78 @@ const Sommeil = () => {
 };
 
 // ─── CHAT ─────────────────────────────────────────────────────────────────────
-const Chat = () => {
+const Chat = ({ authUser }) => {
   const [msg, setMsg] = useState("");
+  const [messages, setMessages] = useState([]);
+  const messagesEndRef = { current: null };
+
+  useEffect(() => {
+    const q = query(collection(db, "chat_messages"), orderBy("createdAt", "asc"), limit(100));
+    const unsub = onSnapshot(q, (snap) => {
+      setMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      setTimeout(() => {
+        const el = document.getElementById("chat-end");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    });
+    return () => unsub();
+  }, []);
+
+  const send = async () => {
+    if (!msg.trim()) return;
+    const text = msg.trim();
+    setMsg("");
+    try {
+      await addDoc(collection(db, "chat_messages"), {
+        text,
+        sender: authUser?.displayName || authUser?.email?.split("@")[0] || "Équipe",
+        senderId: authUser?.uid || "unknown",
+        createdAt: serverTimestamp(),
+      });
+    } catch(e) { console.error("Erreur envoi message:", e); setMsg(text); }
+  };
+
+  const formatTime = (ts) => {
+    if (!ts) return "";
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+  };
+
+  const isMe = (m) => m.senderId === authUser?.uid;
+
   return (
     <div style={{ display:"flex", flexDirection:"column", height:"calc(100vh - 130px)" }}>
       <div style={{ background:"linear-gradient(135deg, "+C.blue+" 60%, "+C.primary+")", borderRadius:14, padding:"16px 18px", color:"#fff", marginBottom:12, display:"flex", alignItems:"center", gap:10 }}>
-        <MessageCircle size={20}/><div><div style={{ fontWeight:800, fontSize:16 }}>Chat Équipe</div><div style={{ fontSize:11, opacity:0.8 }}>Communication avec votre équipe</div></div>
+        <MessageCircle size={20}/><div><div style={{ fontWeight:800, fontSize:16 }}>Chat Équipe</div><div style={{ fontSize:11, opacity:0.8 }}>{messages.length} message{messages.length!==1?"s":""}</div></div>
       </div>
-      <div style={{ flex:1, background:C.card, borderRadius:14, border:"1px solid "+C.border, marginBottom:10 }} />
+
+      <div style={{ flex:1, background:C.card, borderRadius:14, border:"1px solid "+C.border, marginBottom:10, overflowY:"auto", padding:16, display:"flex", flexDirection:"column", gap:10 }}>
+        {messages.length === 0 && (
+          <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", color:C.muted, fontSize:13 }}>
+            Aucun message — soyez le premier à écrire 👋
+          </div>
+        )}
+        {messages.map(m => (
+          <div key={m.id} style={{ display:"flex", flexDirection:"column", alignItems: isMe(m) ? "flex-end" : "flex-start" }}>
+            {!isMe(m) && <div style={{ fontSize:11, color:C.muted, marginBottom:3, paddingLeft:4 }}>{m.sender}</div>}
+            <div style={{ maxWidth:"75%", background: isMe(m) ? C.primary : C.bg, color: isMe(m) ? "#fff" : C.text,
+              borderRadius: isMe(m) ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
+              padding:"10px 14px", fontSize:13, lineHeight:1.4 }}>
+              {m.text}
+            </div>
+            <div style={{ fontSize:10, color:C.muted, marginTop:3, paddingLeft:4, paddingRight:4 }}>{formatTime(m.createdAt)}</div>
+          </div>
+        ))}
+        <div id="chat-end"/>
+      </div>
+
       <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:10, display:"flex", gap:8, alignItems:"center" }}>
-        <button style={{ background:"none", border:"none", cursor:"pointer", color:C.muted }}><Paperclip size={18}/></button>
-        <input value={msg} onChange={e=>setMsg(e.target.value)} placeholder="Écrivez votre message..."
+        <input value={msg} onChange={e=>setMsg(e.target.value)}
+          onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&send()}
+          placeholder="Écrivez votre message..."
           style={{ flex:1, border:"none", outline:"none", fontSize:14, background:"transparent" }} />
-        <button style={{ background:C.primary, border:"none", borderRadius:8, padding:"8px 10px", cursor:"pointer", color:"#fff" }} onClick={async()=>{const u=getCurrentUser();if(!msg.trim())return;await notifyNewChatMessage(msg,u?.name||"Equipe",u?.id);setMsg("");}}><Send size={15}/></button>
+        <button style={{ background:C.primary, border:"none", borderRadius:8, padding:"8px 12px", cursor:"pointer", color:"#fff", display:"flex", alignItems:"center" }}
+          onClick={send}><Send size={15}/></button>
       </div>
     </div>
   );
@@ -2863,7 +2928,7 @@ export default function App() {
       case "videos": return <Videos competitions={competitions} sessions={sessions}/>;
       case "nutrition": return <Nutrition/>;
       case "sommeil": return <Sommeil/>;
-      case "chat": return <Chat/>;
+      case "chat": return <Chat authUser={authUser}/>;
       case "equipe": return <Equipe currentUser={currentUser} onIdentify={(u)=>{setCurrentUser(u);setCurrentUserState(u);}}/>;
       case "profil": return <Profil sessions={sessions} competitions={competitions} authUser={authUser}/>;
       default: return <EmptyState icon={<LayoutDashboard size={24}/>} title="Section à venir"/>;
