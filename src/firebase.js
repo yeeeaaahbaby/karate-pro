@@ -50,14 +50,16 @@ const VAPID_KEY = "BNFtRNp0YAuLAgJb4h73D4W8jjzV15ol9Rl1cZazcveUZioryx_LWj7nfcy";
 export async function requestNotificationPermission() {
   try {
     const permission = await Notification.requestPermission();
-    if (permission === "granted") {
-      const token = await getToken(messaging, { vapidKey: VAPID_KEY });
-      return token;
-    }
-    return null;
+    if (permission !== "granted") { console.warn("Permission refusée:", permission); return null; }
+    // Attendre que le SW soit prêt
+    const swReg = await navigator.serviceWorker.ready;
+    console.log("SW prêt:", swReg.scope);
+    const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg });
+    console.log("Token FCM obtenu:", token ? token.substring(0,20)+"..." : "NULL");
+    return token;
   } catch (error) {
-    console.error("Erreur notification:", error);
-    return null;
+    console.error("Erreur FCM getToken:", error.code, error.message);
+    throw error; // Remonter l'erreur pour la voir dans l'app
   }
 }
 

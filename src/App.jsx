@@ -2875,8 +2875,12 @@ export default function App() {
       // Auto-refresh token si permission déjà accordée
       if (Notification.permission === "granted" && authUser) {
         requestNotificationPermission().then(token => {
-          if (token) saveUserToken(authUser.uid, token);
-        }).catch(() => {});
+          if (token) { saveUserToken(authUser.uid, token); console.log("Token sauvegardé ✅"); }
+          else console.warn("Token FCM null");
+        }).catch(err => {
+          console.error("FCM error:", err);
+          showToast("⚠️ Notif erreur: " + (err.message || err.code || String(err)));
+        });
       }
     }
     onForegroundMessage(payload => setToast(payload.notification?.body || "Nouvelle notification"));
