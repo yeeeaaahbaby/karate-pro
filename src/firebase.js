@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getMessaging, getToken, onMessage, isSupported } from "firebase/messaging";
 import {
   getAuth,
   onAuthStateChanged,
@@ -49,22 +49,15 @@ const VAPID_KEY = "BNFtRNp0YAuLAgJb4h73D4W8jjzV15ol9Rl1cZazcveUZioryxl_Wj7npfcyT
 
 export async function requestNotificationPermission() {
   try {
+    // Vérifier support Firebase Messaging
+    const supported = await isSupported();
+    if (!supported) throw new Error("Firebase Messaging non supporté sur ce navigateur/OS");
     const permission = await Notification.requestPermission();
-    if (permission !== "granted") { return null; }
-    // Attendre SW actif, puis laisser Firebase le découvrir lui-même
+    if (permission !== "granted") return null;
     await navigator.serviceWorker.ready;
-    // Essai 1: sans serviceWorkerRegistration (Firefox/iOS)
-    let token = null;
-    try {
-      token = await getToken(messaging, { vapidKey: VAPID_KEY });
-    } catch(e1) {
-      // Essai 2: avec registration explicite
-      const reg = await navigator.serviceWorker.getRegistration('/');
-      if (reg) token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: reg });
-    }
+    const token = await getToken(messaging, { vapidKey: VAPID_KEY });
     return token;
   } catch (error) {
-    console.error("FCM getToken:", error.code, error.message);
     throw error;
   }
 }
