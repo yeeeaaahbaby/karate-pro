@@ -50,16 +50,22 @@ const VAPID_KEY = "BNFtRNp0YAuLAgJb4h73D4W8jjzV15ol9Rl1cZazcveUZioryxl_Wj7npfcyT
 export async function requestNotificationPermission() {
   try {
     const permission = await Notification.requestPermission();
-    if (permission !== "granted") { console.warn("Permission refusée:", permission); return null; }
-    // Attendre que le SW soit prêt
-    const swReg = await navigator.serviceWorker.ready;
-    console.log("SW prêt:", swReg.scope);
-    const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg });
-    console.log("Token FCM obtenu:", token ? token.substring(0,20)+"..." : "NULL");
+    if (permission !== "granted") { return null; }
+    // Attendre SW actif, puis laisser Firebase le découvrir lui-même
+    await navigator.serviceWorker.ready;
+    // Essai 1: sans serviceWorkerRegistration (Firefox/iOS)
+    let token = null;
+    try {
+      token = await getToken(messaging, { vapidKey: VAPID_KEY });
+    } catch(e1) {
+      // Essai 2: avec registration explicite
+      const reg = await navigator.serviceWorker.getRegistration('/');
+      if (reg) token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: reg });
+    }
     return token;
   } catch (error) {
-    console.error("Erreur FCM getToken:", error.code, error.message);
-    throw error; // Remonter l'erreur pour la voir dans l'app
+    console.error("FCM getToken:", error.code, error.message);
+    throw error;
   }
 }
 
