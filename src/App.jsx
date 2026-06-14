@@ -2042,12 +2042,15 @@ const Chat = ({ authUser }) => {
     const text = msg.trim();
     setMsg("");
     try {
+      const senderName = authUser?.displayName || authUser?.email?.split("@")[0] || "Équipe";
       await addDoc(collection(db, "chat_messages"), {
         text,
-        sender: authUser?.displayName || authUser?.email?.split("@")[0] || "Équipe",
+        sender: senderName,
         senderId: authUser?.uid || "unknown",
         createdAt: serverTimestamp(),
       });
+      // Notif push pour les autres membres
+      try { await notifyNewChatMessage(text, senderName, authUser?.uid); } catch(_) {}
     } catch(e) { console.error("Erreur envoi message:", e); setMsg(text); }
   };
 
