@@ -200,3 +200,21 @@ export async function getSeances() {
     return [];
   }
 }
+
+// ─── ONESIGNAL : SAUVEGARDER PLAYER ID ───────────────────────────────────────
+export async function saveOneSignalPlayerId(userId, playerId) {
+  try {
+    if (!userId || !playerId) return;
+    const q = query(collection(db, "onesignal_players"), where("playerId", "==", playerId));
+    const existing = await getDocs(q);
+    if (!existing.empty) return; // déjà enregistré
+    await addDoc(collection(db, "onesignal_players"), {
+      userId,
+      playerId,
+      createdAt: serverTimestamp(),
+    });
+    console.log("✅ OneSignal Player ID enregistré pour", userId);
+  } catch (error) {
+    console.error("Erreur sauvegarde player ID OneSignal:", error);
+  }
+}
