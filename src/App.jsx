@@ -2875,11 +2875,14 @@ export default function App() {
       // Auto-refresh token si permission déjà accordée
       if (Notification.permission === "granted" && authUser) {
         requestNotificationPermission().then(token => {
-          if (token) { saveUserToken(authUser.uid, token); console.log("Token sauvegardé ✅"); }
-          else console.warn("Token FCM null");
+          if (token) {
+            saveUserToken(authUser.uid, token);
+            showToast("✅ Token FCM OK: " + token.substring(0,15) + "...");
+          } else {
+            showToast("⚠️ Token FCM null (VAPID ou SW?)");
+          }
         }).catch(err => {
-          console.error("FCM error:", err);
-          showToast("⚠️ Notif erreur: " + (err.message || err.code || String(err)));
+          showToast("❌ FCM: " + (err.message || err.code || String(err)).substring(0, 80));
         });
       }
     }
