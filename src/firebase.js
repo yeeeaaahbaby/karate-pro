@@ -9,7 +9,10 @@ import {
   signInWithEmailAndPassword,
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
-  signInWithEmailLink
+  signInWithEmailLink,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -25,6 +28,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+
 export {
   onAuthStateChanged,
   signOut,
@@ -33,7 +37,10 @@ export {
   signInWithEmailAndPassword,
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
-  signInWithEmailLink
+  signInWithEmailLink,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 };
 
 // Firebase Messaging supprimé - remplacé par OneSignal
