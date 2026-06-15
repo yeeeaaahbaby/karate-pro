@@ -14,20 +14,16 @@ exports.sendPushNotification = onDocumentCreated(
     if (!data || data.sent) return;
     const db = getFirestore();
     try {
-      // Récupérer tous les player IDs
+      // Récupérer tous les player IDs (sans exclure l'expéditeur)
       const playersSnap = await db.collection("onesignal_players").get();
-
-      // Récupérer les player IDs de l'expéditeur pour les exclure
-      const senderPlayersSnap = await db.collection("onesignal_players")
-        .where("userId", "==", data.createdBy).get();
-      const senderPlayerIds = new Set(senderPlayersSnap.docs.map(d => d.data().playerId));
-
-      const playerIds = playersSnap.docs
-        .map(d => d.data().playerId)
-        .filter(id => id && !senderPlayerIds.has(id));
+      const playerIds = [...new Set(
+        playersSnap.docs
+          .map(d => d.data().playerId)
+          .filter(id => id)
+      )];
 
       if (playerIds.length === 0) {
-        await event.data.ref.update({ sent: true, skipped: true, reason: "no_recipients" });
+        await event.data.ref.update({ sent: true, skipped: true, reason: "no_players" });
         return;
       }
 
