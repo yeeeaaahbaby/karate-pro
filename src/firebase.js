@@ -1,5 +1,16 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  sendSignInLinkToEmail,
+  isSignInWithEmailLink,
+  signInWithEmailLink
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyALTS-8rZh8muVN6eucdyyXq0ZM48ZumuU",
@@ -13,9 +24,19 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+export const auth = getAuth(app);
+export {
+  onAuthStateChanged,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  sendSignInLinkToEmail,
+  isSignInWithEmailLink,
+  signInWithEmailLink
+};
 
 // Firebase Messaging supprimé - remplacé par OneSignal
-// Les push notifications sont gérées par OneSignalSDKWorker.js
 export async function requestNotificationPermission() {
   return null; // Géré par OneSignal
 }
