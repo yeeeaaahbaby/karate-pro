@@ -14,15 +14,14 @@ exports.sendPushNotification = onDocumentCreated(
     if (!data || data.sent) return;
     const db = getFirestore();
     try {
-      // Récupérer tous les player IDs (sans exclure l'expéditeur)
       const playersSnap = await db.collection("onesignal_players").get();
-      const playerIds = [...new Set(
+      const subscriptionIds = [...new Set(
         playersSnap.docs
           .map(d => d.data().playerId)
           .filter(id => id)
       )];
 
-      if (playerIds.length === 0) {
+      if (subscriptionIds.length === 0) {
         await event.data.ref.update({ sent: true, skipped: true, reason: "no_players" });
         return;
       }
@@ -35,7 +34,7 @@ exports.sendPushNotification = onDocumentCreated(
         },
         body: JSON.stringify({
           app_id: ONESIGNAL_APP_ID,
-          include_player_ids: playerIds,
+          include_subscription_ids: subscriptionIds,
           headings: { fr: data.title, en: data.title },
           contents: { fr: data.body, en: data.body },
           url: "https://karate-pro.vercel.app",
@@ -50,6 +49,7 @@ exports.sendPushNotification = onDocumentCreated(
         sentAt: new Date(),
         oneSignalId: result.id || null,
         recipientCount: result.recipients || 0,
+        onesignalError: result.errors ? JSON.stringify(result.errors) : null,
       });
     } catch (err) {
       console.error("Erreur sendPushNotification:", err);
