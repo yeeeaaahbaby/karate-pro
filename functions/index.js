@@ -6,7 +6,7 @@ const { getFirestore } = require("firebase-admin/firestore");
 initializeApp();
 
 const ONESIGNAL_APP_ID = "0e17a9d1-8c6e-4131-9644-7ab407e46c75";
-const ONESIGNAL_API_KEY = "os_v2_app_byl2tummnzatdfsepk2apzdmoxbbrrgjv4uegeeflhnolc4hf2obuxxclbbepz36tvoqdyjsgjqpc3atl255wqwvxmjchvjuw2v4h3q";
+const ONESIGNAL_API_KEY = "os_v2_app_byl2tummnzatdfsepk2apzdmowo6zqxj7vsem7ulpnvxqnv5hdxs22jkdn4veyhq66ndgad6744gtm4khitwkc4sfon74snj6tcttyi";
 
 async function sendOneSignalPush(title, body) {
   const db = getFirestore();
