@@ -2976,12 +2976,6 @@ export default function App() {
     setAuthAllowed(false);
   };
 
-  // Auth guards
-  if (authUser === undefined) return (
-    <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"linear-gradient(135deg,#7C3AED,#EC4899)" }}>
-      <div style={{ color:"#fff", fontWeight:700, fontSize:16 }}>Chargement…</div>
-    </div>
-  );
   // Marquer chat comme lu à la navigation
   useEffect(() => {
     if (!authUser) return;
@@ -3031,6 +3025,13 @@ export default function App() {
     });
     return () => unsub();
   }, [authUser, page]);
+
+  // Auth guards
+  if (authUser === undefined) return (
+    <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"linear-gradient(135deg,#7C3AED,#EC4899)" }}>
+      <div style={{ color:"#fff", fontWeight:700, fontSize:16 }}>Chargement…</div>
+    </div>
+  );
 
   if (!authUser || !authAllowed) return <LoginScreen />;
 
