@@ -2982,6 +2982,56 @@ export default function App() {
       <div style={{ color:"#fff", fontWeight:700, fontSize:16 }}>Chargement…</div>
     </div>
   );
+  // Marquer chat comme lu à la navigation
+  useEffect(() => {
+    if (!authUser) return;
+    if (page === "chat") {
+      localStorage.setItem("kp_chatread_" + authUser.uid, Date.now().toString());
+      setUnreadChat(0);
+    }
+  }, [page, authUser]);
+
+  // Pastille chat : messages non-lus en temps réel
+  useEffect(() => {
+    if (!authUser) return;
+    const q = query(collection(db, "chat_messages"), orderBy("createdAt", "asc"));
+    const unsub = onSnapshot(q, (snap) => {
+      if (page === "chat") { setUnreadChat(0); return; }
+      const lastReadTs = parseInt(localStorage.getItem("kp_chatread_" + authUser.uid) || "0");
+      const count = snap.docs.filter(d => {
+        const data = d.data();
+        if (data.senderId === authUser.uid) return false;
+        const ts = data.createdAt?.toDate?.()?.getTime?.() || 0;
+        return ts > lastReadTs;
+      }).length;
+      setUnreadChat(count);
+    });
+    return () => unsub();
+  }, [authUser, page]);
+
+  // Pastille séances : Firestore, cross-device, hors créateur
+  useEffect(() => {
+    if (!authUser) return;
+    const unsub = onSnapshot(collection(db, "seances"), (snap) => {
+      const seenStr = localStorage.getItem("kp_seances_seen_" + authUser.uid);
+      if (page === "karate" || seenStr === null) {
+        // Première ouverture ou visite de la section : tout marquer comme vu
+        const ids = snap.docs.map(d => d.id).join(",");
+        localStorage.setItem("kp_seances_seen_" + authUser.uid, ids);
+        setUnreadSeances(0);
+        return;
+      }
+      const seenIds = new Set(seenStr.split(",").filter(Boolean));
+      const count = snap.docs.filter(d => {
+        if (seenIds.has(d.id)) return false;
+        const data = d.data();
+        return data.createdBy !== authUser.uid;
+      }).length;
+      setUnreadSeances(count);
+    });
+    return () => unsub();
+  }, [authUser, page]);
+
   if (!authUser || !authAllowed) return <LoginScreen />;
 
   const handleEnableNotifications = async () => {
@@ -3108,56 +3158,6 @@ export default function App() {
       </div>
     );
   };
-
-  // Marquer chat comme lu à la navigation
-  useEffect(() => {
-    if (!authUser) return;
-    if (page === "chat") {
-      localStorage.setItem("kp_chatread_" + authUser.uid, Date.now().toString());
-      setUnreadChat(0);
-    }
-  }, [page, authUser]);
-
-  // Pastille chat : messages non-lus en temps réel
-  useEffect(() => {
-    if (!authUser) return;
-    const q = query(collection(db, "chat_messages"), orderBy("createdAt", "asc"));
-    const unsub = onSnapshot(q, (snap) => {
-      if (page === "chat") { setUnreadChat(0); return; }
-      const lastReadTs = parseInt(localStorage.getItem("kp_chatread_" + authUser.uid) || "0");
-      const count = snap.docs.filter(d => {
-        const data = d.data();
-        if (data.senderId === authUser.uid) return false;
-        const ts = data.createdAt?.toDate?.()?.getTime?.() || 0;
-        return ts > lastReadTs;
-      }).length;
-      setUnreadChat(count);
-    });
-    return () => unsub();
-  }, [authUser, page]);
-
-  // Pastille séances : Firestore, cross-device, hors créateur
-  useEffect(() => {
-    if (!authUser) return;
-    const unsub = onSnapshot(collection(db, "seances"), (snap) => {
-      const seenStr = localStorage.getItem("kp_seances_seen_" + authUser.uid);
-      if (page === "karate" || seenStr === null) {
-        // Première ouverture ou visite de la section : tout marquer comme vu
-        const ids = snap.docs.map(d => d.id).join(",");
-        localStorage.setItem("kp_seances_seen_" + authUser.uid, ids);
-        setUnreadSeances(0);
-        return;
-      }
-      const seenIds = new Set(seenStr.split(",").filter(Boolean));
-      const count = snap.docs.filter(d => {
-        if (seenIds.has(d.id)) return false;
-        const data = d.data();
-        return data.createdBy !== authUser.uid;
-      }).length;
-      setUnreadSeances(count);
-    });
-    return () => unsub();
-  }, [authUser, page]);
 
   if (isMobile) {
     return (
