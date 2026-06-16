@@ -369,13 +369,44 @@ const Toast = ({ message, onClose }) => (
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
 const Dashboard = ({ sessions, competitions }) => {
+  const _now = new Date();
+  const _monOff = (_now.getDay() + 6) % 7;
+  const startOfWeek = new Date(_now);
+  startOfWeek.setDate(_now.getDate() - _monOff);
+  startOfWeek.setHours(0, 0, 0, 0);
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  endOfWeek.setHours(23, 59, 59, 999);
+
   const thisWeek = sessions.filter(s => {
     const d = new Date(s.date);
-    const now = new Date();
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay());
-    return d >= startOfWeek;
+    return d >= startOfWeek && d <= endOfWeek;
   });
+
+  const _MONTHS = ["jan.","fév.","mar.","avr.","mai","juin","juil.","août","sep.","oct.","nov.","déc."];
+  const _fmt = (d) => `${d.getDate()} ${_MONTHS[d.getMonth()]}`;
+  const weekLabel = `${_fmt(startOfWeek)} – ${_fmt(endOfWeek)} ${endOfWeek.getFullYear()}`;
+
+  const _days = ["lun.","mar.","mer.","jeu.","ven.","sam.","dim."];
+  const weekActivity = _days.map((day, i) => {
+    const dd = new Date(startOfWeek);
+    dd.setDate(startOfWeek.getDate() + i);
+    const dStr = dd.toDateString();
+    const ds = thisWeek.filter(s => new Date(s.date).toDateString() === dStr);
+    const karate = ds
+      .filter(s => ["club","Club","perso","Entr. Perso"].includes(s.type))
+      .reduce((a, s) => a + (s.duration || 0), 0);
+    const physique = ds
+      .filter(s => ["physique","Prépa Physique"].includes(s.type))
+      .reduce((a, s) => a + (s.duration || 0), 0);
+    return { day, karate, physique };
+  });
+
+  const clubCount     = thisWeek.filter(s => s.type === "club"    || s.type === "Club").length;
+  const persoCount    = thisWeek.filter(s => s.type === "perso"   || s.type === "Entr. Perso").length;
+  const physiqueCount = thisWeek.filter(s => s.type === "physique"|| s.type === "Prépa Physique").length;
+  const _today = new Date(); _today.setHours(0, 0, 0, 0);
+  const upcomingComps = (competitions || []).filter(c => new Date(c.date) >= _today).length;
   const avgSat = (sessions.reduce((a,b) => a + b.satisfaction, 0) / sessions.length).toFixed(1);
   const avgDur = Math.round(sessions.reduce((a,b) => a + b.duration, 0) / sessions.length);
 
@@ -390,11 +421,11 @@ const Dashboard = ({ sessions, competitions }) => {
       <div style={{ background:C.card, borderRadius:16, padding:16, marginBottom:16, border:"1px solid "+C.border }}>
         <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:12 }}>
           <Calendar size={15} color={C.accent}/> <strong style={{ fontSize:13 }}>Planning de la semaine</strong>
-          <span style={{ color:C.muted, fontSize:11 }}>8-14 juin 2026</span>
+          <span style={{ color:C.muted, fontSize:11 }}>{weekLabel}</span>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:8, marginBottom:12 }}>
-          {[{label:"Club",val:4,color:C.red},{label:"Prépa Physique",val:2,color:C.blue},
-            {label:"Entr. Perso",val:0,color:C.muted},{label:"Compétitions",val:0,color:C.yellow}].map(s=>(
+          {[{label:"Club",val:clubCount,color:C.red},{label:"Prépa Physique",val:physiqueCount,color:C.blue},
+            {label:"Entr. Perso",val:persoCount,color:C.muted},{label:"Compétitions",val:upcomingComps,color:C.yellow}].map(s=>(
             <div key={s.label} style={{ background:s.color+"11", border:"1px solid "+s.color+"33", borderRadius:10, padding:"10px 12px" }}>
               <div style={{ fontSize:10, color:s.color, fontWeight:600, marginBottom:2 }}>{s.label}</div>
               <div style={{ fontSize:22, fontWeight:800, color:s.color }}>{s.val}</div>
@@ -442,7 +473,7 @@ const Dashboard = ({ sessions, competitions }) => {
       <div style={{ background:C.card, borderRadius:16, padding:16, marginBottom:16, border:"1px solid "+C.border }}>
         <div style={{ fontWeight:700, marginBottom:12, fontSize:14 }}>Activité de la semaine</div>
         <ResponsiveContainer width="100%" height={160}>
-          <BarChart data={mockWeekActivity}>
+          <BarChart data={weekActivity}>
             <XAxis dataKey="day" tick={{ fontSize:10 }} axisLine={false} tickLine={false} />
             <YAxis hide /><Tooltip />
             <Bar dataKey="karate" name="🥋 Karaté" fill={C.red} radius={[4,4,0,0]} />
@@ -2062,7 +2093,7 @@ const Chat = ({ authUser }) => {
   const isMe = (m) => m.senderId === authUser?.uid;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", height:"calc(100vh - 130px)" }}>
+    <div style={{ display:"flex", flexDirection:"column", height:"calc(100dvh - 130px)" }}>
       <div style={{ background:"linear-gradient(135deg, "+C.blue+" 60%, "+C.primary+")", borderRadius:14, padding:"16px 18px", color:"#fff", marginBottom:12, display:"flex", alignItems:"center", gap:10 }}>
         <MessageCircle size={20}/><div><div style={{ fontWeight:800, fontSize:16 }}>Chat Équipe</div><div style={{ fontSize:11, opacity:0.8 }}>{messages.length} message{messages.length!==1?"s":""}</div></div>
       </div>
@@ -2835,6 +2866,8 @@ export default function App() {
   const [page, setPage] = useState("dashboard");
   const [sessions, setSessions] = useState(ALL_SESSIONS);
   const [competitions, setCompetitions] = useState(mockCompetitions);
+  const [unreadChat, setUnreadChat] = useState(0);
+  const [unreadSeances, setUnreadSeances] = useState(0);
   const [currentUser, setCurrentUserState] = useState(() => { try { return JSON.parse(localStorage.getItem("kp_user")||"null"); } catch { return null; } });
   const [splashVisible, setSplashVisible] = useState(true);
   const [splashOpacity, setSplashOpacity] = useState(1);
@@ -3034,7 +3067,7 @@ export default function App() {
             fontWeight:page===n.id?700:500,
             display:"flex", alignItems:"center", gap:10,
           }}>
-            {n.icon}
+            {withBadge(n.icon, getBadge(n.id))}
             <span style={{ flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{n.label}</span>
             {page===n.id && !isMobile && <ChevronRight size={12}/>}
           </button>
@@ -3055,6 +3088,67 @@ export default function App() {
       </div>
     </>
   );
+
+  const getBadge = (id) => {
+    if (id === "chat") return unreadChat;
+    if (id === "karate") return unreadSeances;
+    return 0;
+  };
+  const withBadge = (icon, count) => {
+    if (!count) return icon;
+    return (
+      <div style={{ position:"relative", display:"inline-flex" }}>
+        {icon}
+        <span style={{ position:"absolute", top:-5, right:-5, background:"#ef4444",
+          color:"#fff", borderRadius:"50%", minWidth:14, height:14, fontSize:9,
+          display:"flex", alignItems:"center", justifyContent:"center",
+          fontWeight:700, padding:"0 2px", lineHeight:1 }}>
+          {count > 9 ? "9+" : count}
+        </span>
+      </div>
+    );
+  };
+
+  // Marquer section comme lue à la navigation
+  useEffect(() => {
+    if (!authUser) return;
+    if (page === "chat") {
+      localStorage.setItem("kp_chatread_" + authUser.uid, Date.now().toString());
+      setUnreadChat(0);
+    }
+    if (page === "karate") {
+      localStorage.setItem("kp_seancescount_" + authUser.uid, sessions.length.toString());
+      setUnreadSeances(0);
+    }
+  }, [page, authUser]);
+
+  // Pastille chat : messages non-lus en temps réel
+  useEffect(() => {
+    if (!authUser) return;
+    const q = query(collection(db, "chat_messages"), orderBy("createdAt", "asc"));
+    const unsub = onSnapshot(q, (snap) => {
+      if (page === "chat") { setUnreadChat(0); return; }
+      const lastReadTs = parseInt(localStorage.getItem("kp_chatread_" + authUser.uid) || "0");
+      const count = snap.docs.filter(d => {
+        const data = d.data();
+        if (data.senderId === authUser.uid) return false;
+        const ts = data.createdAt?.toDate?.()?.getTime?.() || 0;
+        return ts > lastReadTs;
+      }).length;
+      setUnreadChat(count);
+    });
+    return () => unsub();
+  }, [authUser, page]);
+
+  // Pastille séances : nouvelles séances depuis dernière visite
+  useEffect(() => {
+    if (!authUser) return;
+    if (page === "karate") { setUnreadSeances(0); return; }
+    const lastCount = parseInt(
+      localStorage.getItem("kp_seancescount_" + authUser.uid) || String(sessions.length)
+    );
+    setUnreadSeances(Math.max(0, sessions.length - lastCount));
+  }, [authUser, sessions, page]);
 
   if (isMobile) {
     return (
@@ -3103,7 +3197,7 @@ export default function App() {
               background:"none", border:"none", cursor:"pointer", gap:2,
               color:page===n.id?C.primary:C.muted
             }}>
-              {n.bottomIcon}
+              {withBadge(n.bottomIcon, getBadge(n.id))}
               <span style={{ fontSize:9, fontWeight:page===n.id?700:500 }}>{n.bottomLabel||n.label}</span>
             </button>
           ))}
