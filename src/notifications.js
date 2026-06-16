@@ -182,6 +182,7 @@ export async function enregistrerSeance(seance, createdBy) {
     const docRef = await addDoc(collection(db, "seances"), {
       ...seance,
       createdAt: serverTimestamp(),
+      createdBy: createdBy || "unknown",
     });
     await notifyNewSeance(seance, createdBy);
     return docRef.id;

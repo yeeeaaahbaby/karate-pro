@@ -3109,16 +3109,12 @@ export default function App() {
     );
   };
 
-  // Marquer section comme lue à la navigation
+  // Marquer chat comme lu à la navigation
   useEffect(() => {
     if (!authUser) return;
     if (page === "chat") {
       localStorage.setItem("kp_chatread_" + authUser.uid, Date.now().toString());
       setUnreadChat(0);
-    }
-    if (page === "karate") {
-      localStorage.setItem("kp_seancescount_" + authUser.uid, sessions.length.toString());
-      setUnreadSeances(0);
     }
   }, [page, authUser]);
 
@@ -3140,15 +3136,28 @@ export default function App() {
     return () => unsub();
   }, [authUser, page]);
 
-  // Pastille séances : nouvelles séances depuis dernière visite
+  // Pastille séances : Firestore, cross-device, hors créateur
   useEffect(() => {
     if (!authUser) return;
-    if (page === "karate") { setUnreadSeances(0); return; }
-    const lastCount = parseInt(
-      localStorage.getItem("kp_seancescount_" + authUser.uid) || String(sessions.length)
-    );
-    setUnreadSeances(Math.max(0, sessions.length - lastCount));
-  }, [authUser, sessions, page]);
+    const unsub = onSnapshot(collection(db, "seances"), (snap) => {
+      const seenStr = localStorage.getItem("kp_seances_seen_" + authUser.uid);
+      if (page === "karate" || seenStr === null) {
+        // Première ouverture ou visite de la section : tout marquer comme vu
+        const ids = snap.docs.map(d => d.id).join(",");
+        localStorage.setItem("kp_seances_seen_" + authUser.uid, ids);
+        setUnreadSeances(0);
+        return;
+      }
+      const seenIds = new Set(seenStr.split(",").filter(Boolean));
+      const count = snap.docs.filter(d => {
+        if (seenIds.has(d.id)) return false;
+        const data = d.data();
+        return data.createdBy !== authUser.uid;
+      }).length;
+      setUnreadSeances(count);
+    });
+    return () => unsub();
+  }, [authUser, page]);
 
   if (isMobile) {
     return (
