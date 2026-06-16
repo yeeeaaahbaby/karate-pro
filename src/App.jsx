@@ -2954,6 +2954,8 @@ export default function App() {
   const handleEnableNotifications = async () => {
     try {
       if (window.OneSignal) {
+        await window.OneSignal.User.PushSubscription.optOut();
+        await new Promise(r => setTimeout(r, 500));
         await window.OneSignal.User.PushSubscription.optIn();
       } else {
         showToast("OneSignal en cours de chargement, réessayez dans un instant");
