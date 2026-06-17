@@ -2480,7 +2480,7 @@ const Profil = ({ sessions, competitions, authUser }) => {
 };
 
 // ─── PLANNING ─────────────────────────────────────────────────────────────────
-const Planning = ({ plannings, setPlannings }) => {
+const Planning = ({ plannings, setPlannings, sessions, competitions }) => {
   const [showForm, setShowForm] = useState(false);
   const [activeTab, setActiveTab] = useState("planning");
   const [form, setForm] = useState({ debut:"", club:0, prepa:0, perso:0, compet:0, objectif:"", commentaireCoach:"" });
@@ -2529,32 +2529,54 @@ const Planning = ({ plannings, setPlannings }) => {
 
       {activeTab === "planning" && (<div>
 
-      {/* Récapitulatif S-1 */}
-      <div style={{ background:C.card, borderRadius:16, border:"1px solid "+C.border, padding:16, marginBottom:16 }}>
-        <div style={{ fontWeight:700, fontSize:14, marginBottom:4 }}>📊 Récapitulatif S-1</div>
-        <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>Semaine du 1 juin au 7 juin 2026</div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10 }}>
-          {[{l:"Entraînement Club",prevu:3,realise:4,ok:true,pct:133,c:C.red},
-            {l:"Prépa Physique",prevu:2,realise:2,ok:true,pct:100,c:C.blue},
-            {l:"Entraînement Perso",prevu:1,realise:0,ok:false,pct:0,c:C.primary},
-            {l:"Compétitions",prevu:0,realise:0,ok:true,pct:100,c:C.yellow}].map(s=>(
-            <div key={s.l} style={{ background:s.c+"11", border:"1px solid "+s.c+"33", borderRadius:12, padding:"12px 14px" }}>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
-                <span style={{ fontSize:12, fontWeight:600, color:s.c }}>{s.l}</span>
-                <div style={{ display:"flex", alignItems:"center", gap:4 }}>
-                  {s.ok ? <CheckCircle2 size={14} color={C.green}/> : <XCircle size={14} color={C.red}/>}
-                  <span style={{ fontSize:11, fontWeight:700, color:s.ok?C.green:C.red }}>{s.pct}%</span>
-                </div>
-              </div>
-              <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>Prévu</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.prevu}</div></div>
-                <span style={{ color:C.muted }}>→</span>
-                <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>Réalisé</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.realise}</div></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Récapitulatif S-1 — dynamique */}
+      {(()=>{
+        const _lm=new Date(); const _ld=_lm.getDay(); _lm.setDate(_lm.getDate()-((_ld+6)%7)-7); _lm.setHours(0,0,0,0);
+        const _le=new Date(_lm); _le.setDate(_le.getDate()+6);
+        const pad=n=>String(n).padStart(2,"0");
+        const toKey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+        const _lk=toKey(_lm); const _lke=toKey(_le);
+        const inLw=d=>{ const s=(d||"").slice(0,10); return s>=_lk&&s<=_lke; };
+        const _lp=(plannings||[]).find(p=>p.debut===_lk)||{};
+        const M=["jan.","fév.","mars","avr.","mai","juin","juil.","août","sep.","oct.","nov.","déc."];
+        const _lbl=`Semaine du ${_lm.getDate()} au ${_le.getDate()} ${M[_le.getMonth()]} ${_le.getFullYear()}`;
+        const clubR=(sessions||[]).filter(s=>inLw(s.date)&&(s.type==="Collectif"||s.type==="Club")).length;
+        const prepaR=(mockPhysique||[]).filter(s=>inLw(s.date)).length;
+        const persoR=(sessions||[]).filter(s=>inLw(s.date)&&(s.type==="Perso"||s.type==="Entr. Perso")).length;
+        const competR=(competitions||[]).filter(c=>inLw(c.date)).length;
+        const rows=[
+          {l:"Entraînement Club",prevu:Number(_lp.club)||0,realise:clubR,c:C.red},
+          {l:"Prépa Physique",prevu:Number(_lp.prepa)||0,realise:prepaR,c:C.blue},
+          {l:"Entraînement Perso",prevu:Number(_lp.perso)||0,realise:persoR,c:C.primary},
+          {l:"Compétitions",prevu:Number(_lp.compet)||0,realise:competR,c:C.yellow},
+        ];
+        return (
+          <div style={{ background:C.card, borderRadius:16, border:"1px solid "+C.border, padding:16, marginBottom:16 }}>
+            <div style={{ fontWeight:700, fontSize:14, marginBottom:4 }}>📊 Récapitulatif S-1</div>
+            <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{_lbl}</div>
+            {!_lp.debut
+              ? <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:8 }}>Aucune planification enregistrée pour cette semaine.</div>
+              : <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10 }}>
+                  {rows.map(s=>{ const pct=s.prevu===0?100:Math.round((s.realise/s.prevu)*100); const ok=s.realise>=s.prevu; return (
+                    <div key={s.l} style={{ background:s.c+"11", border:"1px solid "+s.c+"33", borderRadius:12, padding:"12px 14px" }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+                        <span style={{ fontSize:12, fontWeight:600, color:s.c }}>{s.l}</span>
+                        <div style={{ display:"flex", alignItems:"center", gap:4 }}>
+                          {ok?<CheckCircle2 size={14} color={C.green}/>:<XCircle size={14} color={C.red}/>}
+                          <span style={{ fontSize:11, fontWeight:700, color:ok?C.green:C.red }}>{pct}%</span>
+                        </div>
+                      </div>
+                      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                        <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>Prévu</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.prevu}</div></div>
+                        <span style={{ color:C.muted }}>→</span>
+                        <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>Réalisé</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.realise}</div></div>
+                      </div>
+                    </div>
+                  );})}
+                </div>}
+          </div>
+        );
+      })()}
 
       {/* Planifications à venir — dynamique */}
       {(()=>{
@@ -3089,7 +3111,7 @@ export default function App() {
   const renderPage = () => {
     switch(page) {
       case "dashboard": return <Dashboard sessions={sessions} competitions={competitions} onNavigate={setPage} plannings={plannings}/>;
-      case "planning": return <Planning plannings={plannings} setPlannings={setPlannings}/>;
+      case "planning": return <Planning plannings={plannings} setPlannings={setPlannings} sessions={sessions} competitions={competitions}/>;
       case "visionboard": return <VisionBoard sessions={sessions}/>;
       case "karate": return <SeancesKarate sessions={sessions} setSessions={setSessions} showToast={showToast}/>;
       case "stage": return <StageEquipe/>;
