@@ -626,7 +626,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
       s.notes?.toLowerCase().includes(searchText.toLowerCase()) ||
       s.coach?.toLowerCase().includes(searchText.toLowerCase());
     return matchType && matchSearch;
-  });
+  }).sort((a,b) => (b.date||"").localeCompare(a.date||""));
 
   const avgSat = sessions.length ? (sessions.reduce((a,b)=>a+b.satisfaction,0)/sessions.length).toFixed(1) : 0;
   const avgDur = sessions.length ? Math.round(sessions.reduce((a,b)=>a+b.duration,0)/sessions.length) : 0;
