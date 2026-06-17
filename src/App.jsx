@@ -3014,6 +3014,16 @@ export default function App() {
     setAuthAllowed(false);
   };
 
+  // Sessions karaté : charger depuis Firestore
+  useEffect(() => {
+    if (!authUser) return;
+    const unsub = onSnapshot(collection(db, "seances"), (snap) => {
+      const firestoreSessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setSessions([...ALL_SESSIONS, ...firestoreSessions]);
+    });
+    return () => unsub();
+  }, [authUser]);
+
   // Plannings hebdos : charger depuis Firestore
   useEffect(() => {
     if (!authUser) return;
