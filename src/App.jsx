@@ -443,7 +443,7 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10, marginBottom:16 }}>
         {[{icon:"🥋",label:"Séances karaté",val:sessions.length,c:C.red},
-          {icon:"💪",label:"Prépa physique",val:(physiqueSessions||[]).length,c:"#0ea5e9"},
+          {icon:"💪",label:"Prépa physique",val:(physiqueSessions||[]).length,c:"#7c3aed"},
           {icon:"🏅",label:"Stages EDF",val:mockStages.length,c:"#1d4ed8"},
           {icon:"🏆",label:"Compétitions",val:(competitions||[]).length,c:"#f97316"}].map(s=>(
           <div key={s.label} style={{ background:s.c, borderRadius:14, padding:"14px", color:"#fff" }}>
