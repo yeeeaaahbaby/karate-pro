@@ -2556,29 +2556,40 @@ const Planning = ({ plannings, setPlannings }) => {
         </div>
       </div>
 
-      {/* Planifications à venir */}
-      <div style={{ fontWeight:700, fontSize:14, marginBottom:12 }}>Planifications à venir</div>
-      <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12 }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
-          <div><div style={{ fontWeight:700, fontSize:14 }}>Semaine du 8 au 14 juin 2026</div>
-            <Badge label="📅 Planifié" color={C.primary} /></div>
-          <div style={{ display:"flex", gap:6 }}>
-            <Btn small outlined color={C.primary} style={{ fontSize:10 }}>Modifier</Btn>
-            <Btn small outlined color={C.red} style={{ fontSize:10 }}>Supprimer</Btn>
-          </div>
-        </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8, margin:"12px 0" }}>
-          {[{l:"Club",v:4,c:C.red},{l:"Prépa",v:2,c:C.blue},{l:"Perso",v:0,c:C.muted},{l:"Compét.",v:0,c:C.yellow}].map(x=>(
-            <div key={x.l} style={{ textAlign:"center", padding:8, background:x.c+"11", borderRadius:8 }}>
-              <div style={{ fontSize:10, color:x.c }}>{x.l}</div>
-              <div style={{ fontSize:20, fontWeight:800, color:x.c }}>{x.v}</div>
+      {/* Planifications à venir — dynamique */}
+      {(()=>{
+        const _m=new Date(); const _dow=_m.getDay(); _m.setDate(_m.getDate()-((_dow+6)%7)); _m.setHours(0,0,0,0);
+        const _mk=`${_m.getFullYear()}-${String(_m.getMonth()+1).padStart(2,"0")}-${String(_m.getDate()).padStart(2,"0")}`;
+        const _up=(plannings||[]).filter(p=>p.debut>=_mk).sort((a,b)=>a.debut.localeCompare(b.debut));
+        const _wl=(debut)=>{ const d=new Date(debut+"T00:00:00"); const fin=new Date(d); fin.setDate(fin.getDate()+6); const M=["jan.","fév.","mars","avr.","mai","juin","juil.","août","sep.","oct.","nov.","déc."]; return `Semaine du ${d.getDate()} au ${fin.getDate()} ${M[fin.getMonth()]} ${fin.getFullYear()}`; };
+        return (<>
+          <div style={{ fontWeight:700, fontSize:14, marginBottom:12 }}>Planifications à venir</div>
+          {_up.length===0 && <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12, color:C.muted, fontSize:13, textAlign:"center" }}>Aucune planification à venir.</div>}
+          {_up.map(p=>(
+            <div key={p.debut} style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
+                <div><div style={{ fontWeight:700, fontSize:14 }}>{_wl(p.debut)}</div>
+                  <Badge label="📅 Planifié" color={C.primary} /></div>
+                <div style={{ display:"flex", gap:6 }}>
+                  <Btn small outlined color={C.primary} style={{ fontSize:10 }} onClick={()=>{ setEditingPlan(p.id); setForm({debut:p.debut,club:Number(p.club)||0,prepa:Number(p.prepa)||0,perso:Number(p.perso)||0,compet:Number(p.compet)||0,objectif:p.objectif||"",commentaireCoach:p.commentaireCoach||""}); setShowForm(true); }}>Modifier</Btn>
+                  <Btn small outlined color={C.red} style={{ fontSize:10 }} onClick={()=>{ deleteDoc(doc(db,"weekly_plannings",p.debut)).catch(console.error); setPlannings(prev=>prev.filter(x=>x.debut!==p.debut)); }}>Supprimer</Btn>
+                </div>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8, margin:"12px 0" }}>
+                {[{l:"Club",v:Number(p.club)||0,c:C.red},{l:"Prépa",v:Number(p.prepa)||0,c:C.blue},{l:"Perso",v:Number(p.perso)||0,c:C.muted},{l:"Compét.",v:Number(p.compet)||0,c:C.yellow}].map(x=>(
+                  <div key={x.l} style={{ textAlign:"center", padding:8, background:x.c+"11", borderRadius:8 }}>
+                    <div style={{ fontSize:10, color:x.c }}>{x.l}</div>
+                    <div style={{ fontSize:20, fontWeight:800, color:x.c }}>{x.v}</div>
+                  </div>
+                ))}
+              </div>
+              {p.objectif && <div style={{ background:C.green+"15", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+C.green }}>
+                <span style={{ fontSize:12, color:C.green }}>🎯 <strong>Objectif :</strong> {p.objectif}</span>
+              </div>}
             </div>
           ))}
-        </div>
-        <div style={{ background:C.green+"15", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+C.green }}>
-          <span style={{ fontSize:12, color:C.green }}>🎯 <strong>Objectif :</strong> Prépa Porec</span>
-        </div>
-      </div>
+        </>);
+      })()}
 
       </div>)}
 
