@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { db, auth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "./firebase";
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, where, onSnapshot, orderBy, limit } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, serverTimestamp, query, where, onSnapshot, orderBy, limit } from "firebase/firestore";
 import { enregistrerSeance, getCurrentUser, setCurrentUser, subscribeToNotifications, notifyNewChatMessage, saveOneSignalPlayerId } from "./notifications";
 
 const C = {
@@ -368,7 +368,7 @@ const Toast = ({ message, onClose }) => (
 );
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
-const Dashboard = ({ sessions, competitions, onNavigate }) => {
+const Dashboard = ({ sessions, competitions, onNavigate, plannings }) => {
   const _now = new Date();
   const _monOff = (_now.getDay() + 6) % 7;
   const startOfWeek = new Date(_now);
@@ -402,11 +402,15 @@ const Dashboard = ({ sessions, competitions, onNavigate }) => {
     return { day, karate, physique };
   });
 
-  const clubCount     = thisWeek.filter(s => s.type === "Collectif" || s.type === "Club").length;
-  const persoCount    = thisWeek.filter(s => s.type === "Perso"     || s.type === "Entr. Perso").length;
-  const physiqueCount = mockPhysique.filter(s => { const d = new Date(s.date); return d >= startOfWeek && d <= endOfWeek; }).length;
+  const weekKey = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth()+1).padStart(2,"0")}-${String(startOfWeek.getDate()).padStart(2,"0")}`;
+  const weekPlan = (plannings || []).find(p => p.debut === weekKey) || {};
+  const clubCount     = Number(weekPlan.club)  || 0;
+  const persoCount    = Number(weekPlan.perso) || 0;
+  const physiqueCount = Number(weekPlan.prepa) || 0;
   const _today = new Date(); _today.setHours(0, 0, 0, 0);
-  const upcomingComps = (competitions || []).filter(c => new Date(c.date) >= _today).length;
+  const upcomingComps = weekPlan.debut
+    ? (Number(weekPlan.compet) || 0)
+    : (competitions || []).filter(c => new Date(c.date) >= _today).length;
   const avgSat = (sessions.reduce((a,b) => a + b.satisfaction, 0) / sessions.length).toFixed(1);
   const avgDur = Math.round(sessions.reduce((a,b) => a + b.duration, 0) / sessions.length);
 
@@ -433,7 +437,7 @@ const Dashboard = ({ sessions, competitions, onNavigate }) => {
           ))}
         </div>
         <div style={{ background:C.green+"15", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+C.green }}>
-          <span style={{ color:C.green, fontSize:12 }}>🎯 <strong>Objectif :</strong> Prépa Porec</span>
+          <span style={{ color:C.green, fontSize:12 }}>🎯 <strong>Objectif :</strong> {weekPlan.objectif || "Aucun objectif défini"}</span>
         </div>
       </div>
 
@@ -2476,19 +2480,19 @@ const Profil = ({ sessions, competitions, authUser }) => {
 };
 
 // ─── PLANNING ─────────────────────────────────────────────────────────────────
-const Planning = () => {
+const Planning = ({ plannings, setPlannings }) => {
   const [showForm, setShowForm] = useState(false);
   const [activeTab, setActiveTab] = useState("planning");
   const [form, setForm] = useState({ debut:"", club:0, prepa:0, perso:0, compet:0, objectif:"", commentaireCoach:"" });
-  const [plannings, setPlannings] = useState([]);
   const [editingPlan, setEditingPlan] = useState(null);
 
   const handleSave = () => {
     if (!form.debut) return;
+    setDoc(doc(db, "weekly_plannings", form.debut), { ...form, updatedAt: serverTimestamp() }).catch(console.error);
     if (editingPlan) {
       setPlannings(prev => prev.map(p => p.id===editingPlan ? {...p,...form} : p));
     } else {
-      setPlannings(prev => [{ id:Date.now(), ...form }, ...prev]);
+      setPlannings(prev => [{ id:form.debut, ...form }, ...prev.filter(p => p.debut !== form.debut)]);
     }
     setForm({ debut:"", club:0, prepa:0, perso:0, compet:0, objectif:"", commentaireCoach:"" });
     setEditingPlan(null);
@@ -2866,6 +2870,7 @@ export default function App() {
   const [page, setPage] = useState("dashboard");
   const [sessions, setSessions] = useState(ALL_SESSIONS);
   const [competitions, setCompetitions] = useState(mockCompetitions);
+  const [plannings, setPlannings] = useState([]);
   const [unreadChat, setUnreadChat] = useState(0);
   const [unreadSeances, setUnreadSeances] = useState(0);
   const [currentUser, setCurrentUserState] = useState(() => { try { return JSON.parse(localStorage.getItem("kp_user")||"null"); } catch { return null; } });
@@ -2976,6 +2981,16 @@ export default function App() {
     setAuthAllowed(false);
   };
 
+  // Plannings hebdos : charger depuis Firestore
+  useEffect(() => {
+    if (!authUser) return;
+    const unsub = onSnapshot(collection(db, "weekly_plannings"), (snap) => {
+      const plans = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setPlannings(plans);
+    });
+    return () => unsub();
+  }, [authUser]);
+
   // Marquer chat comme lu à la navigation
   useEffect(() => {
     if (!authUser) return;
@@ -3062,8 +3077,8 @@ export default function App() {
 
   const renderPage = () => {
     switch(page) {
-      case "dashboard": return <Dashboard sessions={sessions} competitions={competitions} onNavigate={setPage}/>;
-      case "planning": return <Planning/>;
+      case "dashboard": return <Dashboard sessions={sessions} competitions={competitions} onNavigate={setPage} plannings={plannings}/>;
+      case "planning": return <Planning plannings={plannings} setPlannings={setPlannings}/>;
       case "visionboard": return <VisionBoard sessions={sessions}/>;
       case "karate": return <SeancesKarate sessions={sessions} setSessions={setSessions} showToast={showToast}/>;
       case "stage": return <StageEquipe/>;
