@@ -442,10 +442,10 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings }) => {
       </div>
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10, marginBottom:16 }}>
-        {[{icon:"🥋",label:"Séances totales",val:sessions.length,c:C.red},
-          {icon:"⏱",label:"Durée moyenne",val:avgDur+" min",c:C.orange},
-          {icon:"⭐",label:"Satisfaction",val:avgSat+"/10",c:C.yellow},
-          {icon:"🏆",label:"Compétitions",val:"1",c:C.blue}].map(s=>(
+        {[{icon:"🥋",label:"Séances karaté",val:sessions.length,c:C.red},
+          {icon:"💪",label:"Prépa physique",val:mockPhysique.length,c:"#0ea5e9"},
+          {icon:"🏅",label:"Stages EDF",val:mockStages.length,c:"#1d4ed8"},
+          {icon:"🏆",label:"Compétitions",val:(competitions||[]).length,c:"#f97316"}].map(s=>(
           <div key={s.label} style={{ background:s.c, borderRadius:14, padding:"14px", color:"#fff" }}>
             <div style={{ fontSize:20, marginBottom:4 }}>{s.icon}</div>
             <div style={{ fontSize:11, opacity:0.85 }}>{s.label}</div>
