@@ -368,7 +368,7 @@ const Toast = ({ message, onClose }) => (
 );
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
-const Dashboard = ({ sessions, competitions, onNavigate, plannings }) => {
+const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSessions }) => {
   const _now = new Date();
   const _monOff = (_now.getDay() + 6) % 7;
   const startOfWeek = new Date(_now);
@@ -396,7 +396,7 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings }) => {
     const karate = ds
       .filter(s => ["Collectif","Club","Perso","Entr. Perso"].includes(s.type))
       .reduce((a, s) => a + (s.duration || 0), 0);
-    const physique = mockPhysique
+    const physique = (physiqueSessions||[])
       .filter(s => new Date(s.date).toDateString() === dStr)
       .reduce((a, s) => a + (s.duration || 0), 0);
     return { day, karate, physique };
@@ -443,7 +443,7 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings }) => {
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10, marginBottom:16 }}>
         {[{icon:"🥋",label:"Séances karaté",val:sessions.length,c:C.red},
-          {icon:"💪",label:"Prépa physique",val:mockPhysique.length,c:"#0ea5e9"},
+          {icon:"💪",label:"Prépa physique",val:(physiqueSessions||[]).length,c:"#0ea5e9"},
           {icon:"🏅",label:"Stages EDF",val:mockStages.length,c:"#1d4ed8"},
           {icon:"🏆",label:"Compétitions",val:(competitions||[]).length,c:"#f97316"}].map(s=>(
           <div key={s.label} style={{ background:s.c, borderRadius:14, padding:"14px", color:"#fff" }}>
@@ -458,7 +458,7 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings }) => {
       {(() => {
         const now = new Date(); const startW = new Date(now); startW.setDate(now.getDate()-now.getDay());
         const karateW = thisWeek.length;
-        const physiqueW = mockPhysique.filter(s=>new Date(s.date)>=startW).length;
+        const physiqueW = (physiqueSessions||[]).filter(s=>new Date(s.date)>=startW).length;
         const corrW = mockCorrections.filter(c=>new Date(c.date)>=startW).length;
         const compAVenir = (competitions||[]).filter(c=>c.statut==="À venir"||(!c.statut&&new Date(c.date)>=now)).length;
         return (
@@ -1134,171 +1134,247 @@ const StageEquipe = () => {
 };
 
 // ─── PRÉPA PHYSIQUE ─────────────────────────────────────────────────────────
-const PHYS_TYPES = ["Endurance","Force","Explosivité","Vitesse","Technique","Récupération","Compétition","Haltérophilie","PPG","Corps entier"];
-const PHYS_COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Jérémie","Michel","Kevin","Autre"];
+const PHYS_TYPES = ["PPG","Force","Explosivité","Full Body","Haltérophilie","Endurance","Vitesse","Technique","Récupération","Compétition"];
+const PHYS_COACHES = ["Kevin","Helvétia","Romain","Olivier","Michel","Jérémie","Hugo","Jonathan","Yves","Autre"];
 const INTENSITES = ["Faible","Moyenne","Élevée","Maximale"];
 const STATUTS_PHYS = ["À venir","Terminée","Non réalisé"];
 const RESSENTIS_PHYS = ["😃 Excellent","😊 Très bon","🙂 Bon","😐 Moyen","😔 Fatigué","😩 Épuisé"];
+const EX_TYPES = ["Classique","Bi-set","Tri-set","Super-set","Circuit","HIIT"];
+const EXERCISE_MODES = ["PPG","Force","Explosivité","Full Body","Haltérophilie","Circuit","HIIT"];
 
-const PrepaPhysique = () => {
-  const [physique, setPhysique] = useState(mockPhysique);
+const mkSerie = () => ({ id: Date.now()+Math.random(), reps:"", poids:"" });
+const mkSubEx = () => ({ id: Date.now()+Math.random(), nom:"", videoUrl:"", repsCibles:"", reposEntre:"", reposApres:"", series:[mkSerie()] });
+const mkEx = () => ({ id: Date.now()+Math.random(), nom:"", typeEx:"Classique", videoUrl:"", repsCibles:"", reposEntre:"", reposApres:"", series:[mkSerie(),mkSerie(),mkSerie()], sousExercices:[] });
+
+const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => {
+  const all = [...(physiqueSessions||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
   const [activeFilter, setActiveFilter] = useState("Toutes");
   const [showForm, setShowForm] = useState(false);
-  const [editingPhys, setEditingPhys] = useState(null);
-  const [expandedId, setExpandedId] = useState(null);
-  const EMPTY_PHYS = { date:new Date().toISOString().split("T")[0], type:"Endurance", duration:"", intensite:"Moyenne", statut:"Terminée", programme:"", coach:"", distance:"", calories:"", fcMoy:"", fcMax:"", ressenti:"🙂 Bon", notes:"" };
-  const [form, setForm] = useState(EMPTY_PHYS);
-  const TYPES_LABELS = ["Toutes","Semaine","🏃 Endurance","💪 Force","⚡ Explosivité","🏋️ Haltéro","🔥 PPG","🔥 Full Body","⚡ Vitesse","🎯 Technique","🧘 Récup","🏆 Compét"];
+  const [editingId, setEditingId] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const todayStr = new Date().toISOString().split("T")[0];
+  const EMPTY = { date:todayStr, type:"PPG", duration:"", intensite:"Moyenne", statut:"À venir", programme:"", coach:"", exercises:[] };
+  const [form, setForm] = useState(EMPTY);
 
-  const openAdd = () => { setForm(EMPTY_PHYS); setEditingPhys(null); setShowForm(true); };
-  const openEdit = (s) => { setForm({...s, duration: String(s.duration), distance: s.distance||"", calories: s.calories||"", fcMoy: s.fcMoy||"", fcMax: s.fcMax||""}); setEditingPhys(s.id); setShowForm(true); };
-  const openCopy = (s) => { setForm({...s, date: new Date().toISOString().split("T")[0], duration: String(s.duration), distance: s.distance||"", calories: s.calories||"", fcMoy: s.fcMoy||"", fcMax: s.fcMax||""}); setEditingPhys(null); setShowForm(true); };
-  const handleDelete = (id) => { if (!window.confirm("Supprimer ?")) return; setPhysique(prev=>prev.filter(p=>p.id!==id)); };
-  const handleSave = () => {
-    if (!form.date || !form.duration) return;
-    const s = { ...form, duration: parseInt(form.duration) };
-    if (editingPhys) { setPhysique(prev=>prev.map(p=>p.id===editingPhys?{...p,...s}:p)); }
-    else { setPhysique(prev=>[{ id:Date.now(), ...s }, ...prev]); }
-    setShowForm(false);
+  const FILTER_LABELS = ["Toutes","Semaine","🔥 PPG","💪 Force","⚡ Explosivité","🏋️ Haltéro","🔥 Full Body","🏃 Endurance","🧘 Récup","🏆 Compét"];
+  const typeMap = { "🔥 PPG":"PPG","💪 Force":"Force","⚡ Explosivité":"Explosivité","🏋️ Haltéro":"Haltérophilie","🔥 Full Body":"Full Body","🏃 Endurance":"Endurance","🧘 Récup":"Récupération","🏆 Compét":"Compétition" };
+  const filterCount = (f) => {
+    if (f==="Toutes") return all.length;
+    if (f==="Semaine") { const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return all.filter(s=>new Date(s.date)>=w).length; }
+    return all.filter(s=>s.type===(typeMap[f]||f)).length;
+  };
+  const filtered = all.filter(s => {
+    if (activeFilter==="Toutes") return true;
+    if (activeFilter==="Semaine") { const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return new Date(s.date)>=w; }
+    return s.type===(typeMap[activeFilter]||activeFilter);
+  });
+
+  const hasExMode = EXERCISE_MODES.includes(form.type);
+  const G = "linear-gradient(135deg,#7c3aed,#db2777)";
+  const inp = { width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, background:"#fff", boxSizing:"border-box" };
+  const lbl = { fontSize:12, fontWeight:600, display:"block", marginBottom:4 };
+
+  const updEx = (eid, field, val) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,[field]:val}:e)}));
+  const addSerie = (eid) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,series:[...e.series,mkSerie()]}:e)}));
+  const delSerie = (eid, sid) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,series:e.series.filter(s=>s.id!==sid)}:e)}));
+  const updSerie = (eid, sid, fld, val) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,series:e.series.map(s=>s.id===sid?{...s,[fld]:val}:s)}:e)}));
+  const addSubEx = (eid) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,sousExercices:[...e.sousExercices,mkSubEx()]}:e)}));
+  const delSubEx = (eid, sid) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,sousExercices:e.sousExercices.filter(s=>s.id!==sid)}:e)}));
+  const updSubEx = (eid, sid, fld, val) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,sousExercices:e.sousExercices.map(s=>s.id===sid?{...s,[fld]:val}:s)}:e)}));
+  const addSubSerie = (eid, sid) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,sousExercices:e.sousExercices.map(s=>s.id===sid?{...s,series:[...s.series,mkSerie()]}:s)}:e)}));
+  const delSubSerie = (eid, sid, srid) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,sousExercices:e.sousExercices.map(s=>s.id===sid?{...s,series:s.series.filter(r=>r.id!==srid)}:s)}:e)}));
+  const updSubSerie = (eid, sid, srid, fld, val) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,sousExercices:e.sousExercices.map(s=>s.id===sid?{...s,series:s.series.map(r=>r.id===srid?{...r,[fld]:val}:r)}:s)}:e)}));
+
+  const handleSave = async () => {
+    if (!form.date || !form.duration) { showToast&&showToast("Date et durée obligatoires","error"); return; }
+    setSaving(true);
+    try {
+      const data = {...form, duration:parseInt(form.duration)};
+      if (editingId) {
+        await setDoc(doc(db,"physique_sessions",String(editingId)), data, {merge:true});
+        showToast&&showToast("Séance modifiée","success");
+      } else {
+        await addDoc(collection(db,"physique_sessions"), {...data, createdAt:serverTimestamp()});
+        showToast&&showToast("Séance enregistrée","success");
+      }
+      setForm(EMPTY); setShowForm(false); setEditingId(null);
+    } catch(e) { console.error(e); showToast&&showToast("Erreur sauvegarde","error"); }
+    setSaving(false);
   };
 
-  const SelectF = ({ label, value, options, onChange }) => (
-    <div style={{ marginBottom:14 }}>
-      <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{label}</label>
-      <select value={value} onChange={e=>onChange(e.target.value)} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
-        {options.map(o=><option key={o}>{o}</option>)}
-      </select>
+  const handleDelete = async (id) => {
+    if (!window.confirm("Supprimer cette séance ?")) return;
+    deleteDoc(doc(db,"physique_sessions",String(id))).catch(console.error);
+  };
+
+  const openEdit = (s) => {
+    setForm({...EMPTY,...s, duration:String(s.duration||""), exercises:s.exercises||[]});
+    setEditingId(s.id); setShowForm(true);
+  };
+
+  const typeColor = (t) => ({"PPG":"#7c3aed","Full Body":"#7c3aed","Force":C.blue,"Haltérophilie":C.blue,"Endurance":C.green,"Explosivité":C.orange,"Compétition":C.yellow,"Technique":C.primary}[t]||C.primary);
+
+  const SeriesBlock = ({ series, onAdd, onDel, onUpd }) => (
+    <div style={{marginTop:10}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+        <span style={{fontSize:12,fontWeight:600}}>Séries</span>
+        <button onClick={onAdd} style={{background:"none",border:"1.5px solid "+C.primary,borderRadius:6,padding:"3px 10px",fontSize:11,fontWeight:600,color:C.primary,cursor:"pointer"}}>+ Ajouter une série</button>
+      </div>
+      {series.map(sr=>(
+        <div key={sr.id} style={{display:"flex",gap:8,marginBottom:6,alignItems:"center"}}>
+          <input placeholder="Reps effectuées" value={sr.reps} onChange={e=>onUpd(sr.id,"reps",e.target.value)} style={{...inp,flex:1}}/>
+          <input placeholder="Poids (kg)" value={sr.poids} onChange={e=>onUpd(sr.id,"poids",e.target.value)} style={{...inp,flex:1}}/>
+          <button onClick={()=>onDel(sr.id)} style={{background:"none",border:"none",cursor:"pointer",color:C.red,padding:4}}><X size={14}/></button>
+        </div>
+      ))}
     </div>
   );
 
-  const typeMap = { "🏃 Endurance":"Endurance","💪 Force":"Force","⚡ Explosivité":"Explosivité","🏋️ Haltéro":"Haltérophilie","🔥 PPG":"PPG","🔥 Full Body":"Full Body","⚡ Vitesse":"Vitesse","🎯 Technique":"Technique","🧘 Récup":"Récupération","🏆 Compét":"Compétition" };
-
-  const counts = {
-    "Toutes": physique.length,
-    "Semaine": physique.filter(s=>{ const d=new Date(s.date); const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return d>=w; }).length,
-    "🏃 Endurance": physique.filter(s=>s.type==="Endurance").length,
-    "💪 Force": physique.filter(s=>s.type==="Force").length,
-    "⚡ Explosivité": physique.filter(s=>s.type==="Explosivité").length,
-    "🏋️ Haltéro": physique.filter(s=>s.type==="Haltérophilie").length,
-    "🔥 PPG": physique.filter(s=>s.type==="PPG").length,
-    "🔥 Full Body": physique.filter(s=>s.type==="Full Body").length,
-    "⚡ Vitesse": physique.filter(s=>s.type==="Vitesse").length,
-    "🎯 Technique": physique.filter(s=>s.type==="Technique").length,
-    "🧘 Récup": physique.filter(s=>s.type==="Récupération").length,
-    "🏆 Compét": physique.filter(s=>s.type==="Compétition").length,
-  };
-
-  const filtered = physique.filter(s => {
-    if (activeFilter === "Toutes") return true;
-    if (activeFilter === "Semaine") { const d=new Date(s.date); const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return d>=w; }
-    return !typeMap[activeFilter] || s.type === typeMap[activeFilter];
-  });
-
-  const avgDurPhys = physique.length ? Math.round(physique.reduce((a,b)=>a+b.duration,0)/physique.length) : 0;
-
-  const typeColor = (t) => ({ "PPG":C.red,"Full Body":C.red,"Haltérophilie":C.blue,"Endurance":C.green,"Explosivité":C.orange,"Technique":C.primary,"Compétition":C.yellow,"Vitesse":C.accent }[t] || C.primary);
-
   return (
     <div>
-      <SectionHeader icon="💪" title="Préparation Physique" subtitle="Suivez toutes vos séances de préparation physique" color={C.blue}
-        action={<Btn onClick={openAdd} color="#fff" style={{ color:C.blue, fontSize:12 }}><Plus size={12}/> Nouvelle séance</Btn>} />
+      <SectionHeader icon="💪" title="Préparation Physique" subtitle="Suivez toutes vos séances de préparation physique" color="#7c3aed"
+        action={<button onClick={()=>{setForm(EMPTY);setEditingId(null);setShowForm(true);}} style={{background:G,border:"none",borderRadius:8,padding:"8px 16px",fontSize:12,fontWeight:700,color:"#fff",cursor:"pointer"}}>+ Nouvelle séance</button>}/>
 
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:14 }}>
-        {[{l:"Séances totales",v:physique.length,c:C.blue},{l:"Durée moyenne",v:avgDurPhys+" min",c:C.orange},{l:"Cette semaine",v:counts["Semaine"],c:C.green}].map(s=>(
-          <div key={s.l} style={{ background:C.card, borderRadius:12, padding:12, border:"1px solid "+C.border, textAlign:"center" }}>
-            <div style={{ fontSize:11, color:C.muted }}>{s.l}</div>
-            <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.v}</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:14}}>
+        {[{l:"Séances totales",v:all.length,c:"#7c3aed"},{l:"Cette semaine",v:filterCount("Semaine"),c:C.green},{l:"PPG / Full Body",v:all.filter(s=>["PPG","Full Body"].includes(s.type)).length,c:C.orange}].map(s=>(
+          <div key={s.l} style={{background:C.card,borderRadius:12,padding:12,border:"1px solid "+C.border,textAlign:"center"}}>
+            <div style={{fontSize:11,color:C.muted}}>{s.l}</div>
+            <div style={{fontSize:18,fontWeight:800,color:s.c}}>{s.v}</div>
           </div>
         ))}
       </div>
 
-      <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:8, marginBottom:16 }}>
-        {TYPES_LABELS.map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} count={counts[f]} />)}
+      <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:8,marginBottom:16}}>
+        {FILTER_LABELS.map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} count={filterCount(f)}/>)}
       </div>
 
-      <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{filtered.length} séance{filtered.length>1?"s":""}</div>
+      <div style={{color:C.muted,fontSize:12,marginBottom:12}}>{filtered.length} séance{filtered.length!==1?"s":""}</div>
 
-      {filtered.length === 0 ? (
-        <EmptyState icon={<Dumbbell size={24}/>} title="Aucune séance cette semaine" sub="Les séances de cette semaine apparaîtront ici" action={{ label:"Créer une séance", fn:()=>setShowForm(true) }} />
-      ) : filtered.map(s=>(
-        <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid "+typeColor(s.type)+"33", padding:16, marginBottom:12 }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
-            <div style={{ cursor:"pointer", flex:1 }} onClick={()=>setExpandedId(expandedId===s.id?null:s.id)}>
-              <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                <Badge label={s.type} color={typeColor(s.type)}/>
-                {s.subType && s.subType!==s.type && <span style={{ fontSize:11, color:C.muted }}>{s.subType}</span>}
-                {s.programme && <span style={{ fontSize:11, color:C.muted }}>{s.programme}</span>}
+      {filtered.length===0
+        ? <EmptyState icon={<Dumbbell size={24}/>} title="Aucune séance" sub="Ajoutez votre première séance de prépa physique" action={{label:"Nouvelle séance",fn:()=>setShowForm(true)}}/>
+        : filtered.map(s=>(
+          <div key={s.id} style={{background:C.card,borderRadius:14,padding:14,border:"1px solid "+C.border,marginBottom:10}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+              <div>
+                <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:4}}>
+                  <span style={{background:typeColor(s.type),color:"#fff",borderRadius:6,padding:"2px 8px",fontSize:11,fontWeight:700}}>{s.type}</span>
+                  {s.statut&&<span style={{background:s.statut==="Terminée"?C.green+"22":s.statut==="À venir"?C.primary+"22":C.muted+"22",color:s.statut==="Terminée"?C.green:s.statut==="À venir"?C.primary:C.muted,borderRadius:6,padding:"2px 8px",fontSize:10,fontWeight:600}}>{s.statut}</span>}
+                </div>
+                <div style={{fontSize:13,fontWeight:700,color:C.text}}>{new Date(s.date).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
+                <div style={{fontSize:12,color:C.muted,marginTop:2}}>{s.duration} min{s.intensite?" · "+s.intensite:""}{s.coach?" · "+s.coach:""}{s.programme?" · "+s.programme:""}</div>
+                {s.exercises&&s.exercises.length>0&&<div style={{fontSize:11,color:"#7c3aed",marginTop:4}}>💪 {s.exercises.length} exercice{s.exercises.length>1?"s":""}</div>}
               </div>
-              <div style={{ color:C.muted, fontSize:11, marginTop:2 }}>{s.date}{s.coach?" · "+s.coach:""}</div>
-            </div>
-            <div style={{ display:"flex", gap:5, flexShrink:0 }}>
-              <button onClick={()=>openEdit(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={13}/></button>
-              <button onClick={()=>openCopy(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
-              <button onClick={()=>handleDelete(s.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={13}/></button>
+              <div style={{display:"flex",gap:8}}>
+                <button onClick={()=>openEdit(s)} style={{background:"none",border:"1.5px solid "+C.border,borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer"}}>✏️</button>
+                <button onClick={()=>handleDelete(String(s.id))} style={{background:"none",border:"none",cursor:"pointer",color:C.red}}><Trash2 size={14}/></button>
+              </div>
             </div>
           </div>
-          <div style={{ display:"flex", gap:16, marginBottom:s.notes?8:0, flexWrap:"wrap" }}>
-            <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
-            {s.distance && <span style={{ fontSize:12, color:C.muted }}>📏 <strong style={{ color:C.text }}>{s.distance}</strong></span>}
-            {s.intensite && <span style={{ fontSize:12, color:C.muted }}>⚡ <strong style={{ color:C.text }}>{s.intensite}</strong></span>}
-            {s.satisfaction && <span style={{ fontSize:12, color:C.muted }}>⭐ <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>}
-          </div>
-          {s.notes && <div style={{ background:typeColor(s.type)+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+typeColor(s.type) }}>
-            <div style={{ fontSize:11, color:typeColor(s.type) }}>{s.notes}</div>
-          </div>}
-          {expandedId===s.id && (
-            <div style={{ marginTop:10, borderTop:"1px solid "+C.border, paddingTop:10, fontSize:12, color:C.muted, display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
-              {s.satisfaction && <span>⭐ Satisfaction: <strong style={{color:C.text}}>{s.satisfaction}/10</strong></span>}
-              {s.coach && <span>👤 Coach: <strong style={{color:C.text}}>{s.coach}</strong></span>}
-              {s.programme && s.programme!==s.type && <span style={{gridColumn:"span 2"}}>📋 Programme: <strong style={{color:C.text}}>{s.programme}</strong></span>}
-              {s.ressenti && <span>😊 Ressenti: <strong style={{color:C.text}}>{s.ressenti}</strong></span>}
-              {s.statut && <span>📌 Statut: <strong style={{color:C.text}}>{s.statut}</strong></span>}
-              {s.fcMoy && <span>❤️ FC moy: <strong style={{color:C.text}}>{s.fcMoy} bpm</strong></span>}
-              {s.fcMax && <span>❤️ FC max: <strong style={{color:C.text}}>{s.fcMax} bpm</strong></span>}
-              {s.calories && <span>🔥 Calories: <strong style={{color:C.text}}>{s.calories}</strong></span>}
-              {s.subType && s.subType!==s.type && <span>🏷️ Sous-type: <strong style={{color:C.text}}>{s.subType}</strong></span>}
-            </div>
-          )}
-        </div>
-      ))}
+        ))
+      }
 
-      {showForm && (
-        <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
-          <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
-            <div style={{ background:"linear-gradient(135deg, "+C.blue+", "+C.primary+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle séance</div>
-              <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
+      {showForm&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:1000,overflowY:"auto",padding:"20px 0"}} onClick={e=>{if(e.target===e.currentTarget)setShowForm(false);}}>
+          <div style={{background:"#fff",borderRadius:16,width:"min(700px,95vw)",margin:"0 auto"}}>
+            <div style={{background:G,borderRadius:"16px 16px 0 0",padding:"20px 24px"}}>
+              <div style={{fontSize:18,fontWeight:800,color:"#fff"}}>{editingId?"Modifier la séance":"Nouvelle séance"}</div>
             </div>
-            <div style={{ padding:"20px 24px" }}>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:14 }}>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date *</label>
-                  <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
-                <SelectF label="Type *" value={form.type} options={PHYS_TYPES} onChange={v=>setForm(f=>({...f,type:v}))} />
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Durée (min) *</label>
-                  <input type="number" placeholder="60" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+            <div style={{padding:24}}>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14,marginBottom:14}}>
+                <div><label style={lbl}>Date *</label><input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={inp}/></div>
+                <div><label style={lbl}>Type *</label>
+                  <select value={form.type} onChange={e=>setForm(f=>({...f,type:e.target.value}))} style={inp}>
+                    {PHYS_TYPES.map(t=><option key={t}>{t}</option>)}
+                  </select>
+                </div>
+                <div><label style={lbl}>Durée (minutes) *</label><input type="number" min="1" placeholder="ex: 60" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} style={inp}/></div>
               </div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
-                <SelectF label="Intensité" value={form.intensite} options={INTENSITES} onChange={v=>setForm(f=>({...f,intensite:v}))} />
-                <SelectF label="Statut *" value={form.statut} options={STATUTS_PHYS} onChange={v=>setForm(f=>({...f,statut:v}))} />
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
+                <div><label style={lbl}>Intensité</label>
+                  <select value={form.intensite} onChange={e=>setForm(f=>({...f,intensite:e.target.value}))} style={inp}>
+                    {INTENSITES.map(t=><option key={t}>{t}</option>)}
+                  </select>
+                </div>
+                <div><label style={lbl}>Statut *</label>
+                  <select value={form.statut} onChange={e=>setForm(f=>({...f,statut:e.target.value}))} style={inp}>
+                    {STATUTS_PHYS.map(t=><option key={t}>{t}</option>)}
+                  </select>
+                </div>
               </div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Nom du programme</label>
-                  <input type="text" placeholder="Ex: Programme Semaine 1" value={form.programme} onChange={e=>setForm(f=>({...f,programme:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
-                <SelectF label="Coach / Préparateur" value={form.coach} options={["Sélectionner...",...PHYS_COACHES]} onChange={v=>setForm(f=>({...f,coach:v}))} />
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
+                <div><label style={lbl}>Nom du programme</label><input placeholder="Ex: Programme Semaine 1" value={form.programme} onChange={e=>setForm(f=>({...f,programme:e.target.value}))} style={inp}/></div>
+                <div><label style={lbl}>Coach / Préparateur</label>
+                  <select value={form.coach} onChange={e=>setForm(f=>({...f,coach:e.target.value}))} style={inp}>
+                    <option value="">Sélectionner...</option>
+                    {PHYS_COACHES.map(c=><option key={c}>{c}</option>)}
+                  </select>
+                </div>
               </div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:12, marginBottom:14 }}>
-                {[["Distance (km)","distance"],["Calories","calories"],["FC moyenne (bpm)","fcMoy"],["FC max (bpm)","fcMax"]].map(([l,k])=>(
-                  <div key={k}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
-                    <input type="number" value={form[k]} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
-                ))}
-              </div>
-              <SelectF label="Ressenti" value={form.ressenti} options={RESSENTIS_PHYS} onChange={v=>setForm(f=>({...f,ressenti:v}))} />
-              <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Notes</label>
-                <textarea rows={3} value={form.notes} onChange={e=>setForm(f=>({...f,notes:e.target.value}))}
-                  style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
-              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
-                <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={handleSave} style={{ background:C.blue, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}>💾 {editingPhys?"Modifier":"Enregistrer"}</button>
+              {hasExMode&&(
+                <div style={{background:"#7c3aed11",border:"1.5px solid #7c3aed33",borderRadius:10,padding:"12px 16px",marginBottom:16}}>
+                  <div style={{fontSize:13,fontWeight:700,color:"#7c3aed"}}>💪 Mode Force/Explosivité/Full Body activé</div>
+                  <div style={{fontSize:12,color:"#7c3aed99",marginTop:2}}>Vous pouvez maintenant ajouter votre programme d'exercices ci-dessous</div>
+                </div>
+              )}
+              {hasExMode&&(
+                <div style={{marginBottom:16}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+                    <span style={{fontSize:16}}>📹</span>
+                    <span style={{fontSize:15,fontWeight:700}}>Programme d'exercices</span>
+                  </div>
+                  {form.exercises.map((ex,ei)=>(
+                    <div key={ex.id} style={{border:"1.5px solid "+C.border,borderRadius:12,padding:16,marginBottom:12,background:"#fafafa"}}>
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+                        <span style={{fontWeight:700,fontSize:13}}>Exercice {ei+1}</span>
+                        <button onClick={()=>setForm(f=>({...f,exercises:f.exercises.filter(e=>e.id!==ex.id)}))} style={{background:"none",border:"none",cursor:"pointer",color:C.red}}><X size={16}/></button>
+                      </div>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
+                        <div><label style={lbl}>Nom de l'exercice *</label><input placeholder="Ex: Squats" value={ex.nom} onChange={e=>updEx(ex.id,"nom",e.target.value)} style={inp}/></div>
+                        <div><label style={lbl}>Type d'exercice</label>
+                          <select value={ex.typeEx} onChange={e=>updEx(ex.id,"typeEx",e.target.value)} style={inp}>
+                            {EX_TYPES.map(t=><option key={t}>{t}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                      <div style={{marginBottom:12}}><label style={lbl}>Lien vidéo (optionnel)</label><input placeholder="URL YouTube/Vimeo" value={ex.videoUrl} onChange={e=>updEx(ex.id,"videoUrl",e.target.value)} style={inp}/></div>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:12}}>
+                        <div><label style={lbl}>Reps cibles</label><input placeholder="Ex: 8-12, Max, 30s" value={ex.repsCibles} onChange={e=>updEx(ex.id,"repsCibles",e.target.value)} style={inp}/></div>
+                        <div><label style={lbl}>Repos entre reps (s)</label><input type="number" value={ex.reposEntre} onChange={e=>updEx(ex.id,"reposEntre",e.target.value)} style={inp}/></div>
+                        <div><label style={lbl}>Repos après exercice (s)</label><input type="number" value={ex.reposApres} onChange={e=>updEx(ex.id,"reposApres",e.target.value)} style={inp}/></div>
+                      </div>
+                      <SeriesBlock series={ex.series} onAdd={()=>addSerie(ex.id)} onDel={sid=>delSerie(ex.id,sid)} onUpd={(sid,fld,val)=>updSerie(ex.id,sid,fld,val)}/>
+                      {["Bi-set","Tri-set","Super-set"].includes(ex.typeEx)&&(
+                        <div style={{marginTop:14,borderTop:"1px solid "+C.border,paddingTop:14}}>
+                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                            <span style={{fontSize:13,fontWeight:700,color:"#7c3aed"}}>Exercices secondaires</span>
+                            <button onClick={()=>addSubEx(ex.id)} style={{background:"#7c3aed",border:"none",borderRadius:6,padding:"5px 12px",fontSize:11,fontWeight:700,color:"#fff",cursor:"pointer"}}>+ Ajouter un sous-exercice</button>
+                          </div>
+                          {ex.sousExercices.map((sx,si)=>(
+                            <div key={sx.id} style={{border:"1.5px solid #7c3aed33",borderRadius:10,padding:14,marginBottom:10,background:"#7c3aed05"}}>
+                              <div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}>
+                                <span style={{fontSize:12,fontWeight:700}}>Sous-Exercice {si+1}</span>
+                                <button onClick={()=>delSubEx(ex.id,sx.id)} style={{background:"none",border:"none",cursor:"pointer",color:C.red}}><X size={14}/></button>
+                              </div>
+                              <input placeholder="Nom du sous-exercice" value={sx.nom} onChange={e=>updSubEx(ex.id,sx.id,"nom",e.target.value)} style={{...inp,marginBottom:8}}/>
+                              <input placeholder="Lien vidéo (optionnel)" value={sx.videoUrl} onChange={e=>updSubEx(ex.id,sx.id,"videoUrl",e.target.value)} style={{...inp,marginBottom:8}}/>
+                              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:8}}>
+                                <input placeholder="Reps cibles" value={sx.repsCibles} onChange={e=>updSubEx(ex.id,sx.id,"repsCibles",e.target.value)} style={inp}/>
+                                <input type="number" placeholder="Repos entre (s)" value={sx.reposEntre} onChange={e=>updSubEx(ex.id,sx.id,"reposEntre",e.target.value)} style={inp}/>
+                                <input type="number" placeholder="Repos après (s)" value={sx.reposApres} onChange={e=>updSubEx(ex.id,sx.id,"reposApres",e.target.value)} style={inp}/>
+                              </div>
+                              <SeriesBlock series={sx.series} onAdd={()=>addSubSerie(ex.id,sx.id)} onDel={srid=>delSubSerie(ex.id,sx.id,srid)} onUpd={(srid,fld,val)=>updSubSerie(ex.id,sx.id,srid,fld,val)}/>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  <button onClick={()=>setForm(f=>({...f,exercises:[...f.exercises,mkEx()]}))} style={{width:"100%",background:G,border:"none",borderRadius:10,padding:14,fontSize:13,fontWeight:700,color:"#fff",cursor:"pointer",marginTop:4}}>+ Ajouter un exercice</button>
+                </div>
+              )}
+              <div style={{display:"flex",gap:10,justifyContent:"flex-end",marginTop:16,paddingTop:16,borderTop:"1px solid "+C.border}}>
+                <button onClick={()=>setShowForm(false)} style={{background:"none",border:"1.5px solid "+C.border,borderRadius:8,padding:"10px 20px",fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:6}}><X size={14}/> Annuler</button>
+                <button onClick={handleSave} disabled={saving} style={{background:G,border:"none",borderRadius:8,padding:"10px 24px",fontSize:13,fontWeight:700,color:"#fff",cursor:"pointer",opacity:saving?0.7:1}}>💾 {editingId?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
@@ -2480,7 +2556,7 @@ const Profil = ({ sessions, competitions, authUser }) => {
 };
 
 // ─── PLANNING ─────────────────────────────────────────────────────────────────
-const Planning = ({ plannings, setPlannings, sessions, competitions }) => {
+const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSessions }) => {
   const [showForm, setShowForm] = useState(false);
   const [activeTab, setActiveTab] = useState("planning");
   const [form, setForm] = useState({ debut:"", club:0, prepa:0, perso:0, compet:0, objectif:"", commentaireCoach:"" });
@@ -2541,7 +2617,7 @@ const Planning = ({ plannings, setPlannings, sessions, competitions }) => {
         const M=["jan.","fév.","mars","avr.","mai","juin","juil.","août","sep.","oct.","nov.","déc."];
         const _lbl=`Semaine du ${_lm.getDate()} au ${_le.getDate()} ${M[_le.getMonth()]} ${_le.getFullYear()}`;
         const clubR=(sessions||[]).filter(s=>inLw(s.date)&&(s.type==="Collectif"||s.type==="Club")).length;
-        const prepaR=(mockPhysique||[]).filter(s=>inLw(s.date)).length;
+        const prepaR=(physiqueSessions||[]).filter(s=>inLw(s.date)).length;
         const persoR=(sessions||[]).filter(s=>inLw(s.date)&&(s.type==="Perso"||s.type==="Entr. Perso")).length;
         const competR=(competitions||[]).filter(c=>inLw(c.date)).length;
         const rows=[
@@ -2904,6 +2980,7 @@ export default function App() {
   const [sessions, setSessions] = useState(ALL_SESSIONS);
   const [competitions, setCompetitions] = useState(mockCompetitions);
   const [plannings, setPlannings] = useState([]);
+  const [physiqueSessions, setPhysiqueSessions] = useState([]);
   const [unreadChat, setUnreadChat] = useState(0);
   const [unreadSeances, setUnreadSeances] = useState(0);
   const [currentUser, setCurrentUserState] = useState(() => { try { return JSON.parse(localStorage.getItem("kp_user")||"null"); } catch { return null; } });
@@ -3047,6 +3124,39 @@ export default function App() {
     return () => unsub && unsub();
   }, [authUser]);
 
+  // Physique : migration mockPhysique → Firestore (1 fois) puis onSnapshot
+  useEffect(() => {
+    if (!authUser) return;
+    const migKey = "kp_phys_migrated_" + authUser.uid;
+    let unsub;
+    const init = async () => {
+      if (!localStorage.getItem(migKey)) {
+        try {
+          const migRef = doc(db, "meta", "physique_migration_v1");
+          const migDoc = await getDoc(migRef);
+          if (!migDoc.exists()) {
+            await setDoc(migRef, { startedAt: serverTimestamp(), uid: authUser.uid });
+            const batchSize = 10;
+            for (let i = 0; i < mockPhysique.length; i += batchSize) {
+              await Promise.all(
+                mockPhysique.slice(i, i + batchSize).map(s =>
+                  addDoc(collection(db, "physique_sessions"), { ...s, _source: "mock" })
+                )
+              );
+            }
+            await setDoc(migRef, { completedAt: serverTimestamp(), count: mockPhysique.length }, { merge: true });
+          }
+          localStorage.setItem(migKey, "1");
+        } catch(e) { console.error("Migration physique:", e); }
+      }
+      unsub = onSnapshot(collection(db, "physique_sessions"), (snap) => {
+        setPhysiqueSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      });
+    };
+    init();
+    return () => unsub && unsub();
+  }, [authUser]);
+
   // Plannings hebdos : charger depuis Firestore
   useEffect(() => {
     if (!authUser) return;
@@ -3143,12 +3253,12 @@ export default function App() {
 
   const renderPage = () => {
     switch(page) {
-      case "dashboard": return <Dashboard sessions={sessions} competitions={competitions} onNavigate={setPage} plannings={plannings}/>;
-      case "planning": return <Planning plannings={plannings} setPlannings={setPlannings} sessions={sessions} competitions={competitions}/>;
+      case "dashboard": return <Dashboard sessions={sessions} competitions={competitions} onNavigate={setPage} plannings={plannings} physiqueSessions={physiqueSessions}/>;
+      case "planning": return <Planning plannings={plannings} setPlannings={setPlannings} sessions={sessions} competitions={competitions} physiqueSessions={physiqueSessions}/>;
       case "visionboard": return <VisionBoard sessions={sessions}/>;
       case "karate": return <SeancesKarate sessions={sessions} setSessions={setSessions} showToast={showToast}/>;
       case "stage": return <StageEquipe/>;
-      case "physique": return <PrepaPhysique/>;
+      case "physique": return <PrepaPhysique physiqueSessions={physiqueSessions} setPhysiqueSessions={setPhysiqueSessions} showToast={showToast}/>;
       case "competitions": return <Competitions competitions={competitions} setCompetitions={setCompetitions}/>;
       case "corrections": return <Corrections sessions={sessions}/>;
       case "videos": return <Videos competitions={competitions} sessions={sessions}/>;
