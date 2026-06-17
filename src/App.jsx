@@ -3157,6 +3157,102 @@ export default function App() {
     return () => unsub && unsub();
   }, [authUser]);
 
+  // ─── SEED PPG SESSIONS (Iliana PPG 2.xlsx) ──────────────────────────────
+  useEffect(() => {
+    if (!authUser) return;
+    const seedKey = "kp_ppg_seed_v1_" + authUser.uid;
+    const init = async () => {
+      if (localStorage.getItem(seedKey)) return;
+      try {
+        const seedRef = doc(db, "meta", "physique_seed_ppg_v1");
+        const seedDoc = await getDoc(seedRef);
+        if (!seedDoc.exists()) {
+          await setDoc(seedRef, { startedAt: serverTimestamp(), uid: authUser.uid });
+          const ppgData = [
+            {
+              date: "2026-06-10", type: "PPG", duration: 75, intensite: "Elevee",
+              statut: "Terminee", coach: "Kevin", programme: "Full Body PPG",
+              exercises: [
+                { id:101, nom:"Velo", typeEx:"Classique", videoUrl:"", repsCibles:"4 min - echauffement progressif", reposEntre:"", reposApres:"", series:[], sousExercices:[] },
+                { id:102, nom:"Trap Barre Deadlift", typeEx:"Bi-set", videoUrl:"Trap Barre Deadlift X Kb Swing Iliana", repsCibles:"3 reps @55-60kg - 4 Rds",
+                  reposEntre:"", reposApres:"150",
+                  series:[{id:1021,reps:"3",poids:"55"},{id:1022,reps:"3",poids:"55"},{id:1023,reps:"3",poids:"60"},{id:1024,reps:"3",poids:"60"}],
+                  sousExercices:[{id:1025,nom:"Kb Swing Russe elastique",videoUrl:"",repsCibles:"8 reps @RPE 8 - focus explosivite",reposEntre:"",reposApres:"",series:[{id:10251,reps:"6",poids:""},{id:10252,reps:"6",poids:""},{id:10253,reps:"6",poids:""},{id:10254,reps:"6",poids:""}]}]
+                },
+                { id:103, nom:"Squats Smith Machine", typeEx:"Classique", videoUrl:"Squat Smith Machine Iliana", repsCibles:"4x20s isometrique @RPE 8",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:1031,reps:"20s",poids:"30"},{id:1032,reps:"20s",poids:"30"},{id:1033,reps:"20s",poids:"33"},{id:1034,reps:"20s",poids:"36"}],
+                  sousExercices:[]
+                },
+                { id:104, nom:"Banded Lunges", typeEx:"Classique", videoUrl:"Banded lunges Iliana", repsCibles:"3x8/8 reps - tempo 2s excentrique",
+                  reposEntre:"", reposApres:"60",
+                  series:[{id:1041,reps:"8/8",poids:"20"},{id:1042,reps:"8/8",poids:"20"},{id:1043,reps:"8/8",poids:"20"}],
+                  sousExercices:[]
+                },
+                { id:105, nom:"Smith Machine Bench Press", typeEx:"Bi-set", videoUrl:"Bloc Push Iliana", repsCibles:"5 reps - Every 2min30 x4",
+                  reposEntre:"", reposApres:"150",
+                  series:[{id:1051,reps:"5",poids:"20"},{id:1052,reps:"5",poids:"21.5"},{id:1053,reps:"5",poids:"21.5"},{id:1054,reps:"5",poids:"23"}],
+                  sousExercices:[{id:1055,nom:"Med Ball Throw position allongee",videoUrl:"",repsCibles:"6 reps max hauteur",reposEntre:"",reposApres:"",series:[{id:10551,reps:"6",poids:""},{id:10552,reps:"6",poids:""},{id:10553,reps:"6",poids:""},{id:10554,reps:"6",poids:""}]}]
+                },
+                { id:106, nom:"Triceps Extension Poulie", typeEx:"Classique", videoUrl:"Triceps Extension Poulie Iliana", repsCibles:"3x10 reps @RPE 7-8 - 2s excentrique",
+                  reposEntre:"", reposApres:"90",
+                  series:[{id:1061,reps:"10",poids:"10"},{id:1062,reps:"10",poids:"10"},{id:1063,reps:"10",poids:"10"}],
+                  sousExercices:[]
+                },
+                { id:107, nom:"Echo Bike Metcon", typeEx:"Bi-set", videoUrl:"Metcom Iliana", repsCibles:"2x20s on/10s off @RPE 10 - 4 Rds",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:1071,reps:"2x20s",poids:""},{id:1072,reps:"2x20s",poids:""},{id:1073,reps:"2x20s",poids:""},{id:1074,reps:"2x20s",poids:""}],
+                  sousExercices:[{id:1075,nom:"Mawashs Pao avec retour en zenkutsu",videoUrl:"",repsCibles:"10/10 reps @RPE 10 max vitesse",reposEntre:"",reposApres:"",series:[{id:10751,reps:"10/10",poids:""},{id:10752,reps:"10/10",poids:""},{id:10753,reps:"10/10",poids:""},{id:10754,reps:"10/10",poids:""}]}]
+                }
+              ]
+            },
+            {
+              date: "2026-06-12", type: "PPG", duration: 75, intensite: "Elevee",
+              statut: "Terminee", coach: "Kevin", programme: "Full Body PPG",
+              exercises: [
+                { id:201, nom:"Ski Erg", typeEx:"Classique", videoUrl:"", repsCibles:"4 min - echauffement", reposEntre:"", reposApres:"", series:[], sousExercices:[] },
+                { id:202, nom:"Hip Thrust", typeEx:"Bi-set", videoUrl:"Hip Trust Iliana", repsCibles:"3 reps @90-100kg @RPE 8-9 - 4 Rds",
+                  reposEntre:"", reposApres:"150",
+                  series:[{id:2021,reps:"3",poids:"90"},{id:2022,reps:"3",poids:"90"},{id:2023,reps:"3",poids:"100"},{id:2024,reps:"3",poids:"100"}],
+                  sousExercices:[{id:2025,nom:"Kb SDHP",videoUrl:"",repsCibles:"6 reps @RPE 8 max vitesse",reposEntre:"",reposApres:"",series:[{id:20251,reps:"16",poids:""},{id:20252,reps:"16",poids:""},{id:20253,reps:"20",poids:""},{id:20254,reps:"20",poids:""}]}]
+                },
+                { id:203, nom:"Leg Curl", typeEx:"Classique", videoUrl:"Leg Curl Iliana", repsCibles:"3x10 reps @RPE 8 - 2s excentrique",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:2031,reps:"10",poids:"30"},{id:2032,reps:"10",poids:"35"},{id:2033,reps:"10",poids:"42.5"}],
+                  sousExercices:[]
+                },
+                { id:204, nom:"Leg Extension", typeEx:"Classique", videoUrl:"Leg Extension Iliana", repsCibles:"2x12 reps Tempo @RPE 8 - 2s excentrique",
+                  reposEntre:"", reposApres:"60",
+                  series:[{id:2041,reps:"12",poids:"42.5"},{id:2042,reps:"12",poids:"47.5"}],
+                  sousExercices:[]
+                },
+                { id:205, nom:"Tirage Horizontal Poulie", typeEx:"Classique", videoUrl:"Tirage Horizontal Poulie Iliana", repsCibles:"4x6 reps Tempo @RPE 8 - 2s excentrique",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:2051,reps:"6",poids:"25"},{id:2052,reps:"6",poids:"25"},{id:2053,reps:"6",poids:"30"},{id:2054,reps:"6",poids:"35"}],
+                  sousExercices:[]
+                },
+                { id:206, nom:"Ski Erg Pull explosivite", typeEx:"Bi-set", videoUrl:"Pull Iliana", repsCibles:"10/8 Cals @RPE 10 - 3 Rds",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:2061,reps:"10 cals",poids:"5"},{id:2062,reps:"10 cals",poids:"5"},{id:2063,reps:"8 cals",poids:"5"}],
+                  sousExercices:[{id:2065,nom:"Slam Balls",videoUrl:"",repsCibles:"10 reps @RPE 10 max impact",reposEntre:"",reposApres:"",series:[{id:20651,reps:"10",poids:"5"},{id:20652,reps:"10",poids:"5"},{id:20653,reps:"10",poids:"5"}]}]
+                },
+                { id:207, nom:"Rotation de Buste Poulie", typeEx:"Bi-set", videoUrl:"Rotation de buste poulie Iliana", repsCibles:"8/8 rotations @RPE 7 - 2-3 Rds",
+                  reposEntre:"", reposApres:"90",
+                  series:[{id:2071,reps:"8/8",poids:"7.5"},{id:2072,reps:"8/8",poids:"7.5"},{id:2073,reps:"8/8",poids:"7.5"}],
+                  sousExercices:[{id:2075,nom:"Biceps Curl",videoUrl:"Biceps Curl Iliana",repsCibles:"8 reps @RPE 7",reposEntre:"",reposApres:"",series:[{id:20751,reps:"8",poids:"10"},{id:20752,reps:"8",poids:"14"},{id:20753,reps:"8",poids:"14"}]}]
+                }
+              ]
+            }
+          ];
+          await Promise.all(ppgData.map(s => addDoc(collection(db, "physique_sessions"), { ...s, _source: "seed_ppg" })));
+          await setDoc(seedRef, { completedAt: serverTimestamp(), count: ppgData.length }, { merge: true });
+        }
+        localStorage.setItem(seedKey, "1");
+      } catch(e) { console.error("Seed PPG:", e); }
+    };
+    init();
+  }, [authUser]);
+
   // Plannings hebdos : charger depuis Firestore
   useEffect(() => {
     if (!authUser) return;
