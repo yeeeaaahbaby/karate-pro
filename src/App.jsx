@@ -1211,6 +1211,10 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
     setForm({...EMPTY,...s, duration:String(s.duration||""), exercises:s.exercises||[]});
     setEditingId(s.id); setShowForm(true);
   };
+  const handleDuplicate = async (s) => {
+    const { id, ...copy } = s;
+    await addDoc(collection(db, "physique_sessions"), { ...copy, date: new Date().toISOString().split("T")[0], _source: "duplicate" });
+  };
 
   const typeColor = (t) => ({"PPG":"#7c3aed","Full Body":"#7c3aed","Force":C.blue,"Haltérophilie":C.blue,"Endurance":C.green,"Explosivité":C.orange,"Compétition":C.yellow,"Technique":C.primary}[t]||C.primary);
 
@@ -1266,6 +1270,7 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
               </div>
               <div style={{display:"flex",gap:8}}>
                 <button onClick={()=>openEdit(s)} style={{background:"none",border:"1.5px solid "+C.border,borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer"}}>✏️</button>
+                <button onClick={()=>handleDuplicate(s)} style={{background:"none",border:"1.5px solid #7c3aed",borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer",color:"#7c3aed"}} title="Dupliquer">⧉</button>
                 <button onClick={()=>handleDelete(String(s.id))} style={{background:"none",border:"none",cursor:"pointer",color:C.red}}><Trash2 size={14}/></button>
               </div>
             </div>
