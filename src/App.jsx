@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { db, auth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "./firebase";
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, serverTimestamp, query, where, onSnapshot, orderBy, limit } from "firebase/firestore";
+import { collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, serverTimestamp, query, where, onSnapshot, orderBy, limit } from "firebase/firestore";
 import { enregistrerSeance, getCurrentUser, setCurrentUser, subscribeToNotifications, notifyNewChatMessage, saveOneSignalPlayerId } from "./notifications";
 
 const C = {
@@ -735,7 +735,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                 </button>
               )}
               <button onClick={()=>openEdit(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
-              <button onClick={()=>setSessions(prev=>prev.filter(p=>p.id!==s.id))} style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
+              <button onClick={()=>{ deleteDoc(doc(db,"seances",String(s.id))).catch(console.error); setSessions(prev=>prev.filter(p=>p.id!==s.id)); }} style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
             </div>
           </div>
           <div style={{ display:"flex", gap:16, marginBottom:s.katas?.length>0||s.notes?8:0 }}>
@@ -3014,14 +3014,37 @@ export default function App() {
     setAuthAllowed(false);
   };
 
-  // Sessions karaté : charger depuis Firestore
+  // Sessions karaté : migration ALL_SESSIONS → Firestore (1 fois) puis source unique
   useEffect(() => {
     if (!authUser) return;
-    const unsub = onSnapshot(collection(db, "seances"), (snap) => {
-      const firestoreSessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      setSessions([...ALL_SESSIONS, ...firestoreSessions]);
-    });
-    return () => unsub();
+    const migKey = "kp_sess_migrated_" + authUser.uid;
+    let unsub;
+    const init = async () => {
+      if (!localStorage.getItem(migKey)) {
+        try {
+          const migRef = doc(db, "meta", "sessions_migration_v1");
+          const migDoc = await getDoc(migRef);
+          if (!migDoc.exists()) {
+            await setDoc(migRef, { startedAt: serverTimestamp(), uid: authUser.uid });
+            const batchSize = 10;
+            for (let i = 0; i < ALL_SESSIONS.length; i += batchSize) {
+              await Promise.all(
+                ALL_SESSIONS.slice(i, i + batchSize).map(s =>
+                  addDoc(collection(db, "seances"), { ...s, _source: "mock" })
+                )
+              );
+            }
+            await setDoc(migRef, { completedAt: serverTimestamp(), count: ALL_SESSIONS.length }, { merge: true });
+          }
+          localStorage.setItem(migKey, "1");
+        } catch(e) { console.error("Migration sessions:", e); }
+      }
+      unsub = onSnapshot(collection(db, "seances"), (snap) => {
+        setSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      });
+    };
+    init();
+    return () => unsub && unsub();
   }, [authUser]);
 
   // Plannings hebdos : charger depuis Firestore
