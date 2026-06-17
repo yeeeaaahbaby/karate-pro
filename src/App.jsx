@@ -572,7 +572,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
 
   const emptyForm = {
     date: new Date().toISOString().split('T')[0],
-    type: "Collectif", duration: "",
+    type: "Collectif", duration: "90",
     coaches: [], katas: [], techniques: [],
     focusPoints: "", corrections: "",
     ressenti: "🙂 Bon", energie: "Normal",
@@ -632,7 +632,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
   const avgDur = sessions.length ? Math.round(sessions.reduce((a,b)=>a+b.duration,0)/sessions.length) : 0;
 
   const handleSubmit = async () => {
-    if (!form.date || !form.duration) return;
+    if (!form.date || !form.duration) { showToast("⚠️ Date et durée obligatoires"); return; }
     setSaving(true);
     try {
       const seance = {
