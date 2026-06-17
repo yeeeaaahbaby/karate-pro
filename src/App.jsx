@@ -368,7 +368,7 @@ const Toast = ({ message, onClose }) => (
 );
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
-const Dashboard = ({ sessions, competitions }) => {
+const Dashboard = ({ sessions, competitions, onNavigate }) => {
   const _now = new Date();
   const _monOff = (_now.getDay() + 6) % 7;
   const startOfWeek = new Date(_now);
@@ -394,17 +394,17 @@ const Dashboard = ({ sessions, competitions }) => {
     const dStr = dd.toDateString();
     const ds = thisWeek.filter(s => new Date(s.date).toDateString() === dStr);
     const karate = ds
-      .filter(s => ["club","Club","perso","Entr. Perso"].includes(s.type))
+      .filter(s => ["Collectif","Club","Perso","Entr. Perso"].includes(s.type))
       .reduce((a, s) => a + (s.duration || 0), 0);
-    const physique = ds
-      .filter(s => ["physique","Prépa Physique"].includes(s.type))
+    const physique = mockPhysique
+      .filter(s => new Date(s.date).toDateString() === dStr)
       .reduce((a, s) => a + (s.duration || 0), 0);
     return { day, karate, physique };
   });
 
-  const clubCount     = thisWeek.filter(s => s.type === "club"    || s.type === "Club").length;
-  const persoCount    = thisWeek.filter(s => s.type === "perso"   || s.type === "Entr. Perso").length;
-  const physiqueCount = thisWeek.filter(s => s.type === "physique"|| s.type === "Prépa Physique").length;
+  const clubCount     = thisWeek.filter(s => s.type === "Collectif" || s.type === "Club").length;
+  const persoCount    = thisWeek.filter(s => s.type === "Perso"     || s.type === "Entr. Perso").length;
+  const physiqueCount = mockPhysique.filter(s => { const d = new Date(s.date); return d >= startOfWeek && d <= endOfWeek; }).length;
   const _today = new Date(); _today.setHours(0, 0, 0, 0);
   const upcomingComps = (competitions || []).filter(c => new Date(c.date) >= _today).length;
   const avgSat = (sessions.reduce((a,b) => a + b.satisfaction, 0) / sessions.length).toFixed(1);
@@ -424,9 +424,9 @@ const Dashboard = ({ sessions, competitions }) => {
           <span style={{ color:C.muted, fontSize:11 }}>{weekLabel}</span>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:8, marginBottom:12 }}>
-          {[{label:"Club",val:clubCount,color:C.red},{label:"Prépa Physique",val:physiqueCount,color:C.blue},
-            {label:"Entr. Perso",val:persoCount,color:C.muted},{label:"Compétitions",val:upcomingComps,color:C.yellow}].map(s=>(
-            <div key={s.label} style={{ background:s.color+"11", border:"1px solid "+s.color+"33", borderRadius:10, padding:"10px 12px" }}>
+          {[{label:"Club",val:clubCount,color:C.red,page:"karate"},{label:"Prépa Physique",val:physiqueCount,color:C.blue,page:"physique"},
+            {label:"Entr. Perso",val:persoCount,color:C.muted,page:"karate"},{label:"Compétitions",val:upcomingComps,color:C.yellow,page:"competitions"}].map(s=>(
+            <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.page)} style={{ background:s.color+"11", border:"1px solid "+s.color+"33", borderRadius:10, padding:"10px 12px", cursor:"pointer" }}>
               <div style={{ fontSize:10, color:s.color, fontWeight:600, marginBottom:2 }}>{s.label}</div>
               <div style={{ fontSize:22, fontWeight:800, color:s.color }}>{s.val}</div>
             </div>
@@ -3062,7 +3062,7 @@ export default function App() {
 
   const renderPage = () => {
     switch(page) {
-      case "dashboard": return <Dashboard sessions={sessions} competitions={competitions}/>;
+      case "dashboard": return <Dashboard sessions={sessions} competitions={competitions} onNavigate={setPage}/>;
       case "planning": return <Planning/>;
       case "visionboard": return <VisionBoard sessions={sessions}/>;
       case "karate": return <SeancesKarate sessions={sessions} setSessions={setSessions} showToast={showToast}/>;
