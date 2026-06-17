@@ -3258,6 +3258,75 @@ export default function App() {
     init();
   }, [authUser]);
 
+  // ─── SEED PPG SESSION 17/06/2026 ─────────────────────────────────────────
+  useEffect(() => {
+    if (!authUser) return;
+    const seedKey = "kp_ppg_seed_v2_" + authUser.uid;
+    const init = async () => {
+      if (localStorage.getItem(seedKey)) return;
+      try {
+        const seedRef = doc(db, "meta", "physique_seed_ppg_v2");
+        const seedDoc = await getDoc(seedRef);
+        if (!seedDoc.exists()) {
+          await setDoc(seedRef, { startedAt: serverTimestamp(), uid: authUser.uid });
+          const ppgData = [
+            {
+              date: "2026-06-17", type: "PPG", duration: 75, intensite: "Elevee",
+              statut: "Terminee", coach: "Kevin", programme: "Full Body PPG",
+              exercises: [
+                { id:301, nom:"Velo", typeEx:"Classique", videoUrl:"", repsCibles:"4 min - augmentation progressive du rythme toutes les minutes", reposEntre:"", reposApres:"", series:[], sousExercices:[] },
+                { id:302, nom:"Trap Barre Deadlift", typeEx:"Bi-set", videoUrl:"Trap Barre Deadlift X Kb Squat Jump Iliana",
+                  repsCibles:"4 reps Tempo @55-65kg @RPE 8 - 4 Rds - 2s excentrique + max vitesse montee",
+                  reposEntre:"", reposApres:"150",
+                  series:[{id:3021,reps:"4",poids:"55"},{id:3022,reps:"4",poids:"60"},{id:3023,reps:"4",poids:"60"},{id:3024,reps:"4",poids:"65"}],
+                  sousExercices:[{id:3025,nom:"Kb Squats Jump",videoUrl:"",repsCibles:"6 reps - max hauteur sur chaque saut",reposEntre:"",reposApres:"",series:[{id:30251,reps:"6",poids:"6"},{id:30252,reps:"6",poids:"6"},{id:30253,reps:"6",poids:"10"},{id:30254,reps:"6",poids:"10"}]}]
+                },
+                { id:303, nom:"Squats Smith Machine", typeEx:"Classique", videoUrl:"Squat Smith Machine Iliana",
+                  repsCibles:"4x6 reps Tempo - focus posture - 2s excentrique + max vitesse montee",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:3031,reps:"6",poids:"30"},{id:3032,reps:"6",poids:"35"},{id:3033,reps:"6",poids:"35"},{id:3034,reps:"6",poids:"40"}],
+                  sousExercices:[]
+                },
+                { id:304, nom:"Banded Lunges", typeEx:"Classique", videoUrl:"Banded lunges Iliana",
+                  repsCibles:"3x20s/20s isometrique @RPE 8 - leste avec 2 Kbs ou Dbs - 2s excentrique",
+                  reposEntre:"", reposApres:"60",
+                  series:[{id:3041,reps:"20s/20s",poids:"12"},{id:3042,reps:"20s/20s",poids:"12"},{id:3043,reps:"20s/20s",poids:"20"}],
+                  sousExercices:[]
+                },
+                { id:305, nom:"Smith Machine Bench Press", typeEx:"Bi-set", videoUrl:"Bloc Push Iliana",
+                  repsCibles:"4 reps Tempo @20-25kg @RPE 8 - 4 Rds",
+                  reposEntre:"", reposApres:"150",
+                  series:[{id:3051,reps:"4",poids:"20"},{id:3052,reps:"4",poids:"23"},{id:3053,reps:"4",poids:"23"},{id:3054,reps:"4",poids:"25"}],
+                  sousExercices:[{id:3055,nom:"Med Ball Throw en fente yaku",videoUrl:"",repsCibles:"6/6 reps - max intensite + vitesse",reposEntre:"",reposApres:"",series:[{id:30551,reps:"6/6",poids:"5"},{id:30552,reps:"6/6",poids:"5"},{id:30553,reps:"6/6",poids:"5"},{id:30554,reps:"6/6",poids:"5"}]}]
+                },
+                { id:306, nom:"Triceps Extension Poulie", typeEx:"Classique", videoUrl:"Triceps Extension Poulie Iliana",
+                  repsCibles:"3x10 reps @RPE 7 - 2s excentrique",
+                  reposEntre:"", reposApres:"90",
+                  series:[{id:3061,reps:"10",poids:"6.5"},{id:3062,reps:"10",poids:"6.5"},{id:3063,reps:"10",poids:"6.5"}],
+                  sousExercices:[]
+                },
+                { id:307, nom:"Metcon Circuit", typeEx:"Circuit", videoUrl:"",
+                  repsCibles:"2 min on / 2 min off x3 - garder min 30s sur la partie Karate",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:3071,reps:"3 Rds",poids:""},{id:3072,reps:"3 Rds",poids:""},{id:3073,reps:"3 Rds",poids:""}],
+                  sousExercices:[
+                    {id:3075,nom:"Echo Bike",videoUrl:"",repsCibles:"30s max effort @RPE 9-10",reposEntre:"",reposApres:"",series:[{id:30751,reps:"30s",poids:""},{id:30752,reps:"30s",poids:""},{id:30753,reps:"30s",poids:""}]},
+                    {id:3076,nom:"Burpees Broad Jump",videoUrl:"",repsCibles:"10 reps",reposEntre:"",reposApres:"",series:[{id:30761,reps:"10",poids:""},{id:30762,reps:"10",poids:""},{id:30763,reps:"10",poids:""}]},
+                    {id:3077,nom:"Techniques Karate sur Pao",videoUrl:"",repsCibles:"Max techniques dans le temps restant - mawashs/yoko/ura - max vitesse + retour zenkutsu",reposEntre:"",reposApres:"",series:[{id:30771,reps:"max",poids:""},{id:30772,reps:"max",poids:""},{id:30773,reps:"max",poids:""}]}
+                  ]
+                }
+              ]
+            }
+          ];
+          await Promise.all(ppgData.map(s => addDoc(collection(db, "physique_sessions"), { ...s, _source: "seed_ppg" })));
+          await setDoc(seedRef, { completedAt: serverTimestamp(), count: ppgData.length }, { merge: true });
+        }
+        localStorage.setItem(seedKey, "1");
+      } catch(e) { console.error("Seed PPG v2:", e); }
+    };
+    init();
+  }, [authUser]);
+
   // Plannings hebdos : charger depuis Firestore
   useEffect(() => {
     if (!authUser) return;
