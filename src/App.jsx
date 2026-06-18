@@ -1693,6 +1693,7 @@ const Corrections = ({ sessions }) => {
       <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
         <button onClick={()=>openEdit(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={12}/></button>
         <button onClick={()=>openCopy(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
+        <button onClick={()=>handleDeleteCorr(c.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={12}/></button>
       </div>
     </div>
   ));
