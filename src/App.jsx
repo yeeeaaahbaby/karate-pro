@@ -428,7 +428,7 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
           <span style={{ color:C.muted, fontSize:11 }}>{weekLabel}</span>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:8, marginBottom:12 }}>
-          {[{label:"Club",val:clubCount,color:C.red,page:"karate"},{label:"Prépa Physique",val:physiqueCount,color:C.blue,page:"physique"},
+          {[{label:"Entr. Club",val:clubCount,color:C.red,page:"karate"},{label:"Prépa Physique",val:physiqueCount,color:C.blue,page:"physique"},
             {label:"Entr. Perso",val:persoCount,color:C.muted,page:"karate"},{label:"Compétitions",val:upcomingComps,color:C.yellow,page:"competitions"}].map(s=>(
             <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.page)} style={{ background:s.color+"11", border:"1px solid "+s.color+"33", borderRadius:10, padding:"10px 12px", cursor:"pointer" }}>
               <div style={{ fontSize:10, color:s.color, fontWeight:600, marginBottom:2 }}>{s.label}</div>
@@ -441,9 +441,13 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
         </div>
       </div>
 
-      <div style={{ fontWeight:700, marginBottom:10, fontSize:14 }}>Activité de la semaine</div>
-      {/* Stats semaine */}
-      {(() => {
+      <div style={{ background:C.card, borderRadius:16, padding:16, marginBottom:16, border:"1px solid "+C.border }}>
+        <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:12 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="5" y1="6" x2="19" y2="6"/><line x1="5" y1="18" x2="19" y2="18"/><polyline points="9,12 11,10 14,14 16,12"/></svg>
+          <strong style={{ fontSize:13 }}>Activité de la semaine</strong>
+        </div>
+        {/* Stats semaine */}
+        {(() => {
         const now = new Date(); const startW = new Date(now); startW.setDate(now.getDate()-now.getDay());
         const karateW = thisWeek.length;
         const physiqueW = (physiqueSessions||[]).filter(s=>new Date(s.date)>=startW).length;
@@ -461,8 +465,6 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
           </div>
         );
       })()}
-
-      <div style={{ background:C.card, borderRadius:16, padding:16, marginBottom:16, border:"1px solid "+C.border }}>
         <ResponsiveContainer width="100%" height={160}>
           <BarChart data={weekActivity}>
             <XAxis dataKey="day" tick={{ fontSize:10 }} axisLine={false} tickLine={false} />
