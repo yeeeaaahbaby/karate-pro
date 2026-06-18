@@ -441,19 +441,6 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
         </div>
       </div>
 
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10, marginBottom:16 }}>
-        {[{icon:"🥋",label:"Séances karaté",val:sessions.length,c:C.red,pg:"seances"},
-          {icon:"💪",label:"Prépa physique",val:(physiqueSessions||[]).length,c:"#7c3aed",pg:"physique"},
-          {icon:"🏅",label:"Stages EDF",val:mockStages.length,c:"#1d4ed8",pg:"stages"},
-          {icon:"🏆",label:"Compétitions",val:(competitions||[]).length,c:"#f97316",pg:"competitions"}].map(s=>(
-          <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.pg)} style={{ background:s.c, borderRadius:14, padding:"14px", color:"#fff", cursor:"pointer" }}>
-            <div style={{ fontSize:20, marginBottom:4 }}>{s.icon}</div>
-            <div style={{ fontSize:11, opacity:0.85 }}>{s.label}</div>
-            <div style={{ fontSize:18, fontWeight:800 }}>{s.val}</div>
-          </div>
-        ))}
-      </div>
-
       <div style={{ fontWeight:700, marginBottom:10, fontSize:14 }}>Activité de la semaine</div>
       {/* Stats semaine */}
       {(() => {
@@ -464,7 +451,7 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
         const compAVenir = (competitions||[]).filter(c=>c.statut==="À venir"||(!c.statut&&new Date(c.date)>=now)).length;
         return (
           <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10, marginBottom:16 }}>
-            {[{icon:"🥋",label:"Karaté",val:karateW,c:C.red,pg:"seances"},{icon:"💪",label:"Prépa",val:physiqueW,c:"#7c3aed",pg:"physique"},{icon:"📝",label:"Corrections",val:corrW,c:C.primary,pg:"corrections"},{icon:"🏆",label:"Compét. à venir",val:compAVenir,c:C.yellow,pg:"competitions"}].map(s=>(
+            {[{icon:"🥋",label:"Karaté",val:karateW,c:C.red,pg:"karate"},{icon:"💪",label:"Prépa",val:physiqueW,c:"#7c3aed",pg:"physique"},{icon:"📝",label:"Corrections",val:corrW,c:C.primary,pg:"corrections"},{icon:"🏆",label:"Compét. à venir",val:compAVenir,c:C.yellow,pg:"competitions"}].map(s=>(
               <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.pg)} style={{ background:s.c+"11", border:"1px solid "+s.c+"44", borderRadius:12, padding:"10px 8px", textAlign:"center", cursor:"pointer" }}>
                 <div style={{ fontSize:22 }}>{s.icon}</div>
                 <div style={{ fontSize:20, fontWeight:800, color:s.c }}>{s.val}</div>
@@ -485,6 +472,19 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
             <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize:11 }} />
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10, marginTop:16 }}>
+        {[{icon:"🥋",label:"Séances karaté",val:sessions.length,c:C.red,pg:"karate"},
+          {icon:"💪",label:"Prépa physique",val:(physiqueSessions||[]).length,c:"#7c3aed",pg:"physique"},
+          {icon:"🏅",label:"Stages EDF",val:mockStages.length,c:"#1d4ed8",pg:"stage"},
+          {icon:"🏆",label:"Compétitions",val:(competitions||[]).length,c:"#f97316",pg:"competitions"}].map(s=>(
+          <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.pg)} style={{ background:s.c, borderRadius:14, padding:"14px", color:"#fff", cursor:"pointer" }}>
+            <div style={{ fontSize:20, marginBottom:4 }}>{s.icon}</div>
+            <div style={{ fontSize:11, opacity:0.85 }}>{s.label}</div>
+            <div style={{ fontSize:18, fontWeight:800 }}>{s.val}</div>
+          </div>
+        ))}
       </div>
 
     </div>
