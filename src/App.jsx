@@ -1644,7 +1644,7 @@ const Corrections = ({ sessions }) => {
   }));
 
   const [extraCorrs, setExtraCorrs] = useState([]);
-  const allCorrections = [...mockCorrections, ...sessionCorrs, ...extraCorrs];
+  const allCorrections = [...mockCorrections, ...sessionCorrs, ...extraCorrs].sort((a,b)=>new Date(b.date)-new Date(a.date));
 
   const openEdit = (c) => {
     setEditingCorr(c.id);
@@ -1703,7 +1703,7 @@ const Corrections = ({ sessions }) => {
     return Object.entries(groups).sort((a,b)=>b[0].localeCompare(a[0])).map(([key,list])=>(
       <div key={key} style={{ marginBottom:20 }}>
         <div style={{ background:C.orange+"22", borderRadius:8, padding:"6px 12px", marginBottom:10, fontWeight:700, fontSize:12, color:C.orange, border:"1px solid "+C.orange+"44" }}>{labelFn(key, list)}</div>
-        {renderList(list)}
+        {renderList(list.sort((a,b)=>new Date(b.date)-new Date(a.date)))}
       </div>
     ));
   };
