@@ -442,11 +442,11 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
       </div>
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10, marginBottom:16 }}>
-        {[{icon:"🥋",label:"Séances karaté",val:sessions.length,c:C.red},
-          {icon:"💪",label:"Prépa physique",val:(physiqueSessions||[]).length,c:"#7c3aed"},
-          {icon:"🏅",label:"Stages EDF",val:mockStages.length,c:"#1d4ed8"},
-          {icon:"🏆",label:"Compétitions",val:(competitions||[]).length,c:"#f97316"}].map(s=>(
-          <div key={s.label} style={{ background:s.c, borderRadius:14, padding:"14px", color:"#fff" }}>
+        {[{icon:"🥋",label:"Séances karaté",val:sessions.length,c:C.red,pg:"seances"},
+          {icon:"💪",label:"Prépa physique",val:(physiqueSessions||[]).length,c:"#7c3aed",pg:"physique"},
+          {icon:"🏅",label:"Stages EDF",val:mockStages.length,c:"#1d4ed8",pg:"stages"},
+          {icon:"🏆",label:"Compétitions",val:(competitions||[]).length,c:"#f97316",pg:"competitions"}].map(s=>(
+          <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.pg)} style={{ background:s.c, borderRadius:14, padding:"14px", color:"#fff", cursor:"pointer" }}>
             <div style={{ fontSize:20, marginBottom:4 }}>{s.icon}</div>
             <div style={{ fontSize:11, opacity:0.85 }}>{s.label}</div>
             <div style={{ fontSize:18, fontWeight:800 }}>{s.val}</div>
@@ -454,6 +454,7 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
         ))}
       </div>
 
+      <div style={{ fontWeight:700, marginBottom:10, fontSize:14 }}>Activité de la semaine</div>
       {/* Stats semaine */}
       {(() => {
         const now = new Date(); const startW = new Date(now); startW.setDate(now.getDate()-now.getDay());
@@ -463,8 +464,8 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
         const compAVenir = (competitions||[]).filter(c=>c.statut==="À venir"||(!c.statut&&new Date(c.date)>=now)).length;
         return (
           <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10, marginBottom:16 }}>
-            {[{icon:"🥋",label:"Karaté",val:karateW,c:C.red},{icon:"💪",label:"Prépa",val:physiqueW,c:C.blue},{icon:"📝",label:"Corrections",val:corrW,c:C.primary},{icon:"🏆",label:"Compét. à venir",val:compAVenir,c:C.yellow}].map(s=>(
-              <div key={s.label} style={{ background:s.c+"11", border:"1px solid "+s.c+"44", borderRadius:12, padding:"10px 8px", textAlign:"center" }}>
+            {[{icon:"🥋",label:"Karaté",val:karateW,c:C.red,pg:"seances"},{icon:"💪",label:"Prépa",val:physiqueW,c:"#7c3aed",pg:"physique"},{icon:"📝",label:"Corrections",val:corrW,c:C.primary,pg:"corrections"},{icon:"🏆",label:"Compét. à venir",val:compAVenir,c:C.yellow,pg:"competitions"}].map(s=>(
+              <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.pg)} style={{ background:s.c+"11", border:"1px solid "+s.c+"44", borderRadius:12, padding:"10px 8px", textAlign:"center", cursor:"pointer" }}>
                 <div style={{ fontSize:22 }}>{s.icon}</div>
                 <div style={{ fontSize:20, fontWeight:800, color:s.c }}>{s.val}</div>
                 <div style={{ fontSize:9, color:s.c, fontWeight:600, lineHeight:1.2, marginTop:2 }}>{s.label}</div>
@@ -475,7 +476,6 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
       })()}
 
       <div style={{ background:C.card, borderRadius:16, padding:16, marginBottom:16, border:"1px solid "+C.border }}>
-        <div style={{ fontWeight:700, marginBottom:12, fontSize:14 }}>Activité de la semaine</div>
         <ResponsiveContainer width="100%" height={160}>
           <BarChart data={weekActivity}>
             <XAxis dataKey="day" tick={{ fontSize:10 }} axisLine={false} tickLine={false} />
@@ -487,23 +487,6 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
         </ResponsiveContainer>
       </div>
 
-      <div style={{ background:C.card, borderRadius:16, padding:16, border:"1px solid "+C.border }}>
-        <div style={{ fontWeight:700, marginBottom:12, fontSize:14 }}>Activités récentes</div>
-        {sessions.slice(0,5).map(s=>(
-          <div key={s.id} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
-            <div style={{ width:34, height:34, borderRadius:"50%", background:C.primary+"22", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-              <TrendingUp size={14} color={C.primary}/>
-            </div>
-            <div style={{ flex:1 }}>
-              <div style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap" }}>
-                <Badge label={s.type} color={C.primary} />
-                <span style={{ fontSize:11, color:C.muted }}>{s.date}</span>
-              </div>
-              <div style={{ fontSize:11, color:C.muted }}>⏱ {s.duration} min · {s.coach && "Coach: "+s.coach}</div>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };
@@ -830,10 +813,14 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
               </div>
 
-              {/* Ressenti + Énergie */}
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
-                <SelectField label="Ressenti" value={form.ressenti} onChange={v=>setForm(f=>({...f,ressenti:v}))} options={RESSENTIS} />
-                <SelectField label="Niveau d'énergie" value={form.energie} onChange={v=>setForm(f=>({...f,energie:v}))} options={ENERGIES} />
+              {/* Ressenti + Niveau de Difficulté */}
+              <div style={{ marginBottom:16 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+                  <label style={{ fontSize:13, fontWeight:600 }}>Ressenti</label>
+                  <span style={{ fontSize:18, fontWeight:800, color:C.red }}>{form.ressenti||5}/10</span>
+                </div>
+                <input type="range" min={1} max={10} value={form.ressenti||5} onChange={e=>setForm(f=>({...f,ressenti:parseInt(e.target.value)}))} style={{ width:"100%", accentColor:C.red, marginBottom:12 }} />
+                <SelectField label="Niveau de Difficulté" value={form.energie} onChange={v=>setForm(f=>({...f,energie:v}))} options={ENERGIES} />
               </div>
 
               {/* Satisfaction technique slider */}
@@ -852,7 +839,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
 
               {/* Retours coach */}
               <div style={{ marginBottom:16 }}>
-                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Retours du Coach</label>
+                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Feedback du Coach</label>
                 <textarea rows={3} placeholder="Commentaires du coach..." value={form.coachFeedback}
                   onChange={e=>setForm(f=>({...f,coachFeedback:e.target.value}))}
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
@@ -1097,24 +1084,36 @@ const StageEquipe = () => {
               <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
             </div>
             <div style={{ padding:"20px 24px" }}>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:14 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date *</label>
                   <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Durée (min) *</label>
                   <input type="number" placeholder="240" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
                 <div>
-                  <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Satisfaction</label>
+                  <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Ressenti</label>
+                  <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                    <input type="range" min={1} max={10} value={form.ressenti||5} onChange={e=>setForm(f=>({...f,ressenti:parseInt(e.target.value)}))} style={{ flex:1, accentColor:"#1D4ED8" }}/>
+                    <span style={{ fontWeight:800, color:"#1D4ED8", minWidth:30 }}>{form.ressenti||5}/10</span>
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Satisfaction Technique</label>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                     <input type="range" min={1} max={10} value={form.satisfaction} onChange={e=>setForm(f=>({...f,satisfaction:parseInt(e.target.value)}))} style={{ flex:1, accentColor:"#1D4ED8" }}/>
                     <span style={{ fontWeight:800, color:"#1D4ED8", minWidth:30 }}>{form.satisfaction}/10</span>
                   </div>
                 </div>
               </div>
+              <div style={{ marginBottom:14 }}>
+                <StageSF label="Niveau de Difficulté" value={form.niveauDiff||"Normal"} onChange={v=>setForm(f=>({...f,niveauDiff:v}))} options={["Très Bas","Bas","Normal","Élevé","Très Élevé"]} />
+              </div>
               <MultiSelect label="Katas pratiqués" options={KATAS_LIST} selected={form.katas||[]}
                 onAdd={v=>setForm(f=>({...f,katas:[...(f.katas||[]),v]}))}
                 onRemove={v=>setForm(f=>({...f,katas:(f.katas||[]).filter(k=>k!==v)}))}
                 color="#1D4ED8" />
-              {[["Focus de la séance","focus","Points travaillés, objectifs..."],["Corrections","corrections","Points à corriger..."],["Retours de l'encadrement","retours","Feedback des coachs..."]].map(([l,k,p])=>(
+              {[["Focus de la séance","focus","Points travaillés, objectifs..."],["Corrections","corrections","Points à corriger..."],["Feedback du Coach","retours","Feedback des coachs..."]].map(([l,k,p])=>(
                 <div key={k} style={{ marginBottom:14 }}>
                   <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
                   <textarea rows={3} placeholder={p} value={form[k]||""} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))}
@@ -2819,7 +2818,7 @@ const LoginScreen = ({ onEmailLink }) => {
         <div style={{ textAlign:"center", marginBottom:28 }}>
           <img src="/iliana.png" alt="Karaté Pro" style={{ width:72, height:72, borderRadius:"50%", objectFit:"cover", objectPosition:"top", marginBottom:12, border:"3px solid #7C3AED" }}/>
           <div style={{ fontWeight:900, fontSize:22, color:"#1E293B" }}>Karaté Pro</div>
-          <div style={{ color:"#94A3B8", fontSize:13, marginTop:4 }}>SKB Elite — Accès privé</div>
+          <div style={{ color:"#94A3B8", fontSize:13, marginTop:4 }}>Accès privé</div>
         </div>
 
         {tab === "link_sent" && (
