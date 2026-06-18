@@ -708,7 +708,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
           <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
             <div>
               <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                <span style={{ fontSize:16 }}>{emoji(s.satisfaction)}</span>
+                <span style={{ fontSize:16 }}>{s.ressenti>=9?"🤩":s.ressenti>=7?"😃":s.ressenti>=5?"😐":s.ressenti>=3?"🫤":s.ressenti>=1?"😒":"😐"}</span>
                 <span style={{ fontWeight:700, fontSize:14 }}>Entraînement {s.type}</span>
               </div>
               <div style={{ color:C.muted, fontSize:11 }}>{s.date}{s.coach?" · "+s.coach:""}</div>
@@ -725,7 +725,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
           </div>
           <div style={{ display:"flex", gap:16, marginBottom:s.katas?.length>0||s.notes?8:0 }}>
             <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
-            <span style={{ fontSize:12, color:C.muted }}>⭐ <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
+            {s.ressenti?<span style={{ fontSize:12, color:C.muted }}>{s.ressenti>=9?"🤩":s.ressenti>=7?"😃":s.ressenti>=5?"😐":s.ressenti>=3?"🫤":s.ressenti>=1?"😒":"😐"} <strong style={{ color:C.text }}>{s.ressenti}/10</strong></span>:null}<span style={{ fontSize:12, color:C.muted }}>🥋 <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
           </div>
           {s.katas && s.katas.length>0 && (
             <div style={{ marginBottom:6 }}>
@@ -1051,7 +1051,7 @@ const StageEquipe = () => {
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
             <div>
               <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                <span style={{ fontSize:16 }}>{emoji(s.satisfaction)}</span>
+                <span style={{ fontSize:16 }}>{s.ressenti>=9?"🤩":s.ressenti>=7?"😃":s.ressenti>=5?"😐":s.ressenti>=3?"🫤":s.ressenti>=1?"😒":"😐"}</span>
                 <span style={{ fontWeight:700, fontSize:14 }}>Stage Équipe de France</span>
               </div>
               <div style={{ color:C.muted, fontSize:11 }}>{s.date}</div>
@@ -1064,7 +1064,7 @@ const StageEquipe = () => {
           </div>
           <div style={{ display:"flex", gap:16, marginBottom:8 }}>
             <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
-            <span style={{ fontSize:12, color:C.muted }}>⭐ <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
+            {s.ressenti?<span style={{ fontSize:12, color:C.muted }}>{s.ressenti>=9?"🤩":s.ressenti>=7?"😃":s.ressenti>=5?"😐":s.ressenti>=3?"🫤":s.ressenti>=1?"😒":"😐"} <strong style={{ color:C.text }}>{s.ressenti}/10</strong></span>:null}<span style={{ fontSize:12, color:C.muted }}>🥋 <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
           </div>
           {s.katas && s.katas.length>0 && (
             <div style={{ marginBottom:6 }}>
