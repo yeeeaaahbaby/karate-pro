@@ -741,12 +741,12 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
           )}
           {s.notes && (
             <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.orange }}>
-              <div style={{ fontSize:11, color:C.orange }}>⚠ Corrections : {s.notes}</div>
+              <div style={{ fontSize:11, color:C.orange, whiteSpace:"pre-wrap" }}>⚠ Corrections : {s.notes}</div>
             </div>
           )}
           {s.coachFeedback && (
             <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green, marginTop:6 }}>
-              <div style={{ fontSize:11, color:C.green }}>💬 Retours coach : {s.coachFeedback}</div>
+              <div style={{ fontSize:11, color:C.green, whiteSpace:"pre-wrap" }}>💬 Retours coach : {s.coachFeedback}</div>
             </div>
           )}
         </div>
@@ -1041,7 +1041,7 @@ const StageEquipe = () => {
         {stages.filter(s=>s.corrections).slice(0,3).map(s=>(
           <div key={s.id} style={{ background:C.orange+"11", borderRadius:8, padding:"8px 12px", marginBottom:8, borderLeft:"3px solid "+C.orange }}>
             <div style={{ fontSize:11, color:C.orange, fontWeight:600, marginBottom:2 }}>{s.date}</div>
-            <div style={{ fontSize:12 }}>{s.corrections}</div>
+            <div style={{ fontSize:12, whiteSpace:"pre-wrap" }}>{s.corrections}</div>
           </div>
         ))}
       </div>
@@ -1072,9 +1072,9 @@ const StageEquipe = () => {
               <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>{s.katas.map(k=><Badge key={k} label={k} color="#1D4ED8"/>)}</div>
             </div>
           )}
-          {s.focus && <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.blue }}><div style={{ fontSize:11, color:C.blue }}>🎯 <strong>Focus :</strong> {s.focus}</div></div>}
-          {s.corrections && <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.orange }}><div style={{ fontSize:11, color:C.orange }}>⚠ <strong>Corrections :</strong> {s.corrections}</div></div>}
-          {s.retours && <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green }}><div style={{ fontSize:11, color:C.green }}>💬 <strong>Retours :</strong> {s.retours}</div></div>}
+          {s.focus && <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.blue }}><div style={{ fontSize:11, color:C.blue, whiteSpace:"pre-wrap" }}>🎯 <strong>Focus :</strong> {s.focus}</div></div>}
+          {s.corrections && <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.orange }}><div style={{ fontSize:11, color:C.orange, whiteSpace:"pre-wrap" }}>⚠ <strong>Corrections :</strong> {s.corrections}</div></div>}
+          {s.retours && <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green }}><div style={{ fontSize:11, color:C.green, whiteSpace:"pre-wrap" }}>💬 <strong>Retours :</strong> {s.retours}</div></div>}
         </div>
       ))}
 
@@ -1690,7 +1690,7 @@ const Corrections = ({ sessions }) => {
           {c.kata && <Badge label={c.kata} color={C.blue}/>}
           <span style={{ color:C.muted, fontSize:11 }}>{c.date}</span>
         </div>
-        <div style={{ fontSize:12, color:C.text }}>{c.content}</div>
+        <div style={{ fontSize:12, color:C.text, whiteSpace:"pre-wrap" }}>{c.content}</div>
       </div>
       <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
         <button onClick={()=>openEdit(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={12}/></button>
