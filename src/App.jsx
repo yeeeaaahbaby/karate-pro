@@ -1644,7 +1644,9 @@ const Corrections = ({ sessions }) => {
   }));
 
   const [extraCorrs, setExtraCorrs] = useState([]);
-  const allCorrections = [...mockCorrections, ...sessionCorrs, ...extraCorrs].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const [deletedIds, setDeletedIds] = useState([]);
+  const handleDeleteCorr = (id) => { setDeletedIds(prev=>[...prev,id]); setExtraCorrs(prev=>prev.filter(c=>c.id!==id)); };
+  const allCorrections = [...mockCorrections, ...sessionCorrs, ...extraCorrs].filter(c=>!deletedIds.includes(c.id)).sort((a,b)=>new Date(b.date)-new Date(a.date));
 
   const openEdit = (c) => {
     setEditingCorr(c.id);
