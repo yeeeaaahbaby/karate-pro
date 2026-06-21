@@ -10,7 +10,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { db, auth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "./firebase";
 import { collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, serverTimestamp, query, where, onSnapshot, orderBy, limit } from "firebase/firestore";
-import { enregistrerSeance, getCurrentUser, setCurrentUser, subscribeToNotifications, notifyNewChatMessage, saveOneSignalPlayerId } from "./notifications";
+import { enregistrerSeance, getCurrentUser, setCurrentUser, subscribeToNotifications, notifyNewChatMessage, saveOneSignalPlayerId, notifyNewContent } from "./notifications";
 
 const C = {
   primary: "#7C3AED", accent: "#EC4899", red: "#EF4444",
@@ -634,6 +634,10 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
         try {
           if (typeof editingSession === "string") {
             await updateDoc(doc(db, "seances", editingSession), seance);
+            if (seance.coachFeedback?.trim()) {
+              const u = getCurrentUser();
+              await notifyNewContent({ type:"notes_coach_seance", title:"💬 Retours du coach — séance "+seance.type, body:seance.coachFeedback, createdBy:u?.id||"unknown" });
+            }
           }
         } catch(fe) { console.warn("Firestore update skipped:", fe.code); }
         // Sync lienVideo dans Firestore si présent
