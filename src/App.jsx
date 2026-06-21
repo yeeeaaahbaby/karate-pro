@@ -630,6 +630,12 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
       if (editingSession) {
         // Modifier séance existante
         setSessions(prev => prev.map(s => s.id === editingSession ? { ...s, ...seance } : s));
+        // Sync séance complète dans Firestore (partage temps réel)
+        try {
+          if (typeof editingSession === "string") {
+            await updateDoc(doc(db, "seances", editingSession), seance);
+          }
+        } catch(fe) { console.warn("Firestore update skipped:", fe.code); }
         // Sync lienVideo dans Firestore si présent
         if (seance.lienVideo) {
           const videoId = "perso_" + editingSession;
