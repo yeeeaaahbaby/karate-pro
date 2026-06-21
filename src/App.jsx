@@ -1649,7 +1649,7 @@ const Corrections = ({ sessions }) => {
 
   const openEdit = (c) => {
     setEditingCorr(c.id);
-    setForm({ kata:c.kata||"", entraineur:c.trainer||"", date:c.date||"", categorie:c.categorie||"Technique", commentaires:c.content||"", coachFeedback:"" });
+    setForm({ kata:c.kata||"", entraineur:c.trainer||"", date:c.date||"", categorie:c.categorie||"Technique", commentaires:c.content||"", coachFeedback:c.coachFeedback||"" });
     setShowForm(true);
   };
   const openCopy = (c) => {
