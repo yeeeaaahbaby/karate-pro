@@ -3331,6 +3331,76 @@ export default function App() {
     init();
   }, [authUser]);
 
+  // ── Seed PPG v3 — séance 21/06/2026 ──────────────────────────────────────
+  useEffect(() => {
+    if (!authUser) return;
+    const seedKey = 'kp_ppg_seed_v3_' + authUser.uid;
+    if (localStorage.getItem(seedKey)) return;
+    const init = async () => {
+      try {
+        const seedRef = doc(db, "meta", "physique_seed_ppg_v3");
+        const seedDoc = await getDoc(seedRef);
+        if (!seedDoc.exists()) {
+          await setDoc(seedRef, { startedAt: serverTimestamp(), uid: authUser.uid });
+          const ppgData = [
+            {
+              date: "2026-06-21", type: "PPG", duration: 75, intensite: "Elevee",
+              statut: "Terminee", coach: "Kevin", programme: "PPG — Ski Erg · Hip Thrust · Leg Curl · Leg Extension · Tirage Vertical · Rotation Poulie · Extension Lombaire",
+              exercises: [
+                { id:401, nom:"Ski Erg", typeEx:"Classique", videoUrl:"",
+                  repsCibles:"4 min — augmentation progressive du rythme",
+                  reposEntre:"", reposApres:"",
+                  series:[{id:4011,reps:"4 min",poids:""}],
+                  sousExercices:[]
+                },
+                { id:402, nom:"Hip Thrust", typeEx:"Bi-set", videoUrl:"Hip Trust Iliana",
+                  repsCibles:"4 Rds x 4 reps @RPE 8-9 — 2s excentrique",
+                  reposEntre:"", reposApres:"150",
+                  series:[{id:4021,reps:"4",poids:"100"},{id:4022,reps:"4",poids:"105"},{id:4023,reps:"4",poids:"105"},{id:4024,reps:"4",poids:"110"}],
+                  sousExercices:[{id:4025,nom:"Kb Swing Russe Élastique",videoUrl:"",repsCibles:"6 reps @8kg — max vitesse sur chaque répétition",reposEntre:"",reposApres:"",series:[{id:40251,reps:"12",poids:"8"},{id:40252,reps:"12",poids:"8"},{id:40253,reps:"12",poids:"8"},{id:40254,reps:"12",poids:"8"}]}]
+                },
+                { id:403, nom:"Leg Curl", typeEx:"Classique", videoUrl:"Leg Curl Iliana",
+                  repsCibles:"3 x 8 reps @RPE 8 — Tempo 2s excentrique",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:4031,reps:"8",poids:"30"},{id:4032,reps:"8",poids:"35"},{id:4033,reps:"8",poids:"42.5"}],
+                  sousExercices:[]
+                },
+                { id:404, nom:"Leg Extension", typeEx:"Classique", videoUrl:"Leg Extension Iliana",
+                  repsCibles:"3 x 10 reps @RPE 8 — Tempo 2s excentrique",
+                  reposEntre:"", reposApres:"60",
+                  series:[{id:4041,reps:"10",poids:"42.5"},{id:4042,reps:"10",poids:"47.5"},{id:4043,reps:"10",poids:"50"}],
+                  sousExercices:[]
+                },
+                { id:405, nom:"Tirage Vertical Poulie", typeEx:"Classique", videoUrl:"Tirage Vertical Poulie Iliana",
+                  repsCibles:"4 x 8 reps @RPE 7 — Tempo 2s excentrique",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:4051,reps:"8",poids:"25"},{id:4052,reps:"8",poids:"30"},{id:4053,reps:"8",poids:"30"},{id:4054,reps:"8",poids:"35"}],
+                  sousExercices:[]
+                },
+                { id:406, nom:"Rotation de Buste Poulie", typeEx:"Classique", videoUrl:"Rotation Poulie Iliana",
+                  repsCibles:"3 x 8/8 reps @RPE 7 — Tempo 2s excentrique",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:4061,reps:"8/8",poids:"7.5"},{id:4062,reps:"8/8",poids:"7.5"},{id:4063,reps:"8/8",poids:"7.5"}],
+                  sousExercices:[]
+                },
+                { id:407, nom:"Extension Lombaire", typeEx:"Classique", videoUrl:"Extension Lombaire Iliana",
+                  repsCibles:"3 x 15 reps — Lesté si trop facile · Focus fessiers",
+                  reposEntre:"", reposApres:"60",
+                  series:[{id:4071,reps:"15",poids:"PdC"},{id:4072,reps:"15",poids:"PdC"},{id:4073,reps:"15",poids:"PdC"}],
+                  sousExercices:[]
+                }
+              ]
+            }
+          ];
+          await Promise.all(ppgData.map(s => addDoc(collection(db, "physique_sessions"), { ...s, _source: "seed_ppg" })));
+          await setDoc(seedRef, { completedAt: serverTimestamp(), count: ppgData.length }, { merge: true });
+        }
+        localStorage.setItem(seedKey, "1");
+      } catch(e) { console.error("Seed PPG v3:", e); }
+    };
+    init();
+  }, [authUser]);
+
   // Plannings hebdos : charger depuis Firestore
   useEffect(() => {
     if (!authUser) return;
