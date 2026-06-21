@@ -448,10 +448,10 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
         </div>
         {/* Stats semaine */}
         {(() => {
-        const now = new Date(); const startW = new Date(now); startW.setDate(now.getDate()-now.getDay());
+        const now = new Date();
         const karateW = thisWeek.length;
-        const physiqueW = (physiqueSessions||[]).filter(s=>new Date(s.date)>=startW).length;
-        const corrW = mockCorrections.filter(c=>new Date(c.date)>=startW).length;
+        const physiqueW = (physiqueSessions||[]).filter(s=>new Date(s.date)>=startOfWeek).length;
+        const corrW = mockCorrections.filter(c=>new Date(c.date)>=startOfWeek).length;
         const compAVenir = (competitions||[]).filter(c=>c.statut==="À venir"||(!c.statut&&new Date(c.date)>=now)).length;
         return (
           <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10, marginBottom:16 }}>
