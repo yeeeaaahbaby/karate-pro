@@ -220,7 +220,6 @@ const mockCompetitions = [
 ];
 
 const mockCorrections = [
-  { id:1, date:"2026-11-10", trainer:"Jonathan", kata:"Gojūshiho Dai", content:"Taper moins fort sur les pics, attention à la posture lors du kiba dachi" },
   { id:2, date:"2025-10-19", trainer:"Jonathan", kata:"Gankaku", content:"Premier coup de coude insuffisant, regarder en bas avant de tourner" },
   { id:3, date:"2025-10-18", trainer:"Olivier", kata:"Unsu", content:"Ikité trop bas, stabiliser le bunkai final" },
 ];
