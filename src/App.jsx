@@ -633,8 +633,10 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
         // Sync séance complète dans Firestore (partage temps réel)
         try {
           if (typeof editingSession === "string") {
+            const prevDoc = await getDoc(doc(db, "seances", editingSession));
+            const prevFeedback = prevDoc.exists() ? (prevDoc.data().coachFeedback || "") : "";
             await updateDoc(doc(db, "seances", editingSession), seance);
-            if (seance.coachFeedback?.trim()) {
+            if (seance.coachFeedback?.trim() && seance.coachFeedback !== prevFeedback) {
               const u = getCurrentUser();
               await notifyNewContent({ type:"notes_coach_seance", title:"💬 Retours du coach — séance "+seance.type, body:seance.coachFeedback, createdBy:u?.id||"unknown" });
             }
