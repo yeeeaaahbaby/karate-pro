@@ -2583,6 +2583,7 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
   const handleSave = () => {
     if (!form.debut) return;
     setDoc(doc(db, "weekly_plannings", form.debut), { ...form, updatedAt: serverTimestamp() }).catch(console.error);
+    (async () => { try { const u = getCurrentUser(); await notifyNewContent({ type:"nouveau_planning", title:"📅 Planning semaine mis à jour", body:"Semaine du "+form.debut+(form.objectif?" — Objectif : "+form.objectif:""), createdBy:u?.id||"unknown" }); } catch(e) {} })();
     if (editingPlan) {
       setPlannings(prev => prev.map(p => p.id===editingPlan ? {...p,...form} : p));
     } else {
