@@ -1207,6 +1207,12 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
         await addDoc(collection(db,"physique_sessions"), {...data, createdAt:serverTimestamp()});
         showToast&&showToast("Séance enregistrée","success");
       }
+      if (data.statut === "Terminée" || data.statut === "Terminee") {
+        try {
+          const u = getCurrentUser();
+          await notifyNewContent({ type:"seance_physique_terminee", title:"💪 Séance physique terminée — "+data.type, body:"Séance du "+(data.date||"")+" · "+(data.duration||"")+" min"+(data.programme?" · "+data.programme:""), createdBy:u?.id||"unknown" });
+        } catch(ne) {}
+      }
       setForm(EMPTY); setShowForm(false); setEditingId(null);
     } catch(e) { console.error(e); showToast&&showToast("Erreur sauvegarde","error"); }
     setSaving(false);
