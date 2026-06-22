@@ -3411,6 +3411,76 @@ export default function App() {
     init();
   }, [authUser]);
 
+  // ── Seed PPG v4 — séance 22/06/2026 ──────────────────────────────────────
+  useEffect(() => {
+    if (!authUser) return;
+    const seedKey = 'kp_ppg_seed_v4_' + authUser.uid;
+    if (localStorage.getItem(seedKey)) return;
+    const init = async () => {
+      try {
+        const seedRef = doc(db, "meta", "physique_seed_ppg_v4");
+        const seedDoc = await getDoc(seedRef);
+        if (!seedDoc.exists()) {
+          await setDoc(seedRef, { startedAt: serverTimestamp(), uid: authUser.uid });
+          const ppgData = [
+            {
+              date: "2026-06-22", type: "PPG", duration: 75, intensite: "Elevee",
+              statut: "Terminee", coach: "Kevin",
+              programme: "PPG — Ski Erg · Leg Press · Hip Thrust · Leg Extension · Tirage Vertical · Kb Pull Through · Kb Biceps Curl",
+              exercises: [
+                { id:501, nom:"Ski Erg", typeEx:"Classique", videoUrl:"",
+                  repsCibles:"4 min — échauffement progressif",
+                  reposEntre:"", reposApres:"",
+                  series:[{id:5011,reps:"4 min",poids:""}],
+                  sousExercices:[]
+                },
+                { id:502, nom:"Leg Press", typeEx:"Classique", videoUrl:"Leg Press Iliana",
+                  repsCibles:"4X6 reps Tempo @RPE 7 — 2/1/X/1 — Ne pas tendre complètement les jambes en fin de mouvement, garder une légère flexion",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:5021,reps:"6",poids:"100"},{id:5022,reps:"6",poids:"115"},{id:5023,reps:"6",poids:"115"},{id:5024,reps:"6",poids:"130"}],
+                  sousExercices:[]
+                },
+                { id:503, nom:"Hip Thrust", typeEx:"Classique", videoUrl:"Hip Trust Iliana",
+                  repsCibles:"3X8 reps @95-100kg (RPE 8) — 2'' excentrique",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:5031,reps:"8",poids:"100"},{id:5032,reps:"8",poids:"100"},{id:5033,reps:"8",poids:"105"}],
+                  sousExercices:[]
+                },
+                { id:504, nom:"Leg Extension", typeEx:"Classique", videoUrl:"Leg Extension Iliana",
+                  repsCibles:"3X8 reps + 10-15'' isométrique @42,5-47,5kg (RPE 7) — Adapter la charge · 15'' isométrique jambes tendues",
+                  reposEntre:"", reposApres:"60",
+                  series:[{id:5041,reps:"8",poids:"42.5"},{id:5042,reps:"8",poids:"47.5"},{id:5043,reps:"8",poids:"47.5"}],
+                  sousExercices:[]
+                },
+                { id:505, nom:"Tirage Vertical Poulie", typeEx:"Classique", videoUrl:"Tirage Vertical Poulie Iliana",
+                  repsCibles:"4X6 reps Tempo @RPE 7-8 — 2'' excentrique",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:5051,reps:"6",poids:"25"},{id:5052,reps:"6",poids:"30"},{id:5053,reps:"6",poids:"30"},{id:5054,reps:"6",poids:"35"}],
+                  sousExercices:[]
+                },
+                { id:506, nom:"Kb Pull Through", typeEx:"Classique", videoUrl:"Kb Pull Through Iliana",
+                  repsCibles:"3X16 reps (8 reps/côté) @RPE 7 — Focus dos droit, activation abdos ++",
+                  reposEntre:"", reposApres:"90",
+                  series:[{id:5061,reps:"8/8",poids:"4"},{id:5062,reps:"8/8",poids:"4"},{id:5063,reps:"8/8",poids:"4"}],
+                  sousExercices:[]
+                },
+                { id:507, nom:"Kb Biceps Curl", typeEx:"Classique", videoUrl:"Kb Biceps Curl Iliana",
+                  repsCibles:"3X10 reps Tempo @RPE 7 — 2'' excentrique",
+                  reposEntre:"", reposApres:"60",
+                  series:[{id:5071,reps:"10",poids:"12"},{id:5072,reps:"10",poids:"12"},{id:5073,reps:"10",poids:"12"}],
+                  sousExercices:[]
+                }
+              ]
+            }
+          ];
+          await Promise.all(ppgData.map(s => addDoc(collection(db, "physique_sessions"), { ...s, _source: "seed_ppg" })));
+          await setDoc(seedRef, { completedAt: serverTimestamp(), count: ppgData.length }, { merge: true });
+        }
+        localStorage.setItem(seedKey, "1");
+      } catch(e) { console.error("Seed PPG v4:", e); }
+    };
+    init();
+
   // Plannings hebdos : charger depuis Firestore
   useEffect(() => {
     if (!authUser) return;
