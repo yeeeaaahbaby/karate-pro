@@ -3566,6 +3566,7 @@ export default function App() {
       } catch(e) { console.error("Seed PPG v5:", e); }
     };
     init();
+  }, [authUser]);
 
   // Plannings hebdos : charger depuis Firestore
   useEffect(() => {
