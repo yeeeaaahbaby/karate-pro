@@ -3490,6 +3490,83 @@ export default function App() {
     init();
   }, [authUser]);
 
+  // ── Seed PPG v5 — séance 24/06/2026 ──────────────────────────────────────
+  useEffect(() => {
+    if (!authUser) return;
+    const seedKey = 'kp_ppg_seed_v5_' + authUser.uid;
+    if (localStorage.getItem(seedKey)) return;
+    const init = async () => {
+      try {
+        const seedRef = doc(db, "meta", "physique_seed_ppg_v5");
+        const seedDoc = await getDoc(seedRef);
+        if (!seedDoc.exists()) {
+          await setDoc(seedRef, { startedAt: serverTimestamp(), uid: authUser.uid });
+          const ppgData = [
+            {
+              date: "2026-06-24", type: "PPG", duration: 90, intensite: "Elevee",
+              statut: "Terminee", coach: "Kevin",
+              programme: "PPG — Vélo · Trap Barre Deadlift · Squats Smith Machine · Banded Lunges · Bloc Push · Élévations latérales · Metcon",
+              exercises: [
+                {
+                  id:601, nom:"Vélo", typeEx:"Classique", videoUrl:"",
+                  repsCibles:"4' avec augmentation progressive du rythme toutes les minutes",
+                  reposEntre:"", reposApres:"",
+                  series:[{id:6011,reps:"4 min",poids:""}],
+                  sousExercices:[]
+                },
+                {
+                  id:602, nom:"Trap Barre Deadlift", typeEx:"Bi-set", videoUrl:"Trap Barre Deadlift X Box Jump Iliana",
+                  repsCibles:"Force explosive — Cluster de potentialisation — 4 Rds (@RPE 8) : 4x(1 rep Trap Bar Deadlift @65kg+ + 1 Box Jump max hauteur) avec 20'' repos entre chaque rep — 2'30-3' entre les rounds",
+                  reposEntre:"20", reposApres:"150",
+                  series:[{id:6021,reps:"4x(1+BJ)",poids:"65"},{id:6022,reps:"4x(1+BJ)",poids:"65"},{id:6023,reps:"4x(1+BJ)",poids:"70"},{id:6024,reps:"4x(1+BJ)",poids:"65"}],
+                  sousExercices:[{id:6025,nom:"Box Jump",videoUrl:"",repsCibles:"Max hauteur — 1 rep par cluster",reposEntre:"",reposApres:"",series:[{id:60251,reps:"4",poids:""},{id:60252,reps:"4",poids:""},{id:60253,reps:"4",poids:""},{id:60254,reps:"4",poids:""}]}]
+                },
+                {
+                  id:603, nom:"Squats Smith Machine", typeEx:"Classique", videoUrl:"Squat Smith Machine Iliana",
+                  repsCibles:"5X5 reps Tempo @40kg (RPE 7-8) — Focus posture — 2/1/X/1 : 2'' excentrique + 1'' pause en bas + max vitesse sur la montée",
+                  reposEntre:"", reposApres:"120",
+                  series:[{id:6031,reps:"5",poids:"25"},{id:6032,reps:"5",poids:"30"},{id:6033,reps:"5",poids:"30"},{id:6034,reps:"5",poids:"35"},{id:6035,reps:"5",poids:"35"}],
+                  sousExercices:[]
+                },
+                {
+                  id:604, nom:"Banded Lunges", typeEx:"Classique", videoUrl:"Banded Lunges Iliana",
+                  repsCibles:"3 Rds : 30'' Banded Lunges Hold (focus fessiers) + 8/6 reps Banded Step Over Reverse Lunges — Jambe 1 puis Jambe 2 — 2'' excentrique sur la descente",
+                  reposEntre:"", reposApres:"60",
+                  series:[{id:6041,reps:"30''+8/6",poids:"12"},{id:6042,reps:"30''+8/6",poids:"12"},{id:6043,reps:"30''+8/6",poids:"12"}],
+                  sousExercices:[]
+                },
+                {
+                  id:605, nom:"Bloc Push (explosivité)", typeEx:"Bi-set", videoUrl:"Smith Machine Bench Press Iliana",
+                  repsCibles:"EMOM 8' — 4 Rds : 1) 6/5 reps Smith Machine Bench Press Tempo @20kg (RPE 7) — Focus technique + tempo — 2) 20''-30'' Max Med Ball Chest Slam (max intensité, tension continue) — Si fatigue : réduire à 3 Rds (EMOM 6')",
+                  reposEntre:"", reposApres:"",
+                  series:[{id:6051,reps:"6",poids:"20"},{id:6052,reps:"6",poids:"23"},{id:6053,reps:"5",poids:"23"},{id:6054,reps:"5",poids:"25"}],
+                  sousExercices:[{id:6055,nom:"Med Ball Chest Slam",videoUrl:"",repsCibles:"20-30'' max intensité en tension continue",reposEntre:"",reposApres:"",series:[{id:60551,reps:"20-30''",poids:""},{id:60552,reps:"20-30''",poids:""},{id:60553,reps:"20-30''",poids:""},{id:60554,reps:"20-30''",poids:""}]}]
+                },
+                {
+                  id:606, nom:"Élévations latérales haltères", typeEx:"Classique", videoUrl:"Elevation Laterale Iliana",
+                  repsCibles:"3X10 reps Tempo @RPE 6-7 — Charges légères — 2'' excentrique",
+                  reposEntre:"", reposApres:"90",
+                  series:[{id:6061,reps:"10",poids:"6"},{id:6062,reps:"10",poids:"6"},{id:6063,reps:"10",poids:"6"}],
+                  sousExercices:[]
+                },
+                {
+                  id:607, nom:"Metcon", typeEx:"Classique", videoUrl:"",
+                  repsCibles:"AMRAP 10' (max tours) : 50 sauts à la corde (target 40'' max) + 2-4-6-etc...+2/Rds Enchâînements Blocage/poings en Zenkutsu (en avançant) + 10 Kb Swing Russe @RPE 7-8 (focus fessiers/abdos) + 2-4-6-etc...+2/Rds Mawashis Pao — Max intensité sur les techniques karaté",
+                  reposEntre:"", reposApres:"",
+                  series:[{id:6071,reps:"AMRAP 10'",poids:""}],
+                  sousExercices:[{id:6075,nom:"Kb Swing Russe",videoUrl:"",repsCibles:"10 reps @RPE 7-8 — Focus fessiers/abdos",reposEntre:"",reposApres:"",series:[{id:60751,reps:"10",poids:"6"},{id:60752,reps:"10",poids:"6"},{id:60753,reps:"10",poids:"6"},{id:60754,reps:"10",poids:"6"},{id:60755,reps:"10",poids:"6"},{id:60756,reps:"10",poids:"6"}]}]
+                }
+              ]
+            }
+          ];
+          await Promise.all(ppgData.map(s => addDoc(collection(db, "physique_sessions"), { ...s, _source: "seed_ppg" })));
+          await setDoc(seedRef, { completedAt: serverTimestamp(), count: ppgData.length }, { merge: true });
+        }
+        localStorage.setItem(seedKey, "1");
+      } catch(e) { console.error("Seed PPG v5:", e); }
+    };
+    init();
+
   // Plannings hebdos : charger depuis Firestore
   useEffect(() => {
     if (!authUser) return;
