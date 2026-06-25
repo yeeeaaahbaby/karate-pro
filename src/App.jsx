@@ -565,6 +565,21 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
       }
     } catch(e) {}
   };
+  const [feedbackEditIdK, setFeedbackEditIdK] = useState(null);
+  const [feedbackTextK, setFeedbackTextK] = useState("");
+  const saveKarateFeedback = async (sessionId, feedback) => {
+    setSessions(prev => prev.map(s => s.id===sessionId ? {...s, coachFeedback:feedback} : s));
+    if (typeof sessionId === "string") {
+      try {
+        await updateDoc(doc(db, "seances", sessionId), { coachFeedback: feedback });
+        if (feedback.trim()) {
+          const u = getCurrentUser();
+          await notifyNewContent({ type:"notes_coach_seance", title:"💬 Retours du coach — séance karaté", body:feedback, createdBy:u?.id||"unknown" });
+        }
+      } catch(e) {}
+    }
+    setFeedbackEditIdK(null); setFeedbackTextK("");
+  };
 
   const emptyForm = {
     date: new Date().toISOString().split('T')[0],
@@ -767,7 +782,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
               <div style={{ fontSize:11, color:C.orange, whiteSpace:"pre-wrap" }}>⚠ Corrections : {s.notes}</div>
             </div>
           )}
-          {s.coachFeedback && (
+          {s.coachFeedback && expandedIdK!==s.id && (
             <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green, marginTop:6 }}>
               <div style={{ fontSize:11, color:C.green, whiteSpace:"pre-wrap" }}>💬 Retours coach : {s.coachFeedback}</div>
             </div>
@@ -781,14 +796,27 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                 </div>
               )}
               {s.focusPoints && (
-                <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.blue, marginBottom:6 }}>
+                <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.blue, marginBottom:8 }}>
                   <div style={{ fontSize:11, color:C.blue, whiteSpace:"pre-wrap" }}>🎯 <strong>Points de focus :</strong> {s.focusPoints}</div>
                 </div>
               )}
-              {!s.energie && !s.focusPoints && (
-                <div style={{ fontSize:11, color:C.muted, fontStyle:"italic" }}>Aucun détail supplémentaire renseigné</div>
-              )}
-              <div style={{ fontSize:10, color:C.muted, marginTop:6, textAlign:"right" }}>✓ Admin notifié</div>
+              <div>
+                <div style={{ fontSize:11, fontWeight:600, color:C.muted, marginBottom:4 }}>💬 Feedback du Coach</div>
+                {feedbackEditIdK===s.id ? (
+                  <div onClick={e=>e.stopPropagation()}>
+                    <textarea value={feedbackTextK} onChange={e=>setFeedbackTextK(e.target.value)} placeholder="Écrire un feedback..." rows={3}
+                      style={{ width:"100%", border:"1.5px solid "+C.primary, borderRadius:8, padding:"8px 10px", fontSize:12, boxSizing:"border-box", resize:"none", outline:"none" }}/>
+                    <div style={{ display:"flex", gap:8, marginTop:6, justifyContent:"flex-end" }}>
+                      <button onClick={()=>{setFeedbackEditIdK(null);setFeedbackTextK("");}} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:6, padding:"5px 12px", fontSize:11, cursor:"pointer" }}>Annuler</button>
+                      <button onClick={()=>saveKarateFeedback(s.id, feedbackTextK)} style={{ background:C.primary, border:"none", borderRadius:6, padding:"5px 12px", fontSize:11, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div onClick={e=>{e.stopPropagation();setFeedbackEditIdK(s.id);setFeedbackTextK(s.coachFeedback||"");}} style={{ background:C.primary+"11", borderRadius:8, padding:"8px 10px", fontSize:11, color:s.coachFeedback?C.text:C.muted, cursor:"pointer", borderLeft:"3px solid "+C.primary, fontStyle:s.coachFeedback?"normal":"italic" }}>
+                    {s.coachFeedback || "Ajouter un commentaire..."}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
