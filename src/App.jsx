@@ -561,7 +561,6 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
       const vDoc = await getDoc(vRef);
       if (!vDoc.exists()) {
         await setDoc(vRef, { viewedAt: serverTimestamp(), userId: u.id, sessionId: String(s.id), type: "karate" });
-        await notifyNewContent({ type:"session_viewed", title:"👁 Séance karaté ouverte", body:(u.prenom||u.id)+" a ouvert la séance du "+(s.date||"")+(s.type?" — "+s.type:""), createdBy:u.id });
       }
     } catch(e) {}
   };
@@ -580,6 +579,23 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
     }
     setFeedbackEditIdK(null); setFeedbackTextK("");
   };
+  const currentUser = getCurrentUser();
+  const [sessionViews, setSessionViews] = useState({});
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, "session_views"), (snap) => {
+      const views = {};
+      snap.docs.forEach(d => {
+        const data = d.data();
+        if (data.type === "karate") {
+          const sid = data.sessionId;
+          if (!views[sid]) views[sid] = [];
+          if (!views[sid].includes(data.userId)) views[sid].push(data.userId);
+        }
+      });
+      setSessionViews(views);
+    }, () => {});
+    return () => unsub();
+  }, []);
 
   const emptyForm = {
     date: new Date().toISOString().split('T')[0],
@@ -817,6 +833,9 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                   </div>
                 )}
               </div>
+              {currentUser&&(currentUser.id==="alexandre"||currentUser.id==="iliana")&&(sessionViews[String(s.id)]||[]).filter(uid=>uid!=="alexandre"&&uid!=="iliana").length>0&&(
+                <div style={{fontSize:10,color:C.muted,marginTop:8,textAlign:"right"}}>👁 lu par {(sessionViews[String(s.id)]||[]).filter(uid=>uid!=="alexandre"&&uid!=="iliana").map(uid=>({"helvetia":"Helvétia","isabelle":"Isabelle","kevin":"Kevin"}[uid]||uid)).join(", ")}</div>
+              )}
             </div>
           )}
         </div>
