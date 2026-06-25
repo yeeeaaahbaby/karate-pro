@@ -553,6 +553,18 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [searchText, setSearchText] = useState("");
   const [saving, setSaving] = useState(false);
+  const [expandedIdK, setExpandedIdK] = useState(null);
+  const trackViewK = async (s) => {
+    const u = getCurrentUser(); if (!u) return;
+    try {
+      const vRef = doc(db, "session_views", "karate_"+String(s.id)+"_"+u.id);
+      const vDoc = await getDoc(vRef);
+      if (!vDoc.exists()) {
+        await setDoc(vRef, { viewedAt: serverTimestamp(), userId: u.id, sessionId: String(s.id), type: "karate" });
+        await notifyNewContent({ type:"session_viewed", title:"👁 Séance karaté ouverte", body:(u.prenom||u.id)+" a ouvert la séance du "+(s.date||"")+(s.type?" — "+s.type:""), createdBy:u.id });
+      }
+    } catch(e) {}
+  };
 
   const emptyForm = {
     date: new Date().toISOString().split('T')[0],
@@ -715,7 +727,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
       <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{filtered.length} séance{filtered.length>1?"s":""}</div>
 
       {filtered.map(s=>(
-        <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid "+C.red+"33", padding:16, marginBottom:12 }}>
+        <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid "+C.red+(expandedIdK===s.id?"99":"33"), padding:16, marginBottom:12, cursor:"pointer" }} onClick={()=>{ setExpandedIdK(expandedIdK===s.id?null:s.id); trackViewK(s); }}>
           <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
             <div>
               <div style={{ display:"flex", alignItems:"center", gap:6 }}>
@@ -726,12 +738,12 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
             </div>
             <div style={{ display:"flex", gap:6 }}>
               {s.lienVideo && (
-                <button onClick={()=>window.open(s.lienVideo,"_blank")} title="Voir la vidéo" style={{ background:C.primary+"22", border:"1px solid "+C.primary+"44", borderRadius:6, padding:"3px 8px", cursor:"pointer", color:C.primary, fontSize:11, display:"flex", alignItems:"center", gap:3 }}>
+                <button onClick={(e)=>{e.stopPropagation();window.open(s.lienVideo,"_blank");}} title="Voir la vidéo" style={{ background:C.primary+"22", border:"1px solid "+C.primary+"44", borderRadius:6, padding:"3px 8px", cursor:"pointer", color:C.primary, fontSize:11, display:"flex", alignItems:"center", gap:3 }}>
                   <Video size={12}/> Vidéo
                 </button>
               )}
-              <button onClick={()=>openEdit(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
-              <button onClick={()=>{ deleteDoc(doc(db,"seances",String(s.id))).catch(console.error); setSessions(prev=>prev.filter(p=>p.id!==s.id)); }} style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
+              <button onClick={(e)=>{e.stopPropagation();openEdit(s);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
+              <button onClick={(e)=>{ e.stopPropagation(); deleteDoc(doc(db,"seances",String(s.id))).catch(console.error); setSessions(prev=>prev.filter(p=>p.id!==s.id)); }} style={{ background:"none", border:"none", cursor:"pointer", color:C.red }}><Trash2 size={13}/></button>
             </div>
           </div>
           <div style={{ display:"flex", gap:16, marginBottom:s.katas?.length>0||s.notes?8:0 }}>
@@ -1007,6 +1019,18 @@ const StageEquipe = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY_STAGE);
+  const [expandedIdE, setExpandedIdE] = useState(null);
+  const trackViewE = async (s) => {
+    const u = getCurrentUser(); if (!u) return;
+    try {
+      const vRef = doc(db, "session_views", "edf_"+String(s.id)+"_"+u.id);
+      const vDoc = await getDoc(vRef);
+      if (!vDoc.exists()) {
+        await setDoc(vRef, { viewedAt: serverTimestamp(), userId: u.id, sessionId: String(s.id), type: "edf" });
+        await notifyNewContent({ type:"session_viewed", title:"👁 Stage EDF ouvert", body:(u.prenom||u.id)+" a ouvert le stage du "+(s.date||""), createdBy:u.id });
+      }
+    } catch(e) {}
+  };
 
   const avgSat = stages.length ? (stages.reduce((a,b)=>a+b.satisfaction,0)/stages.length).toFixed(1) : 0;
   const avgDur = stages.length ? Math.round(stages.reduce((a,b)=>a+b.duration,0)/stages.length) : 0;
@@ -1058,7 +1082,7 @@ const StageEquipe = () => {
       </div>
 
       {stages.map(s=>(
-        <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid #1D4ED833", padding:16, marginBottom:12 }}>
+        <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid "+(expandedIdE===s.id?"#1D4ED8":"#1D4ED833"), padding:16, marginBottom:12, cursor:"pointer" }} onClick={()=>{ setExpandedIdE(expandedIdE===s.id?null:s.id); trackViewE(s); }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
             <div>
               <div style={{ display:"flex", alignItems:"center", gap:6 }}>
@@ -1068,9 +1092,9 @@ const StageEquipe = () => {
               <div style={{ color:C.muted, fontSize:11 }}>{s.date}</div>
             </div>
             <div style={{ display:"flex", gap:5 }}>
-              <button onClick={()=>openEdit(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={13}/></button>
-              <button onClick={()=>openCopy(s)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
-              <button onClick={()=>handleDelete(s.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={13}/></button>
+              <button onClick={(e)=>{e.stopPropagation();openEdit(s);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={13}/></button>
+              <button onClick={(e)=>{e.stopPropagation();openCopy(s);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
+              <button onClick={(e)=>{e.stopPropagation();handleDelete(s.id);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={13}/></button>
             </div>
           </div>
           <div style={{ display:"flex", gap:16, marginBottom:8 }}>
@@ -1164,6 +1188,18 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [expandedIdP, setExpandedIdP] = useState(null);
+  const trackViewP = async (s) => {
+    const u = getCurrentUser(); if (!u) return;
+    try {
+      const vRef = doc(db, "session_views", "physique_"+String(s.id)+"_"+u.id);
+      const vDoc = await getDoc(vRef);
+      if (!vDoc.exists()) {
+        await setDoc(vRef, { viewedAt: serverTimestamp(), userId: u.id, sessionId: String(s.id), type: "physique" });
+        await notifyNewContent({ type:"session_viewed", title:"👁 Séance physique ouverte", body:(u.prenom||u.id)+" a ouvert la séance du "+(s.date||"")+(s.type?" — "+s.type:"")+(s.duration?" · "+s.duration+"min":""), createdBy:u.id });
+      }
+    } catch(e) {}
+  };
   const todayStr = new Date().toISOString().split("T")[0];
   const EMPTY = { date:todayStr, type:"PPG", duration:"", intensite:"Moyenne", statut:"À venir", programme:"", coach:"", exercises:[] };
   const [form, setForm] = useState(EMPTY);
@@ -1275,7 +1311,7 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
       {filtered.length===0
         ? <EmptyState icon={<Dumbbell size={24}/>} title="Aucune séance" sub="Ajoutez votre première séance de prépa physique" action={{label:"Nouvelle séance",fn:()=>setShowForm(true)}}/>
         : filtered.map(s=>(
-          <div key={s.id} style={{background:C.card,borderRadius:14,padding:14,border:"1px solid "+C.border,marginBottom:10}}>
+          <div key={s.id} style={{background:C.card,borderRadius:14,padding:14,border:"1px solid "+(expandedIdP===s.id?"#7c3aed":C.border),marginBottom:10,cursor:"pointer"}} onClick={()=>{ setExpandedIdP(expandedIdP===s.id?null:s.id); trackViewP(s); }}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
               <div>
                 <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:4}}>
@@ -1287,11 +1323,30 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
                 {s.exercises&&s.exercises.length>0&&<div style={{fontSize:11,color:"#7c3aed",marginTop:4}}>💪 {s.exercises.length} exercice{s.exercises.length>1?"s":""}</div>}
               </div>
               <div style={{display:"flex",gap:8}}>
-                <button onClick={()=>openEdit(s)} style={{background:"none",border:"1.5px solid "+C.border,borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer"}}>✏️</button>
-                <button onClick={()=>handleDuplicate(s)} style={{background:"none",border:"1.5px solid #7c3aed",borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer",color:"#7c3aed"}} title="Dupliquer">⧉</button>
-                <button onClick={()=>handleDelete(String(s.id))} style={{background:"none",border:"none",cursor:"pointer",color:C.red}}><Trash2 size={14}/></button>
+                <button onClick={(e)=>{e.stopPropagation();openEdit(s);}} style={{background:"none",border:"1.5px solid "+C.border,borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer"}}>✏️</button>
+                <button onClick={(e)=>{e.stopPropagation();handleDuplicate(s);}} style={{background:"none",border:"1.5px solid #7c3aed",borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer",color:"#7c3aed"}} title="Dupliquer">⧉</button>
+                <button onClick={(e)=>{e.stopPropagation();handleDelete(String(s.id));}} style={{background:"none",border:"none",cursor:"pointer",color:C.red}}><Trash2 size={14}/></button>
               </div>
             </div>
+            {expandedIdP===s.id&&s.exercises&&s.exercises.length>0&&(
+              <div style={{marginTop:12,borderTop:"1px solid "+C.border,paddingTop:12}}>
+                {s.exercises.map((ex,idx)=>(
+                  <div key={ex.id||idx} style={{marginBottom:10}}>
+                    <div style={{fontSize:12,fontWeight:700,color:"#7c3aed"}}>{idx+1}. {ex.nom}</div>
+                    {ex.repsCibles&&<div style={{fontSize:11,color:C.muted,marginTop:2,whiteSpace:"pre-wrap"}}>{ex.repsCibles}</div>}
+                    {ex.series&&ex.series.filter(sr=>sr.reps||sr.poids).length>0&&(
+                      <div style={{fontSize:11,color:C.text,marginTop:2}}>{ex.series.filter(sr=>sr.reps||sr.poids).map((sr,si)=>"S"+(si+1)+": "+sr.reps+(sr.poids?" @"+sr.poids+"kg":"")).join(" · ")}</div>
+                    )}
+                    {ex.sousExercices&&ex.sousExercices.map(sx=>(
+                      <div key={sx.id} style={{marginTop:4,paddingLeft:10,borderLeft:"2px solid #7c3aed44"}}>
+                        <div style={{fontSize:11,fontWeight:600,color:"#7c3aed99"}}>↳ {sx.nom}</div>
+                        {sx.repsCibles&&<div style={{fontSize:10,color:C.muted}}>{sx.repsCibles}</div>}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))
       }
