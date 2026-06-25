@@ -772,6 +772,25 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
               <div style={{ fontSize:11, color:C.green, whiteSpace:"pre-wrap" }}>💬 Retours coach : {s.coachFeedback}</div>
             </div>
           )}
+          {expandedIdK===s.id && (
+            <div style={{ marginTop:10, borderTop:"1px solid "+C.border, paddingTop:10 }}>
+              {s.energie && s.energie!=="Normal" && (
+                <div style={{ marginBottom:6 }}>
+                  <span style={{ fontSize:11, fontWeight:600, color:C.muted }}>⚡ Niveau de difficulté : </span>
+                  <span style={{ fontSize:11, fontWeight:700, color:C.orange }}>{s.energie}</span>
+                </div>
+              )}
+              {s.focusPoints && (
+                <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.blue, marginBottom:6 }}>
+                  <div style={{ fontSize:11, color:C.blue, whiteSpace:"pre-wrap" }}>🎯 <strong>Points de focus :</strong> {s.focusPoints}</div>
+                </div>
+              )}
+              {!s.energie && !s.focusPoints && (
+                <div style={{ fontSize:11, color:C.muted, fontStyle:"italic" }}>Aucun détail supplémentaire renseigné</div>
+              )}
+              <div style={{ fontSize:10, color:C.muted, marginTop:6, textAlign:"right" }}>✓ Admin notifié</div>
+            </div>
+          )}
         </div>
       ))}
 
