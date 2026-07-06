@@ -1270,8 +1270,8 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
   const EMPTY = { date:todayStr, type:"PPG", duration:"", intensite:"Moyenne", statut:"À venir", programme:"", coach:"", exercises:[] };
   const [form, setForm] = useState(EMPTY);
 
-  const FILTER_LABELS = ["Toutes","Semaine","🔥 PPG","💪 Force","⚡ Explosivité","🏋️ Haltéro","🔥 Full Body","🏃 Endurance","🧘 Récup","🏆 Compét"];
-  const typeMap = { "🔥 PPG":"PPG","💪 Force":"Force","⚡ Explosivité":"Explosivité","🏋️ Haltéro":"Haltérophilie","🔥 Full Body":"Full Body","🏃 Endurance":"Endurance","🧘 Récup":"Récupération","🏆 Compét":"Compétition" };
+  const FILTER_LABELS = ["Toutes","Semaine","🔥 PPG","💪 Force","⚡ Explosivité","🏋️ Haltéro","🔥 Full Body","🏃 Endurance","🧘 Récup","🏆 Compét","⚡ Vitesse","🎯 Technique"];
+  const typeMap = { "🔥 PPG":"PPG","💪 Force":"Force","⚡ Explosivité":"Explosivité","🏋️ Haltéro":"Haltérophilie","🔥 Full Body":"Full Body","🏃 Endurance":"Endurance","🧘 Récup":"Récupération","🏆 Compét":"Compétition","⚡ Vitesse":"Vitesse","🎯 Technique":"Technique" };
   const filterCount = (f) => {
     if (f==="Toutes") return all.length;
     if (f==="Semaine") { const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return all.filter(s=>new Date(s.date)>=w).length; }
@@ -1310,6 +1310,11 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
       } else {
         await addDoc(collection(db,"physique_sessions"), {...data, createdAt:serverTimestamp()});
         showToast&&showToast("Séance enregistrée","success");
+        try {
+          const u = getCurrentUser();
+          const statLabel = data.statut ? " · "+data.statut : "";
+          await notifyNewContent({ type:"new_physique_session", title:"📅 Nouvelle séance physique — "+data.type, body:"Séance du "+(data.date||"")+" · "+(data.duration||"")+" min"+statLabel, createdBy:u?.id||"unknown" });
+        } catch(ne) {}
       }
       if (data.statut === "Terminée" || data.statut === "Terminee") {
         try {
