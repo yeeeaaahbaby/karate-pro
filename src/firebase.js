@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache } from "firebase/firestore";
 import {
   getAuth,
   onAuthStateChanged,
@@ -26,7 +26,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+// Persistence IndexedDB désactivée : addDoc/setDoc ne résolvent qu'après confirmation serveur
+export const db = initializeFirestore(app, { localCache: memoryLocalCache() });
 export const auth = getAuth(app);
 
 export {
