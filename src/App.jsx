@@ -1609,6 +1609,16 @@ const Competitions = ({ competitions, setCompetitions }) => {
       // v43: mettre à jour dans Firestore
       try {
         await setDoc(doc(db, "competitions", String(editId)), { ...form, updatedAt: serverTimestamp() }, { merge: true });
+        // v45 — notification push mise à jour compétition
+        await addDoc(collection(db, "notifications_queue"), {
+          type: "competition_modifiee",
+          athlete: "Iliana Voratovic",
+          nom: form.nom || "",
+          date: form.date || "",
+          lieu: form.lieu || form.localisation || "",
+          createdAt: serverTimestamp(),
+          sent: false
+        });
       } catch(e) { console.error("[v43] Erreur update compétition:", e.code, e.message); }
       setCompetitions(prev => prev.map(c => c.id === editId ? { ...c, ...form } : c));
       // Sync lienVideo dans Firestore si présent
@@ -1625,6 +1635,16 @@ const Competitions = ({ competitions, setCompetitions }) => {
       // v43: sauvegarder dans Firestore
       try {
         const ref = await addDoc(collection(db, "competitions"), { ...form, hasVideo: !!form.lienVideo, createdAt: serverTimestamp() });
+        // v45 — notification push nouvelle compétition
+        await addDoc(collection(db, "notifications_queue"), {
+          type: "nouvelle_competition",
+          athlete: "Iliana Voratovic",
+          nom: form.nom || "",
+          date: form.date || "",
+          lieu: form.lieu || form.localisation || "",
+          createdAt: serverTimestamp(),
+          sent: false
+        });
         setCompetitions(prev => [{ id: ref.id, ...form, hasVideo: !!form.lienVideo }, ...prev]);
         if (form.lienVideo) {
           try {
