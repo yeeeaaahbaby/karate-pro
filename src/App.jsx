@@ -1586,6 +1586,10 @@ const Competitions = ({ competitions, setCompetitions }) => {
   const handleSave = async () => {
     if (!form.nom || !form.date) return;
     if (editId) {
+      // v43: mettre à jour dans Firestore
+      try {
+        await setDoc(doc(db, "competitions", String(editId)), { ...form, updatedAt: serverTimestamp() }, { merge: true });
+      } catch(e) { console.error("[v43] Erreur update compétition:", e.code, e.message); }
       setCompetitions(prev => prev.map(c => c.id === editId ? { ...c, ...form } : c));
       // Sync lienVideo dans Firestore si présent
       if (form.lienVideo) {
@@ -1598,13 +1602,19 @@ const Competitions = ({ competitions, setCompetitions }) => {
         } catch(e) { console.error("Erreur sync vidéo compét:", e); }
       }
     } else {
-      const newId = Date.now();
-      setCompetitions(prev => [{ id: newId, ...form, hasVideo: !!form.lienVideo }, ...prev]);
-      // Sync lienVideo dans Firestore si présent
-      if (form.lienVideo) {
-        try {
-          await addDoc(collection(db, "video_links"), { videoId: "comp_" + newId, lien: form.lienVideo, updatedAt: serverTimestamp() });
-        } catch(e) { console.error("Erreur sync vidéo compét:", e); }
+      // v43: sauvegarder dans Firestore
+      try {
+        const ref = await addDoc(collection(db, "competitions"), { ...form, hasVideo: !!form.lienVideo, createdAt: serverTimestamp() });
+        setCompetitions(prev => [{ id: ref.id, ...form, hasVideo: !!form.lienVideo }, ...prev]);
+        if (form.lienVideo) {
+          try {
+            await addDoc(collection(db, "video_links"), { videoId: "comp_" + ref.id, lien: form.lienVideo, updatedAt: serverTimestamp() });
+          } catch(e) { console.error("Erreur sync vidéo compét:", e); }
+        }
+      } catch(e) {
+        console.error("[v43] Erreur save compétition:", e.code, e.message);
+        const newId = Date.now();
+        setCompetitions(prev => [{ id: newId, ...form, hasVideo: !!form.lienVideo }, ...prev]);
       }
     }
     setShowForm(false);
@@ -1612,6 +1622,8 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
   const handleDelete = (id) => {
     if (!window.confirm("Supprimer cette compétition ?")) return;
+    // v43: supprimer de Firestore
+    deleteDoc(doc(db, "competitions", String(id))).catch(e => console.error("[v43] Erreur delete compétition:", e));
     setCompetitions(prev => prev.filter(c => c.id !== id));
   };
 
@@ -3141,7 +3153,7 @@ export default function App() {
   const [authAllowed, setAuthAllowed] = useState(false);
   const [page, setPage] = useState("dashboard");
   const [sessions, setSessions] = useState(ALL_SESSIONS);
-  const [competitions, setCompetitions] = useState(mockCompetitions);
+  const [competitions, setCompetitions] = useState([]);
   const [plannings, setPlannings] = useState([]);
   const [physiqueSessions, setPhysiqueSessions] = useState([]);
   const [unreadChat, setUnreadChat] = useState(0);
@@ -3288,6 +3300,15 @@ export default function App() {
   }, [authUser]);
 
   // Physique : migration mockPhysique → Firestore (1 fois) puis onSnapshot
+  // ─── Charger compétitions depuis Firestore ─────────────────────────────────
+  useEffect(() => {
+    if (!authUser) return;
+    const unsub = onSnapshot(collection(db, "competitions"), (snap) => {
+      setCompetitions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }, (err) => { console.error("[v43] onSnapshot competitions ERREUR:", err.code, err.message); });
+    return () => unsub();
+  }, [authUser]);
+
   useEffect(() => {
     if (!authUser) return;
     const migKey = "kp_phys_migrated_" + authUser.uid;
