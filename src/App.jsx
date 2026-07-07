@@ -1308,8 +1308,15 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
         await setDoc(doc(db,"physique_sessions",String(editingId)), data, {merge:true});
         showToast&&showToast("Séance modifiée","success");
       } else {
-        await addDoc(collection(db,"physique_sessions"), {...data, createdAt:serverTimestamp()});
-        showToast&&showToast("Séance enregistrée","success");
+        // v42: forcer le refresh du token Firebase Auth avant d'écrire
+        try {
+          const _fb = auth.currentUser;
+          if (_fb) { await _fb.getIdToken(true); }
+          else { console.error("[v42] auth.currentUser null — écriture sans auth!"); }
+        } catch(te) { console.warn("[v42] token refresh failed:", te.code, te.message); }
+        const _ref42 = await addDoc(collection(db,"physique_sessions"), {...data, createdAt:serverTimestamp()});
+        console.log("[v42] addDoc OK id:", _ref42.id, "type:", data.type, "uid:", auth.currentUser?.uid);
+        showToast&&showToast("Séance enregistrée ✓","success");
         try {
           const u = getCurrentUser();
           const statLabel = data.statut ? " · "+data.statut : "";
@@ -1323,7 +1330,10 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
         } catch(ne) {}
       }
       setForm(EMPTY); setShowForm(false); setEditingId(null);
-    } catch(e) { console.error(e); showToast&&showToast("Erreur sauvegarde","error"); }
+    } catch(e) {
+      console.error("[v42] handleSave error:", e.code, e.message, e);
+      showToast&&showToast("Erreur: "+(e.code||e.message||"inconnue"),"error");
+    }
     setSaving(false);
   };
 
@@ -3302,9 +3312,26 @@ export default function App() {
           localStorage.setItem(migKey, "1");
         } catch(e) { console.error("Migration physique:", e); }
       }
-      unsub = onSnapshot(collection(db, "physique_sessions"), (snap) => {
-        setPhysiqueSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      });
+      unsub = onSnapshot(collection(db, "physique_sessions"),
+        { includeMetadataChanges: true },
+        (snap) => {
+          // v42: détecter les writes rejetés par le serveur
+          snap.docChanges().forEach(ch => {
+            if (ch.type === "removed" && !ch.doc.metadata.hasPendingWrites) {
+              const d = ch.doc.data();
+              console.warn("[v42] Doc SUPPRIMÉ/REJETÉ par serveur:", ch.doc.id, "type:", d?.type, "date:", d?.date);
+            }
+            if (ch.type === "added" && ch.doc.metadata.hasPendingWrites) {
+              console.log("[v42] Write en attente serveur:", ch.doc.id, "type:", ch.doc.data()?.type);
+            }
+            if (ch.type === "modified" && !ch.doc.metadata.hasPendingWrites && !ch.doc.metadata.fromCache) {
+              console.log("[v42] Write CONFIRMÉ serveur:", ch.doc.id, "type:", ch.doc.data()?.type);
+            }
+          });
+          setPhysiqueSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        },
+        (err) => { console.error("[v42] onSnapshot Firestore ERREUR:", err.code, err.message); }
+      );
     };
     init();
     return () => unsub && unsub();
