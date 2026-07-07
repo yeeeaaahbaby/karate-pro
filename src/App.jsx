@@ -1561,11 +1561,19 @@ const EMPTY_COMP = { nom:"", date:"", lieu:"", statut:"À venir", coach:"", resu
 const EMPTY_TOUR = { nom:"1er tour", kata:"Gojūshiho Shō", scoreType:"Drapeaux", score:"5-0", ok:true, note:"" };
 
 const Competitions = ({ competitions, setCompetitions }) => {
-  const allMonths = [...new Set(competitions.map(c => {
-    const d = new Date(c.date);
-    return d.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
-  }))];
+  const allMonths = [...new Set(
+    [...competitions]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .map(c => {
+        const d = new Date(c.date);
+        return d.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+      })
+  )];
   const [activeMois, setActiveMois] = useState(allMonths[0] || "");
+  // Auto-sélectionner le mois le plus récent quand Firestore charge
+  useEffect(() => {
+    if (allMonths.length > 0 && !activeMois) setActiveMois(allMonths[0]);
+  }, [allMonths.length]);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState(EMPTY_COMP);
@@ -1627,11 +1635,13 @@ const Competitions = ({ competitions, setCompetitions }) => {
     setCompetitions(prev => prev.filter(c => c.id !== id));
   };
 
-  const filteredComps = competitions.filter(c => {
-    const d = new Date(c.date);
-    const mois = d.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
-    return mois === activeMois;
-  });
+  const filteredComps = competitions
+    .filter(c => {
+      const d = new Date(c.date);
+      const mois = d.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+      return mois === activeMois;
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const CompSF = ({ label, value, options, onChange }) => (
     <div>
