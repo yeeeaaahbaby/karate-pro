@@ -3300,13 +3300,30 @@ export default function App() {
   }, [authUser]);
 
   // Physique : migration mockPhysique → Firestore (1 fois) puis onSnapshot
-  // ─── Charger compétitions depuis Firestore ─────────────────────────────────
+  // ─── Migration mockCompetitions → Firestore puis onSnapshot ─────────────────
   useEffect(() => {
     if (!authUser) return;
-    const unsub = onSnapshot(collection(db, "competitions"), (snap) => {
-      setCompetitions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    }, (err) => { console.error("[v43] onSnapshot competitions ERREUR:", err.code, err.message); });
-    return () => unsub();
+    const migKey = "kp_comp_migrated_" + authUser.uid;
+    let unsub;
+    const init = async () => {
+      // 1. Seed si jamais migré et Firestore vide
+      if (!localStorage.getItem(migKey)) {
+        const snap = await getDocs(collection(db, "competitions"));
+        if (snap.empty) {
+          for (const c of mockCompetitions) {
+            const { id: _id, ...rest } = c;
+            await addDoc(collection(db, "competitions"), { ...rest, createdAt: serverTimestamp() });
+          }
+        }
+        localStorage.setItem(migKey, "1");
+      }
+      // 2. onSnapshot en temps réel
+      unsub = onSnapshot(collection(db, "competitions"), (snap) => {
+        setCompetitions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      }, (err) => { console.error("[v43] onSnapshot competitions ERREUR:", err.code, err.message); });
+    };
+    init();
+    return () => { if (unsub) unsub(); };
   }, [authUser]);
 
   useEffect(() => {
