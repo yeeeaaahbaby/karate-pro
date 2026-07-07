@@ -1593,7 +1593,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
   const openAdd = () => { setForm(EMPTY_COMP); setEditId(null); setShowForm(true); };
   const openEdit = (c) => { setForm({...c, nom: c.nom||c.name||"", resultat: c.resultat||c.result||""}); setEditId(c.id); setShowForm(true); };
-  const openCopy = (c) => { if (!window.confirm("Copier "+(c.nom||"cette compétition")+" ?")) return; setForm({...c, nom:(c.nom||c.name||"")+" (copie)", resultat:c.resultat||c.result||"", date: new Date().toISOString().split("T")[0]}); setEditId(null); setShowForm(true); };
+  const openCopy = (c) => { if (!window.confirm("Copier "+(c.nom||"cette compétition")+" ?")) return; if (!window.confirm("Copier "+(c.nom||"cette compétition")+" ?")) return; setForm({...c, nom:(c.nom||c.name||"")+" (copie)", resultat:c.resultat||c.result||"", date: new Date().toISOString().split("T")[0]}); setEditId(null); setShowForm(true); };
 
   const addTour = () => {
     if (!newTour.nom || !newTour.kata) return;
