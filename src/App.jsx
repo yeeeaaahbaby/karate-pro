@@ -1593,7 +1593,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
   const openAdd = () => { setForm(EMPTY_COMP); setEditId(null); setShowForm(true); };
   const openEdit = (c) => { setForm({...c, nom: c.nom||c.name||"", resultat: c.resultat||c.result||""}); setEditId(c.id); setShowForm(true); };
-  const openCopy = (c) => { setForm({...c, nom:(c.nom||c.name||"")+" (copie)", resultat:c.resultat||c.result||"", date: new Date().toISOString().split("T")[0]}); setEditId(null); setShowForm(true); };
+  const openCopy = (c) => { if (!window.confirm("Copier "+(c.nom||"cette compétition")+" ?")) return; setForm({...c, nom:(c.nom||c.name||"")+" (copie)", resultat:c.resultat||c.result||"", date: new Date().toISOString().split("T")[0]}); setEditId(null); setShowForm(true); };
 
   const addTour = () => {
     if (!newTour.nom || !newTour.kata) return;
@@ -1659,7 +1659,8 @@ const Competitions = ({ competitions, setCompetitions }) => {
         } catch(notifErr) {
           console.error("[v46] ERREUR notifications_queue (nouvelle):", notifErr.code, notifErr.message);
         }
-        setCompetitions(prev => [{ id: ref.id, ...form, hasVideo: !!form.lienVideo }, ...prev]);
+        // v47: supprimé — l'onSnapshot (L3377) gère déjà la mise à jour, évite la duplication
+        // setCompetitions(prev => [{ id: ref.id, ...form, hasVideo: !!form.lienVideo }, ...prev]);
         if (form.lienVideo) {
           try {
             await addDoc(collection(db, "video_links"), { videoId: "comp_" + ref.id, lien: form.lienVideo, updatedAt: serverTimestamp() });
@@ -1670,6 +1671,9 @@ const Competitions = ({ competitions, setCompetitions }) => {
         const newId = Date.now();
         setCompetitions(prev => [{ id: newId, ...form, hasVideo: !!form.lienVideo }, ...prev]);
       }
+    }
+    if (typeof showToast === 'function') {
+      showToast(editId ? "Compétition mise à jour ✓" : "Compétition ajoutée ✓", "success");
     }
     setShowForm(false);
   };
