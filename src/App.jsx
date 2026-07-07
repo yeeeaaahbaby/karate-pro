@@ -1609,16 +1609,23 @@ const Competitions = ({ competitions, setCompetitions }) => {
       // v43: mettre à jour dans Firestore
       try {
         await setDoc(doc(db, "competitions", String(editId)), { ...form, updatedAt: serverTimestamp() }, { merge: true });
-        // v45 — notification push mise à jour compétition
-        await addDoc(collection(db, "notifications_queue"), {
-          type: "competition_modifiee",
-          athlete: "Iliana Voratovic",
-          nom: form.nom || "",
-          date: form.date || "",
-          lieu: form.lieu || form.localisation || "",
-          createdAt: serverTimestamp(),
-          sent: false
-        });
+        // v46 — notification push mise à jour compétition
+        try {
+          console.log("[v46] Écriture notifications_queue (edit compét):", form.nom);
+          await addDoc(collection(db, "notifications_queue"), {
+            type: "competition_modifiee",
+            title: "🏆 Compétition mise à jour",
+            body: (form.nom || "Compétition") + " — " + (form.date || ""),
+            athlete: "Iliana Voratovic",
+            nom: form.nom || "",
+            date: form.date || "",
+            createdAt: serverTimestamp(),
+            sent: false
+          });
+          console.log("[v46] notifications_queue (edit) OK ✓");
+        } catch(notifErr) {
+          console.error("[v46] ERREUR notifications_queue (edit):", notifErr.code, notifErr.message);
+        }
       } catch(e) { console.error("[v43] Erreur update compétition:", e.code, e.message); }
       setCompetitions(prev => prev.map(c => c.id === editId ? { ...c, ...form } : c));
       // Sync lienVideo dans Firestore si présent
@@ -1635,16 +1642,23 @@ const Competitions = ({ competitions, setCompetitions }) => {
       // v43: sauvegarder dans Firestore
       try {
         const ref = await addDoc(collection(db, "competitions"), { ...form, hasVideo: !!form.lienVideo, createdAt: serverTimestamp() });
-        // v45 — notification push nouvelle compétition
-        await addDoc(collection(db, "notifications_queue"), {
-          type: "nouvelle_competition",
-          athlete: "Iliana Voratovic",
-          nom: form.nom || "",
-          date: form.date || "",
-          lieu: form.lieu || form.localisation || "",
-          createdAt: serverTimestamp(),
-          sent: false
-        });
+        // v46 — notification push nouvelle compétition
+        try {
+          console.log("[v46] Écriture notifications_queue (nouvelle compét):", form.nom);
+          await addDoc(collection(db, "notifications_queue"), {
+            type: "nouvelle_competition",
+            title: "🏆 Nouvelle compétition",
+            body: (form.nom || "Compétition") + " — " + (form.date || ""),
+            athlete: "Iliana Voratovic",
+            nom: form.nom || "",
+            date: form.date || "",
+            createdAt: serverTimestamp(),
+            sent: false
+          });
+          console.log("[v46] notifications_queue (nouvelle) OK ✓");
+        } catch(notifErr) {
+          console.error("[v46] ERREUR notifications_queue (nouvelle):", notifErr.code, notifErr.message);
+        }
         setCompetitions(prev => [{ id: ref.id, ...form, hasVideo: !!form.lienVideo }, ...prev]);
         if (form.lienVideo) {
           try {
