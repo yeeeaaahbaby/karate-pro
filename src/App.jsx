@@ -1660,7 +1660,8 @@ const Competitions = ({ competitions, setCompetitions }) => {
           console.error("[v46] ERREUR notifications_queue (nouvelle):", notifErr.code, notifErr.message);
         }
         // v47: supprimé — l'onSnapshot (L3377) gère déjà la mise à jour, évite la duplication
-        // setCompetitions(prev => [{ id: ref.id, ...form, hasVideo: !!form.lienVideo }, ...prev]);
+        // v47: supprimé — onSnapshot gère déjà la mise à jour → évite la duplication
+        // // setCompetitions(prev => [{ id: ref.id, ...form, hasVideo: !!form.lienVideo }, ...prev]);
         if (form.lienVideo) {
           try {
             await addDoc(collection(db, "video_links"), { videoId: "comp_" + ref.id, lien: form.lienVideo, updatedAt: serverTimestamp() });
@@ -1675,6 +1676,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
     if (typeof showToast === 'function') {
       showToast(editId ? "Compétition mise à jour ✓" : "Compétition ajoutée ✓", "success");
     }
+    if (typeof showToast === 'function') showToast(editId ? "Compétition mise à jour ✓" : "Compétition ajoutée ✓", "success");
     setShowForm(false);
   };
 
