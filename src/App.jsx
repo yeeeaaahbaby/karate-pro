@@ -1315,6 +1315,18 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
           else { console.error("[v42] auth.currentUser null — écriture sans auth!"); }
         } catch(te) { console.warn("[v42] token refresh failed:", te.code, te.message); }
         const _ref42 = await addDoc(collection(db,"physique_sessions"), {...data, createdAt:serverTimestamp()});
+        // v44 — notification push séance physique
+        await addDoc(collection(db, "notifications_queue"), {
+          type: "nouvelle_seance_physique",
+          athlete: "Iliana Voratovic",
+          type_seance: form.type || "",
+          duree: parseInt(form.duration) || 0,
+          programme: form.programme || "",
+          coach: form.coach || "",
+          date: form.date || "",
+          createdAt: serverTimestamp(),
+          sent: false
+        });
         console.log("[v42] addDoc OK id:", _ref42.id, "type:", data.type, "uid:", auth.currentUser?.uid);
         showToast&&showToast("Séance enregistrée ✓","success");
         try {
