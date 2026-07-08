@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   LayoutDashboard, Calendar, Shield, Dumbbell, Trophy, Clock,
   Video, Apple, Moon, MessageCircle, Users, User, LogOut, Plus,
@@ -1603,7 +1603,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
   const removeTour = (idx) => setForm(f=>({...f, tours: f.tours.filter((_,i)=>i!==idx).map((t,i)=>({...t,num:i+1}))}));
 
-  const isSavingRef = React.useRef(false);
+  const isSavingRef = useRef(false);
   const handleSave = async () => {
     if (isSavingRef.current) { console.log("[v49] handleSave ignoré (déjà en cours)"); return; }
     isSavingRef.current = true;
