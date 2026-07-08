@@ -1611,7 +1611,8 @@ const Competitions = ({ competitions, setCompetitions }) => {
     if (editId) {
       // v43: mettre à jour dans Firestore
       try {
-        await setDoc(doc(db, "competitions", String(editId)), { ...form, updatedAt: serverTimestamp() }, { merge: true });
+        const { id: _fid, ...formData } = form;
+      await setDoc(doc(db, "competitions", String(editId)), { ...formData, updatedAt: serverTimestamp() }, { merge: true });
       console.log("[v50] setDoc OK — editId:", editId, "date:", form.date, "nom:", form.nom);
         // v46 — notification push mise à jour compétition
         try {
@@ -1645,7 +1646,8 @@ const Competitions = ({ competitions, setCompetitions }) => {
     } else {
       // v43: sauvegarder dans Firestore
       try {
-        const ref = await addDoc(collection(db, "competitions"), { ...form, hasVideo: !!form.lienVideo, createdAt: serverTimestamp() });
+                const { id: _fid2, ...formData2 } = form;
+        const ref = await addDoc(collection(db, "competitions"), { ...formData2, hasVideo: !!form.lienVideo, createdAt: serverTimestamp() });
         // v46 — notification push nouvelle compétition
         try {
           console.log("[v46] Écriture notifications_queue (nouvelle compét):", form.nom);
@@ -2379,7 +2381,7 @@ const Chat = ({ authUser }) => {
   useEffect(() => {
     const q = query(collection(db, "chat_messages"), orderBy("createdAt", "asc"), limit(100));
     const unsub = onSnapshot(q, (snap) => {
-      setMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      setMessages(snap.docs.map(d => ({ ...d.data(), id: d.id })));
       setTimeout(() => {
         const el = document.getElementById("chat-end");
         if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -3139,7 +3141,7 @@ const AdminUsers = ({ currentUserEmail }) => {
 
   const loadUsers = async () => {
     const snap = await getDocs(collection(db, "allowed_emails"));
-    setUsers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    setUsers(snap.docs.map(d => ({ ...d.data(), id: d.id })));
   };
 
   const invite = async () => {
@@ -3359,7 +3361,7 @@ export default function App() {
         } catch(e) { console.error("Migration sessions:", e); }
       }
       unsub = onSnapshot(collection(db, "seances"), (snap) => {
-        setSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setSessions(snap.docs.map(d => ({ ...d.data(), id: d.id })));
       });
     };
     init();
@@ -3387,7 +3389,7 @@ export default function App() {
       // 2. onSnapshot en temps réel
       unsub = onSnapshot(collection(db, "competitions"), (snap) => {
       console.log("[v50] onSnapshot competitions:", snap.docs.length, "docs");
-        setCompetitions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setCompetitions(snap.docs.map(d => ({ ...d.data(), id: d.id })));
       }, (err) => { console.error("[v43] onSnapshot competitions ERREUR:", err.code, err.message); });
     };
     init();
@@ -3434,7 +3436,7 @@ export default function App() {
               console.log("[v42] Write CONFIRMÉ serveur:", ch.doc.id, "type:", ch.doc.data()?.type);
             }
           });
-          setPhysiqueSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+          setPhysiqueSessions(snap.docs.map(d => ({ ...d.data(), id: d.id })));
         },
         (err) => { console.error("[v42] onSnapshot Firestore ERREUR:", err.code, err.message); }
       );
@@ -3831,7 +3833,7 @@ export default function App() {
   useEffect(() => {
     if (!authUser) return;
     const unsub = onSnapshot(collection(db, "weekly_plannings"), (snap) => {
-      const plans = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const plans = snap.docs.map(d => ({ ...d.data(), id: d.id }));
       setPlannings(plans);
     });
     return () => unsub();
