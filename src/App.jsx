@@ -1604,6 +1604,9 @@ const Competitions = ({ competitions, setCompetitions }) => {
   const removeTour = (idx) => setForm(f=>({...f, tours: f.tours.filter((_,i)=>i!==idx).map((t,i)=>({...t,num:i+1}))}));
 
   const handleSave = async () => {
+    console.log("[v48] handleSave Compétitions — editId:", editId, "typeof:", typeof editId);
+    console.log("[v48] form.date:", form.date, "form.nom:", form.nom, "form.lienVideo:", form.lienVideo);
+    console.log("[v48] form.tours:", JSON.stringify(form.tours));
     if (!form.nom || !form.date) return;
     if (editId) {
       // v43: mettre à jour dans Firestore
