@@ -1105,17 +1105,7 @@ const StageEquipe = () => {
   const openAdd = () => { setForm(EMPTY_STAGE); setEditingId(null); setShowForm(true); };
   const openEdit = (s) => { setForm({...s, duration:String(s.duration), katas:s.katas||[]}); setEditingId(s.id); setShowForm(true); };
   const openCopy = (s) => { setForm({...s, date:new Date().toISOString().split("T")[0], duration:String(s.duration), katas:s.katas||[]}); setEditingId(null); setShowForm(true); };
-  const handleDelete = async (id) => {
-    if (!window.confirm("Supprimer cette compétition ?")) return;
-    try {
-      await deleteDoc(doc(db, "competitions", String(id)));
-      console.log("[v50] deleteDoc OK — id:", id);
-    } catch(e) {
-      console.error("[v50] deleteDoc ECHEC:", e.code, e.message);
-    }
-    // v50: retiré — onSnapshot gère la suppression dans le state
-    // setCompetitions(prev => prev.filter(c => c.id !== id));
-  };
+  const handleDelete = async (id) => { if (!window.confirm("Supprimer ce stage ?")) return; setStages(prev=>prev.filter(s=>s.id!==id)); };
   const handleSave = () => {
     if (!form.date || !form.duration) return;
     const s = { ...form, duration: parseInt(form.duration), katas: form.katas||[] };
@@ -1699,7 +1689,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
     if (!window.confirm("Supprimer cette compétition ?")) return;
     // v43: supprimer de Firestore
     deleteDoc(doc(db, "competitions", String(id))).catch(e => console.error("[v43] Erreur delete compétition:", e));
-    setCompetitions(prev => prev.filter(c => c.id !== id));
+    // v50: retiré — onSnapshot gère la suppression
   };
 
   const filteredComps = competitions
