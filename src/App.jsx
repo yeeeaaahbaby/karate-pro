@@ -1105,7 +1105,17 @@ const StageEquipe = () => {
   const openAdd = () => { setForm(EMPTY_STAGE); setEditingId(null); setShowForm(true); };
   const openEdit = (s) => { setForm({...s, duration:String(s.duration), katas:s.katas||[]}); setEditingId(s.id); setShowForm(true); };
   const openCopy = (s) => { setForm({...s, date:new Date().toISOString().split("T")[0], duration:String(s.duration), katas:s.katas||[]}); setEditingId(null); setShowForm(true); };
-  const handleDelete = (id) => { if (!window.confirm("Supprimer ce stage ?")) return; setStages(prev=>prev.filter(s=>s.id!==id)); };
+  const handleDelete = async (id) => {
+    if (!window.confirm("Supprimer cette compétition ?")) return;
+    try {
+      await deleteDoc(doc(db, "competitions", String(id)));
+      console.log("[v50] deleteDoc OK — id:", id);
+    } catch(e) {
+      console.error("[v50] deleteDoc ECHEC:", e.code, e.message);
+    }
+    // v50: retiré — onSnapshot gère la suppression dans le state
+    // setCompetitions(prev => prev.filter(c => c.id !== id));
+  };
   const handleSave = () => {
     if (!form.date || !form.duration) return;
     const s = { ...form, duration: parseInt(form.duration), katas: form.katas||[] };
@@ -1612,6 +1622,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
       // v43: mettre à jour dans Firestore
       try {
         await setDoc(doc(db, "competitions", String(editId)), { ...form, updatedAt: serverTimestamp() }, { merge: true });
+      console.log("[v50] setDoc OK — editId:", editId, "date:", form.date, "nom:", form.nom);
         // v46 — notification push mise à jour compétition
         try {
           console.log("[v46] Écriture notifications_queue (edit compét):", form.nom);
@@ -1630,7 +1641,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
           console.error("[v46] ERREUR notifications_queue (edit):", notifErr.code, notifErr.message);
         }
       } catch(e) { console.error("[v43] Erreur update compétition:", e.code, e.message); }
-      setCompetitions(prev => prev.map(c => c.id === editId ? { ...c, ...form } : c));
+    // v50: retiré — onSnapshot (L3377+) est la seule source de vérité
       // Sync lienVideo dans Firestore si présent
       if (form.lienVideo) {
         try {
@@ -3385,6 +3396,7 @@ export default function App() {
       }
       // 2. onSnapshot en temps réel
       unsub = onSnapshot(collection(db, "competitions"), (snap) => {
+      console.log("[v50] onSnapshot competitions:", snap.docs.length, "docs");
         setCompetitions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
       }, (err) => { console.error("[v43] onSnapshot competitions ERREUR:", err.code, err.message); });
     };
