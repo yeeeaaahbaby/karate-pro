@@ -1603,11 +1603,11 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
   const removeTour = (idx) => setForm(f=>({...f, tours: f.tours.filter((_,i)=>i!==idx).map((t,i)=>({...t,num:i+1}))}));
 
+  const isSavingRef = React.useRef(false);
   const handleSave = async () => {
-    console.log("[v48] handleSave Compétitions — editId:", editId, "typeof:", typeof editId);
-    console.log("[v48] form.date:", form.date, "form.nom:", form.nom, "form.lienVideo:", form.lienVideo);
-    console.log("[v48] form.tours:", JSON.stringify(form.tours));
-    if (!form.nom || !form.date) return;
+    if (isSavingRef.current) { console.log("[v49] handleSave ignoré (déjà en cours)"); return; }
+    isSavingRef.current = true;
+    if (!form.nom || !form.date) { isSavingRef.current = false; return; }
     if (editId) {
       // v43: mettre à jour dans Firestore
       try {
@@ -1680,6 +1680,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
       showToast(editId ? "Compétition mise à jour ✓" : "Compétition ajoutée ✓", "success");
     }
     if (typeof showToast === 'function') showToast(editId ? "Compétition mise à jour ✓" : "Compétition ajoutée ✓", "success");
+    isSavingRef.current = false;
     setShowForm(false);
   };
 
