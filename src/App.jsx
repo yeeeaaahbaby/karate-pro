@@ -19,114 +19,114 @@ const C = {
   text: "#1E293B", muted: "#94A3B8", border: "#E2E8F0",
 };
 
-// âââ 106 SÃANCES âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── 106 SÉANCES ─────────────────────────────────────────────────────────────
 const ALL_SESSIONS = [
-  {id:1,date:"2026-06-09",type:"Collectif",coach:"",duration:120,satisfaction:7,katas:["GojÅ«shiho Dai", "GojÅ«shiho ShÅ", "Unsu", "Gankaku"],techniques:["Kihon (Bases)", "Yoko Geri"],notes:"Taper moins sur les pics, sur gankaku bien faire le premier coup de coude, attention iquitÃ© trop bas"},
-  {id:2,date:"2026-06-07",type:"Collectif",coach:"Jonathan",duration:120,satisfaction:8,katas:["Unsu", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Ne pas trop m'Ã©craser sur le kiba, Pose yuko plus rapide (gankaku) Bien tourner le talon sur le zen Ã  la fin de la ligne goju Pieds bien parallÃ¨les sur la ligne kiba Attention main en griffe"},
-  {id:3,date:"2026-06-04",type:"Collectif",coach:"Romain",duration:120,satisfaction:6,katas:["GojÅ«shiho ShÅ"],techniques:[],notes:"S'Ã©craser sur les kiba, ouvrir plus l'armÃ©e, moins taper du pied sur la pose kiba de la ligne"},
-  {id:4,date:"2026-06-03",type:"Collectif",coach:"HelvÃ©tia",duration:75,satisfaction:8,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu", "Supaenpei", "Kanku ShÅ"],techniques:[],notes:"Moins s'Ã©craser sur les kiba de goju et les zen de supa, tendre la jambe arriÃ¨re sur le zen de kanku sho"},
-  {id:5,date:"2026-06-02",type:"Collectif",coach:"Romain",duration:120,satisfaction:6,katas:["GojÅ«shiho ShÅ", "Unsu"],techniques:["Kihon (Bases)"],notes:"EnchaÃ®ner plus les rotations sur goju, passer bien par le milieu avant les changements de direction"},
-  {id:6,date:"2026-05-30",type:"Collectif",coach:"HelvÃ©tia, Olivier",duration:120,satisfaction:9,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku", "Unsu", "Kanku ShÅ"],techniques:[],notes:"Armer correctement sur ligne unsu, ne pas remonter sur ligne kiba, dynamique sur les dÃ©placements, contrÃ´ler les temps lents"},
-  {id:7,date:"2026-05-28",type:"Collectif",coach:"Olivier",duration:120,satisfaction:7,katas:["Kanku ShÅ", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku"],techniques:["Kihon (Bases)", "Mawashi Geri"],notes:"Rester droite Ã  la fin de unsu aprÃ¨s le saut, Ãªtre plus dynamique"},
-  {id:8,date:"2026-05-27",type:"Collectif",coach:"HelvÃ©tia",duration:90,satisfaction:8,katas:["Kanku ShÅ"],techniques:[],notes:"Pour le saut aller vite le sol au dÃ©but, avant de chercher le premier saut kokutsu, zen et non fudo sur les positions Ã  la fin"},
-  {id:9,date:"2026-05-26",type:"Collectif",coach:"HelvÃ©tia",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ"],techniques:[],notes:"Armer correctement, aller moins loin chercher sur le pic, rÃ©trÃ©cir le zen, bien tourner le talon sur le zen inversÃ© Ã  la fin de la ligne"},
-  {id:10,date:"2026-05-23",type:"Collectif",coach:"Hugo",duration:120,satisfaction:8,katas:["GojÅ«shiho Dai"],techniques:[],notes:"Lever les iquitÃ©s"},
-  {id:11,date:"2026-05-21",type:"Collectif",coach:"Hugo",duration:120,satisfaction:8,katas:["Unsu"],techniques:[],notes:"Ne pas trop bouger le haut du corps sur le dÃ©but, jouer plus sur les temps carÃªmes"},
-  {id:12,date:"2026-05-19",type:"Collectif",coach:"Hugo",duration:90,satisfaction:8,katas:["GojÅ«shiho Dai"],techniques:["Kihon (Bases)", "Yoko Geri"],notes:"Moins de bruit de bouche"},
-  {id:13,date:"2026-05-17",type:"Perso",coach:"HelvÃ©tia",duration:75,satisfaction:8,katas:["GojÅ«shiho Dai", "Supaenpei"],techniques:[],notes:"Travail sur les corrections proposÃ©es par HelvÃ©tia"},
-  {id:14,date:"2026-05-16",type:"Collectif",coach:"Hugo, Olivier",duration:120,satisfaction:8,katas:["GojÅ«shiho Dai"],techniques:["Kihon (Bases)"],notes:"Attention pied gauche qui se dÃ©cale dans les rotations de goju, levier iquitÃ©, plus vite au sol aprÃ¨s yuko"},
-  {id:15,date:"2026-05-16",type:"Collectif",coach:"Olivier",duration:120,satisfaction:7,katas:["Unsu"],techniques:["Mae Geri", "Mawashi Geri", "Yoko Geri", "Kihon (Bases)"],notes:"Lever le iquitÃ©"},
-  {id:16,date:"2026-05-13",type:"Perso",coach:"HelvÃ©tia",duration:75,satisfaction:8,katas:["GojÅ«shiho Dai"],techniques:[],notes:"Ãchauffement spÃ©cifique â travail sur positions et techniques"},
-  {id:17,date:"2026-05-12",type:"Perso",coach:"HelvÃ©tia",duration:60,satisfaction:8,katas:["Supaenpei"],techniques:[],notes:"Exercices de prÃ©paration physique"},
-  {id:18,date:"2026-05-07",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Unsu"],techniques:[],notes:"Ligne unsu ne pas regarder derriÃ¨re sur le soto, attention kiba, Ã©quilibre le neko"},
-  {id:19,date:"2026-05-06",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai"],techniques:[],notes:"Corrections pour l'Equipe"},
-  {id:20,date:"2026-05-05",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai"],techniques:[],notes:"Attention iquitÃ© trop bas, Ãªtre bien de face sur les pics"},
-  {id:21,date:"2026-05-02",type:"Collectif",coach:"Romain, HelvÃ©tia",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu"],techniques:[],notes:"Attention rotation des poignet, sur goju bien armer le bras avant 2eme rotation"},
-  {id:22,date:"2026-05-02",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:6,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu"],techniques:[],notes:"Ãtre plus technique, attention iquitÃ© trop bas"},
+  {id:1,date:"2026-06-09",type:"Collectif",coach:"",duration:120,satisfaction:7,katas:["Gojūshiho Dai", "Gojūshiho Shō", "Unsu", "Gankaku"],techniques:["Kihon (Bases)", "Yoko Geri"],notes:"Taper moins sur les pics, sur gankaku bien faire le premier coup de coude, attention iquité trop bas"},
+  {id:2,date:"2026-06-07",type:"Collectif",coach:"Jonathan",duration:120,satisfaction:8,katas:["Unsu", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Ne pas trop m'écraser sur le kiba, Pose yuko plus rapide (gankaku) Bien tourner le talon sur le zen à la fin de la ligne goju Pieds bien parallèles sur la ligne kiba Attention main en griffe"},
+  {id:3,date:"2026-06-04",type:"Collectif",coach:"Romain",duration:120,satisfaction:6,katas:["Gojūshiho Shō"],techniques:[],notes:"S'écraser sur les kiba, ouvrir plus l'armée, moins taper du pied sur la pose kiba de la ligne"},
+  {id:4,date:"2026-06-03",type:"Collectif",coach:"Helvétia",duration:75,satisfaction:8,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu", "Supaenpei", "Kanku Shō"],techniques:[],notes:"Moins s'écraser sur les kiba de goju et les zen de supa, tendre la jambe arrière sur le zen de kanku sho"},
+  {id:5,date:"2026-06-02",type:"Collectif",coach:"Romain",duration:120,satisfaction:6,katas:["Gojūshiho Shō", "Unsu"],techniques:["Kihon (Bases)"],notes:"Enchaîner plus les rotations sur goju, passer bien par le milieu avant les changements de direction"},
+  {id:6,date:"2026-05-30",type:"Collectif",coach:"Helvétia, Olivier",duration:120,satisfaction:9,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Gankaku", "Unsu", "Kanku Shō"],techniques:[],notes:"Armer correctement sur ligne unsu, ne pas remonter sur ligne kiba, dynamique sur les déplacements, contrôler les temps lents"},
+  {id:7,date:"2026-05-28",type:"Collectif",coach:"Olivier",duration:120,satisfaction:7,katas:["Kanku Shō", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku"],techniques:["Kihon (Bases)", "Mawashi Geri"],notes:"Rester droite à la fin de unsu après le saut, être plus dynamique"},
+  {id:8,date:"2026-05-27",type:"Collectif",coach:"Helvétia",duration:90,satisfaction:8,katas:["Kanku Shō"],techniques:[],notes:"Pour le saut aller vite le sol au début, avant de chercher le premier saut kokutsu, zen et non fudo sur les positions à la fin"},
+  {id:9,date:"2026-05-26",type:"Collectif",coach:"Helvétia",duration:120,satisfaction:8,katas:["Gojūshiho Shō"],techniques:[],notes:"Armer correctement, aller moins loin chercher sur le pic, rétrécir le zen, bien tourner le talon sur le zen inversé à la fin de la ligne"},
+  {id:10,date:"2026-05-23",type:"Collectif",coach:"Hugo",duration:120,satisfaction:8,katas:["Gojūshiho Dai"],techniques:[],notes:"Lever les iquités"},
+  {id:11,date:"2026-05-21",type:"Collectif",coach:"Hugo",duration:120,satisfaction:8,katas:["Unsu"],techniques:[],notes:"Ne pas trop bouger le haut du corps sur le début, jouer plus sur les temps carêmes"},
+  {id:12,date:"2026-05-19",type:"Collectif",coach:"Hugo",duration:90,satisfaction:8,katas:["Gojūshiho Dai"],techniques:["Kihon (Bases)", "Yoko Geri"],notes:"Moins de bruit de bouche"},
+  {id:13,date:"2026-05-17",type:"Perso",coach:"Helvétia",duration:75,satisfaction:8,katas:["Gojūshiho Dai", "Supaenpei"],techniques:[],notes:"Travail sur les corrections proposées par Helvétia"},
+  {id:14,date:"2026-05-16",type:"Collectif",coach:"Hugo, Olivier",duration:120,satisfaction:8,katas:["Gojūshiho Dai"],techniques:["Kihon (Bases)"],notes:"Attention pied gauche qui se décale dans les rotations de goju, levier iquité, plus vite au sol après yuko"},
+  {id:15,date:"2026-05-16",type:"Collectif",coach:"Olivier",duration:120,satisfaction:7,katas:["Unsu"],techniques:["Mae Geri", "Mawashi Geri", "Yoko Geri", "Kihon (Bases)"],notes:"Lever le iquité"},
+  {id:16,date:"2026-05-13",type:"Perso",coach:"Helvétia",duration:75,satisfaction:8,katas:["Gojūshiho Dai"],techniques:[],notes:"Échauffement spécifique — travail sur positions et techniques"},
+  {id:17,date:"2026-05-12",type:"Perso",coach:"Helvétia",duration:60,satisfaction:8,katas:["Supaenpei"],techniques:[],notes:"Exercices de préparation physique"},
+  {id:18,date:"2026-05-07",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Unsu"],techniques:[],notes:"Ligne unsu ne pas regarder derrière sur le soto, attention kiba, équilibre le neko"},
+  {id:19,date:"2026-05-06",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai"],techniques:[],notes:"Corrections pour l'Equipe"},
+  {id:20,date:"2026-05-05",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai"],techniques:[],notes:"Attention iquité trop bas, être bien de face sur les pics"},
+  {id:21,date:"2026-05-02",type:"Collectif",coach:"Romain, Helvétia",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu"],techniques:[],notes:"Attention rotation des poignet, sur goju bien armer le bras avant 2eme rotation"},
+  {id:22,date:"2026-05-02",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:6,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu"],techniques:[],notes:"Être plus technique, attention iquité trop bas"},
   {id:23,date:"2026-04-30",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["Sansai"],techniques:[],notes:"Moins taper du pied et revoir la fin"},
   {id:24,date:"2026-04-28",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["Supaenpei"],techniques:[],notes:""},
   {id:25,date:"2026-04-25",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["Gankaku"],techniques:[],notes:""},
-  {id:26,date:"2026-04-21",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["GojÅ«shiho ShÅ"],techniques:[],notes:"Penser Ã  plus armer. Rotation bien"},
+  {id:26,date:"2026-04-21",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["Gojūshiho Shō"],techniques:[],notes:"Penser à plus armer. Rotation bien"},
   {id:27,date:"2026-04-18",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["Unsu"],techniques:[],notes:""},
-  {id:28,date:"2026-04-16",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["GojÅ«shiho Dai"],techniques:[],notes:"Moins sauter sur les pics"},
-  {id:29,date:"2026-04-15",type:"Collectif",coach:"HelvÃ©tia",duration:90,satisfaction:7,katas:["GojÅ«shiho ShÅ"],techniques:[],notes:"Tourner que sur le talon pour la rotation, ne pas trop taper sur les bras"},
-  {id:30,date:"2026-04-09",type:"Collectif",coach:"Romain",duration:90,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku", "Supaenpei"],techniques:[],notes:"Attention ne pas trop taper sur les pics, sur gankaku bien stopper le 2eme sur la ligne"},
-  {id:31,date:"2026-04-08",type:"Collectif",coach:"HelvÃ©tia",duration:75,satisfaction:8,katas:["Empi", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Fermer le regard, ne pas trop taper les pics goju"},
-  {id:32,date:"2026-04-07",type:"Collectif",coach:"Romain",duration:120,satisfaction:1,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu", "Gankaku", "Kanku ShÅ"],techniques:[],notes:"Rien â il ne s'est occupÃ© que de Romane"},
-  {id:33,date:"2026-04-02",type:"Collectif",coach:"",duration:120,satisfaction:6,katas:["Empi", "GojÅ«shiho Dai", "GojÅ«shiho ShÅ", "Unsu"],techniques:[],notes:"Postures"},
-  {id:34,date:"2026-03-28",type:"Collectif",coach:"Olivier",duration:120,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku", "Supaenpei", "Kanku ShÅ"],techniques:[],notes:"Baisser les Ã©paules, attention Ã  pas rentrer les pieds sur kokutsu"},
-  {id:35,date:"2026-03-26",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["GojÅ«shiho Dai", "Gankaku", "Unsu"],techniques:[],notes:"Garder toujours la tÃªte droite ! Dai : ne pas taper sur pics, descendre le bras"},
-  {id:36,date:"2026-03-25",type:"Collectif",coach:"HelvÃ©tia",duration:75,satisfaction:8,katas:["GojÅ«shiho ShÅ", "Unsu"],techniques:[],notes:"Descendre moins, redresser le corps sur la ligne kiba"},
-  {id:37,date:"2026-03-24",type:"Collectif",coach:"Romain",duration:120,satisfaction:2,katas:[],techniques:[],notes:"TOUT ! 2h Ã  entendre que rien n'Ã©tait bienâ¦"},
-  {id:38,date:"2026-03-21",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:7,katas:["Kanku ShÅ", "Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Tirer les iquitÃ©s, stopper plus sur la ligne de unsu"},
-  {id:39,date:"2026-03-19",type:"Collectif",coach:"Romain",duration:90,satisfaction:7,katas:["Unsu", "GojÅ«shiho ShÅ", "Empi"],techniques:[],notes:"Kiba centrÃ©, fudo jambe arriÃ¨re moins pliÃ©"},
-  {id:40,date:"2026-03-17",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Kanku ShÅ", "Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Unsu : stopper plus les shion tsuki, ramener de face sur la ligne sur les changements de jambes"},
-  {id:41,date:"2026-03-14",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "Gankaku"],techniques:[],notes:"Goju : marquer plus les 2 tsuki, plus prÃ©cis sur les mains"},
-  {id:42,date:"2026-03-14",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Kanku ShÅ", "Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku", "Supaenpei"],techniques:[],notes:"Sho : plus sobre sur les temps lents du dÃ©but. Unsu : marquer le troisiÃ¨me shion tsuki"},
-  {id:43,date:"2026-03-12",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "Kanku ShÅ", "Unsu"],techniques:[],notes:"Prendre son temps sur la ligne unsu"},
-  {id:44,date:"2026-03-10",type:"Collectif",coach:"",duration:120,satisfaction:6,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku", "Kanku ShÅ"],techniques:[],notes:"Plus prÃ©cise sur tout, descendre plus, rÃ©trÃ©cir les positions"},
-  {id:45,date:"2026-03-03",type:"Collectif",coach:"Autre",duration:90,satisfaction:7,katas:["Unsu", "GojÅ«shiho ShÅ", "Gankaku"],techniques:[],notes:"Plus d'expression, plus de rapiditÃ©"},
-  {id:46,date:"2026-02-28",type:"Collectif",coach:"Jonathan",duration:150,satisfaction:8,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu"],techniques:[],notes:"Frapper pic droit, armer correctement dans dai"},
-  {id:47,date:"2026-02-26",type:"Collectif",coach:"Romain",duration:120,satisfaction:6,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Kanku ShÅ", "Gankaku"],techniques:[],notes:""},
-  {id:48,date:"2026-02-26",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Kanku ShÅ", "GojÅ«shiho ShÅ", "Unsu"],techniques:[],notes:""},
-  {id:49,date:"2026-02-25",type:"Collectif",coach:"HelvÃ©tia",duration:150,satisfaction:7,katas:["GojÅ«shiho ShÅ", "Unsu"],techniques:[],notes:"Goju : attention ouverture pic et pic droit, temps lents, marquer plus le Mae gueri"},
-  {id:50,date:"2026-02-24",type:"Collectif",coach:"Autre",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "Kanku ShÅ", "Unsu", "Gankaku", "GojÅ«shiho Dai"],techniques:[],notes:"Ne pas remonter entre les positions, ouvrir les kiba, tirer les iquitÃ©s"},
+  {id:28,date:"2026-04-16",type:"Perso",coach:"Perso",duration:75,satisfaction:8,katas:["Gojūshiho Dai"],techniques:[],notes:"Moins sauter sur les pics"},
+  {id:29,date:"2026-04-15",type:"Collectif",coach:"Helvétia",duration:90,satisfaction:7,katas:["Gojūshiho Shō"],techniques:[],notes:"Tourner que sur le talon pour la rotation, ne pas trop taper sur les bras"},
+  {id:30,date:"2026-04-09",type:"Collectif",coach:"Romain",duration:90,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku", "Supaenpei"],techniques:[],notes:"Attention ne pas trop taper sur les pics, sur gankaku bien stopper le 2eme sur la ligne"},
+  {id:31,date:"2026-04-08",type:"Collectif",coach:"Helvétia",duration:75,satisfaction:8,katas:["Empi", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Fermer le regard, ne pas trop taper les pics goju"},
+  {id:32,date:"2026-04-07",type:"Collectif",coach:"Romain",duration:120,satisfaction:1,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu", "Gankaku", "Kanku Shō"],techniques:[],notes:"Rien — il ne s'est occupé que de Romane"},
+  {id:33,date:"2026-04-02",type:"Collectif",coach:"",duration:120,satisfaction:6,katas:["Empi", "Gojūshiho Dai", "Gojūshiho Shō", "Unsu"],techniques:[],notes:"Postures"},
+  {id:34,date:"2026-03-28",type:"Collectif",coach:"Olivier",duration:120,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku", "Supaenpei", "Kanku Shō"],techniques:[],notes:"Baisser les épaules, attention à pas rentrer les pieds sur kokutsu"},
+  {id:35,date:"2026-03-26",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Gojūshiho Dai", "Gankaku", "Unsu"],techniques:[],notes:"Garder toujours la tête droite ! Dai : ne pas taper sur pics, descendre le bras"},
+  {id:36,date:"2026-03-25",type:"Collectif",coach:"Helvétia",duration:75,satisfaction:8,katas:["Gojūshiho Shō", "Unsu"],techniques:[],notes:"Descendre moins, redresser le corps sur la ligne kiba"},
+  {id:37,date:"2026-03-24",type:"Collectif",coach:"Romain",duration:120,satisfaction:2,katas:[],techniques:[],notes:"TOUT ! 2h à entendre que rien n'était bien…"},
+  {id:38,date:"2026-03-21",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:7,katas:["Kanku Shō", "Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Tirer les iquités, stopper plus sur la ligne de unsu"},
+  {id:39,date:"2026-03-19",type:"Collectif",coach:"Romain",duration:90,satisfaction:7,katas:["Unsu", "Gojūshiho Shō", "Empi"],techniques:[],notes:"Kiba centré, fudo jambe arrière moins plié"},
+  {id:40,date:"2026-03-17",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Kanku Shō", "Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Unsu : stopper plus les shion tsuki, ramener de face sur la ligne sur les changements de jambes"},
+  {id:41,date:"2026-03-14",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gankaku"],techniques:[],notes:"Goju : marquer plus les 2 tsuki, plus précis sur les mains"},
+  {id:42,date:"2026-03-14",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Kanku Shō", "Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku", "Supaenpei"],techniques:[],notes:"Sho : plus sobre sur les temps lents du début. Unsu : marquer le troisième shion tsuki"},
+  {id:43,date:"2026-03-12",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Kanku Shō", "Unsu"],techniques:[],notes:"Prendre son temps sur la ligne unsu"},
+  {id:44,date:"2026-03-10",type:"Collectif",coach:"",duration:120,satisfaction:6,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku", "Kanku Shō"],techniques:[],notes:"Plus précise sur tout, descendre plus, rétrécir les positions"},
+  {id:45,date:"2026-03-03",type:"Collectif",coach:"Autre",duration:90,satisfaction:7,katas:["Unsu", "Gojūshiho Shō", "Gankaku"],techniques:[],notes:"Plus d'expression, plus de rapidité"},
+  {id:46,date:"2026-02-28",type:"Collectif",coach:"Jonathan",duration:150,satisfaction:8,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu"],techniques:[],notes:"Frapper pic droit, armer correctement dans dai"},
+  {id:47,date:"2026-02-26",type:"Collectif",coach:"Romain",duration:120,satisfaction:6,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Kanku Shō", "Gankaku"],techniques:[],notes:""},
+  {id:48,date:"2026-02-26",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Kanku Shō", "Gojūshiho Shō", "Unsu"],techniques:[],notes:""},
+  {id:49,date:"2026-02-25",type:"Collectif",coach:"Helvétia",duration:150,satisfaction:7,katas:["Gojūshiho Shō", "Unsu"],techniques:[],notes:"Goju : attention ouverture pic et pic droit, temps lents, marquer plus le Mae gueri"},
+  {id:50,date:"2026-02-24",type:"Collectif",coach:"Autre",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Kanku Shō", "Unsu", "Gankaku", "Gojūshiho Dai"],techniques:[],notes:"Ne pas remonter entre les positions, ouvrir les kiba, tirer les iquités"},
   {id:51,date:"2026-02-22",type:"Collectif",coach:"Jonathan",duration:90,satisfaction:7,katas:["Unsu"],techniques:[],notes:"Mae gueri et respiration, revoir timing dans le bunkai"},
-  {id:52,date:"2026-02-21",type:"Collectif",coach:"Jonathan",duration:60,satisfaction:7,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai"],techniques:[],notes:"Les Mae gueri, temps des pics, demi tour haito en 2 temps"},
-  {id:53,date:"2026-02-21",type:"Collectif",coach:"Olivier, Hugo, Romain",duration:120,satisfaction:7,katas:["GojÅ«shiho ShÅ", "Gankaku", "Kanku ShÅ"],techniques:[],notes:"Centrer les kiba, ouvrir plus grand armÃ©e des pics"},
-  {id:54,date:"2026-02-19",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu", "Empi"],techniques:[],notes:"Kiba trop grand"},
-  {id:55,date:"2026-02-18",type:"Perso",coach:"",duration:60,satisfaction:8,katas:["Unsu", "GojÅ«shiho Dai"],techniques:[],notes:"Corrections+sansei"},
-  {id:56,date:"2026-02-17",type:"Perso",coach:"Perso",duration:60,satisfaction:8,katas:["Unsu", "GojÅ«shiho Dai"],techniques:[],notes:"Dai : coordonnÃ©es les temps lents, attention pic sur le cÃ´tÃ©"},
-  {id:57,date:"2026-02-15",type:"Collectif",coach:"Jonathan",duration:120,satisfaction:8,katas:["Empi", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu"],techniques:[],notes:"Revoir le mouvement aprÃ¨s le 2eme Mae gueri de dai, attention respi trop shito"},
-  {id:58,date:"2026-02-14",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu", "Gankaku"],techniques:[],notes:"Kiba, mains plus tendues, Ã©paules en avant"},
-  {id:59,date:"2026-02-14",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:8,katas:["Kanku ShÅ", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Taper plus, plus technique, revoir les kiba"},
-  {id:60,date:"2026-02-12",type:"Collectif",coach:"",duration:120,satisfaction:6,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu", "Gankaku", "Kanku ShÅ"],techniques:[],notes:"Plus propre techniquement"},
-  {id:61,date:"2026-02-11",type:"Collectif",coach:"HelvÃ©tia",duration:90,satisfaction:8,katas:["Kanku ShÅ"],techniques:[],notes:"Ne pas pliÃ© jambe arriÃ¨re sur fudo, ne pas lever le pied en commenÃ§ant, armer yuko correctement"},
-  {id:62,date:"2026-02-03",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "Unsu"],techniques:[],notes:"Attention Ã©paules qui bougent, ouvrir plus avant de piquer goju"},
-  {id:63,date:"2026-01-27",type:"Collectif",coach:"Hugo",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu", "Supaenpei"],techniques:[],notes:"Plus stopper rythme ligne unsu, gros stop aprÃ¨s demi tour coup de pied supa"},
-  {id:64,date:"2026-01-26",type:"Perso",coach:"Perso",duration:45,satisfaction:7,katas:["Empi", "GojÅ«shiho ShÅ"],techniques:[],notes:"Rythme Ã©quipe"},
-  {id:65,date:"2026-01-22",type:"Collectif",coach:"Hugo",duration:120,satisfaction:9,katas:["Kanku ShÅ", "GojÅ«shiho ShÅ", "Unsu", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Stopper plus le rythme sur dai et sur la ligne de unsu"},
-  {id:66,date:"2026-01-20",type:"Collectif",coach:"Romain",duration:120,satisfaction:9,katas:["Unsu", "Kanku ShÅ", "GojÅ«shiho Dai", "GojÅ«shiho ShÅ"],techniques:[],notes:"Les Ã©paules vers l'avant, moins vite, pic linÃ©aire"},
-  {id:67,date:"2026-01-15",type:"Collectif",coach:"Romain",duration:90,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Ãpaule plus vers l'avant sur les pics, hanche de face sur dai"},
-  {id:68,date:"2026-01-13",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Supaenpei"],techniques:[],notes:"Moins sur l'arriÃ¨re, plus grand me avancÃ©e sur dai"},
-  {id:69,date:"2026-01-12",type:"Perso",coach:"Perso",duration:45,satisfaction:8,katas:["GojÅ«shiho ShÅ"],techniques:[],notes:"Rythme Ã©quipe de France"},
-  {id:70,date:"2026-01-05",type:"Perso",coach:"Perso, HelvÃ©tia",duration:60,satisfaction:8,katas:["GojÅ«shiho Dai"],techniques:[],notes:""},
-  {id:71,date:"2026-01-04",type:"Perso",coach:"",duration:90,satisfaction:6,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Respi"},
-  {id:72,date:"2026-01-02",type:"Visio",coach:"Perso, HelvÃ©tia",duration:70,satisfaction:8,katas:["Unsu"],techniques:[],notes:"Tomber mieux au sol, attention ramener bien avant changement de jambe sur la ligne"},
-  {id:73,date:"2025-12-30",type:"Perso",coach:"",duration:70,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Rythme et respiration"},
-  {id:74,date:"2025-12-14",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["GojÅ«shiho Dai", "Unsu"],techniques:["Mae Geri", "Yoko Geri"],notes:"Sur unsu : plus percutant sur la ligne. Dai : marquer plus le coup de coude"},
-  {id:75,date:"2025-12-14",type:"Collectif",coach:"Romain, Jonathan",duration:120,satisfaction:9,katas:["Unsu", "GojÅ«shiho ShÅ"],techniques:["Yoko Geri", "Mae Geri"],notes:"Unsu : balancer plus les shion tsuki plus vite et plus fort"},
-  {id:76,date:"2025-12-11",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ"],techniques:[],notes:"Sur unsu : balancer les tsuki, pose pied fort. Sur goju: monter les pics"},
-  {id:77,date:"2025-12-09",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["GojÅ«shiho ShÅ"],techniques:["Kihon (Bases)"],notes:"Armer plus en bas, moins vite, Ã©paule alignÃ©es"},
-  {id:78,date:"2025-12-02",type:"Collectif",coach:"Romain",duration:90,satisfaction:7,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku", "Supaenpei", "Unsu"],techniques:[],notes:"Calibrer mieux kiba, plus gainer"},
-  {id:79,date:"2025-12-01",type:"Perso",coach:"Perso",duration:60,satisfaction:8,katas:["GojÅ«shiho ShÅ", "Unsu"],techniques:[],notes:"Corrections"},
-  {id:80,date:"2025-11-29",type:"Collectif",coach:"Olivier",duration:120,satisfaction:6,katas:["GojÅ«shiho ShÅ", "Unsu"],techniques:[],notes:"Attention genou qui rentre sur zen, placement hanche sur fudo. Malade"},
-  {id:81,date:"2025-11-29",type:"Collectif",coach:"Olivier",duration:120,satisfaction:7,katas:["GojÅ«shiho Dai", "Unsu", "Gankaku"],techniques:[],notes:"RÃ©trÃ©cir kiba"},
-  {id:82,date:"2025-11-27",type:"Perso",coach:"HelvÃ©tia",duration:90,satisfaction:7,katas:["GojÅ«shiho ShÅ", "Unsu", "Kanku ShÅ"],techniques:[],notes:"Routine d'Ã©chauffement compÃ©tition"},
-  {id:83,date:"2025-11-25",type:"Collectif",coach:"Romain",duration:120,satisfaction:9,katas:["Gankaku", "GojÅ«shiho ShÅ"],techniques:[],notes:"Sur mandji mettre le bras arriÃ¨re parallÃ¨le au sol, sur goju stopper avant de lancer le Mae gueri"},
-  {id:84,date:"2025-11-22",type:"Collectif",coach:"Olivier, Yves",duration:120,satisfaction:7,katas:["GojÅ«shiho Dai", "GojÅ«shiho ShÅ", "Unsu", "Kanku ShÅ"],techniques:[],notes:"Lever le genoux pour Mae gueri, marquer plus les mandji"},
-  {id:85,date:"2025-11-22",type:"Collectif",coach:"Yves, Olivier",duration:120,satisfaction:7,katas:["GojÅ«shiho ShÅ"],techniques:["Kihon (Bases)", "Mae Geri"],notes:"Ne pas remonter sur transitions"},
-  {id:86,date:"2025-11-20",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu", "Kanku ShÅ", "Supaenpei"],techniques:[],notes:"Ne pas chercher le 2eme pic trop loin, descendre plus sur kiai des goju"},
-  {id:87,date:"2025-11-19",type:"Collectif",coach:"Jonathan",duration:75,satisfaction:6,katas:[],techniques:[],notes:"Point linÃ©aire, aller chercher moins loin sur gyaku tsuki"},
-  {id:88,date:"2025-11-18",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Supaenpei"],techniques:[],notes:"Ne pas aller chercher trop loin sur 2eme pic goju"},
-  {id:89,date:"2025-11-17",type:"Perso",coach:"HelvÃ©tia",duration:45,satisfaction:7,katas:["Unsu", "Kanku ShÅ"],techniques:[],notes:"En quart de kata -> Une fois doucement -> Une fois Ã  fond"},
-  {id:90,date:"2025-11-15",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["GojÅ«shiho Dai", "GojÅ«shiho ShÅ", "Unsu", "Kanku ShÅ"],techniques:[],notes:"Ouvrir plus pic goju, avoir les hanches de face sur les pics dai"},
-  {id:91,date:"2025-11-15",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "Unsu", "GojÅ«shiho Dai"],techniques:["Kihon (Bases)"],notes:"Ne pas rentrer l'Ã©paule sur Mae gueri, fermer les hanches sur les pics"},
-  {id:92,date:"2025-11-12",type:"Perso",coach:"Jonathan",duration:60,satisfaction:7,katas:["GojÅ«shiho ShÅ"],techniques:[],notes:"Travail sur les corrections de Jonathan"},
-  {id:93,date:"2025-11-11",type:"Collectif",coach:"Romain",duration:120,satisfaction:5,katas:[],techniques:["Gyaku Zuki", "Kihon (Bases)", "Shuto", "Uke"],notes:"Ãtre plus carrÃ© sur tout, rÃ©trÃ©cir tout, Ãªtre gaine tout le temps"},
-  {id:94,date:"2025-10-30",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku", "Supaenpei"],techniques:[],notes:"Sur suparinpei marquer plus le shuto, axer les pics des goju"},
-  {id:95,date:"2025-10-30",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Gankaku", "Supaenpei"],techniques:[],notes:"Sur suparinpei marquer plus le shuto, axer les pics des goju"},
-  {id:96,date:"2025-10-29",type:"PrivÃ©",coach:"HelvÃ©tia",duration:60,satisfaction:8,katas:["GojÅ«shiho ShÅ", "Gankaku", "Kanku ShÅ"],techniques:[],notes:"Armer les yuko sur gankaku, pas de temps d'appel sur pics goju"},
-  {id:97,date:"2025-10-28",type:"Collectif",coach:"Romain",duration:120,satisfaction:6,katas:["Kanku ShÅ", "Empi", "GojÅ«shiho ShÅ", "Unsu", "GojÅ«shiho Dai", "Gankaku"],techniques:[],notes:"Rotation plus rapide, taper plus"},
-  {id:98,date:"2025-10-28",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Kanku ShÅ", "Empi", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai"],techniques:[],notes:"Envoyer ++"},
-  {id:99,date:"2025-10-26",type:"Collectif",coach:"Yves",duration:120,satisfaction:8,katas:["GojÅ«shiho Dai", "Unsu", "Empi"],techniques:[],notes:"Plus fort les rotations kiba"},
-  {id:100,date:"2025-10-26",type:"Collectif",coach:"Yves",duration:120,satisfaction:8,katas:["GojÅ«shiho ShÅ", "Kanku ShÅ"],techniques:[],notes:"Attention au Mae gueri et aux alignements des Ã©paules"},
-  {id:101,date:"2025-10-24",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Supaenpei", "GojÅ«shiho Dai", "GojÅ«shiho ShÅ", "Unsu", "Empi"],techniques:[],notes:"Sur supa prendre moins de temps aprÃ¨s le kiai"},
-  {id:102,date:"2025-10-24",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Empi", "GojÅ«shiho ShÅ", "Unsu", "GojÅ«shiho Dai", "Gankaku", "Kanku ShÅ"],techniques:[],notes:"Attention kiba sur empi"},
-  {id:103,date:"2025-10-22",type:"PrivÃ©",coach:"HelvÃ©tia",duration:45,satisfaction:8,katas:["GojÅ«shiho ShÅ", "GojÅ«shiho Dai", "Unsu", "Gankaku"],techniques:[],notes:"Plus Ã©purer le travail au niveau des hanches"},
-  {id:104,date:"2025-10-22",type:"Collectif",coach:"HelvÃ©tia",duration:120,satisfaction:8,katas:["Empi", "Unsu", "GojÅ«shiho ShÅ", "GojÅ«shiho Dai"],techniques:[],notes:"Posture"},
-  {id:105,date:"2025-10-18",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:8,katas:["Kanku ShÅ", "Unsu", "GojÅ«shiho Dai", "GojÅ«shiho ShÅ", "Supaenpei", "Gankaku"],techniques:[],notes:"Mae gueri"},
-  {id:106,date:"2025-10-18",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Kanku ShÅ", "Gankaku", "GojÅ«shiho Dai", "Unsu", "GojÅ«shiho ShÅ", "Supaenpei"],techniques:[],notes:"ma posture, Mes pics de goju avec la hanche du bon cÃ´tÃ©"}
+  {id:52,date:"2026-02-21",type:"Collectif",coach:"Jonathan",duration:60,satisfaction:7,katas:["Gojūshiho Shō", "Gojūshiho Dai"],techniques:[],notes:"Les Mae gueri, temps des pics, demi tour haito en 2 temps"},
+  {id:53,date:"2026-02-21",type:"Collectif",coach:"Olivier, Hugo, Romain",duration:120,satisfaction:7,katas:["Gojūshiho Shō", "Gankaku", "Kanku Shō"],techniques:[],notes:"Centrer les kiba, ouvrir plus grand armée des pics"},
+  {id:54,date:"2026-02-19",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu", "Empi"],techniques:[],notes:"Kiba trop grand"},
+  {id:55,date:"2026-02-18",type:"Perso",coach:"",duration:60,satisfaction:8,katas:["Unsu", "Gojūshiho Dai"],techniques:[],notes:"Corrections+sansei"},
+  {id:56,date:"2026-02-17",type:"Perso",coach:"Perso",duration:60,satisfaction:8,katas:["Unsu", "Gojūshiho Dai"],techniques:[],notes:"Dai : coordonnées les temps lents, attention pic sur le côté"},
+  {id:57,date:"2026-02-15",type:"Collectif",coach:"Jonathan",duration:120,satisfaction:8,katas:["Empi", "Gojūshiho Shō", "Gojūshiho Dai", "Unsu"],techniques:[],notes:"Revoir le mouvement après le 2eme Mae gueri de dai, attention respi trop shito"},
+  {id:58,date:"2026-02-14",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu", "Gankaku"],techniques:[],notes:"Kiba, mains plus tendues, épaules en avant"},
+  {id:59,date:"2026-02-14",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:8,katas:["Kanku Shō", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Taper plus, plus technique, revoir les kiba"},
+  {id:60,date:"2026-02-12",type:"Collectif",coach:"",duration:120,satisfaction:6,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu", "Gankaku", "Kanku Shō"],techniques:[],notes:"Plus propre techniquement"},
+  {id:61,date:"2026-02-11",type:"Collectif",coach:"Helvétia",duration:90,satisfaction:8,katas:["Kanku Shō"],techniques:[],notes:"Ne pas plié jambe arrière sur fudo, ne pas lever le pied en commençant, armer yuko correctement"},
+  {id:62,date:"2026-02-03",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Unsu"],techniques:[],notes:"Attention épaules qui bougent, ouvrir plus avant de piquer goju"},
+  {id:63,date:"2026-01-27",type:"Collectif",coach:"Hugo",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu", "Supaenpei"],techniques:[],notes:"Plus stopper rythme ligne unsu, gros stop après demi tour coup de pied supa"},
+  {id:64,date:"2026-01-26",type:"Perso",coach:"Perso",duration:45,satisfaction:7,katas:["Empi", "Gojūshiho Shō"],techniques:[],notes:"Rythme équipe"},
+  {id:65,date:"2026-01-22",type:"Collectif",coach:"Hugo",duration:120,satisfaction:9,katas:["Kanku Shō", "Gojūshiho Shō", "Unsu", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Stopper plus le rythme sur dai et sur la ligne de unsu"},
+  {id:66,date:"2026-01-20",type:"Collectif",coach:"Romain",duration:120,satisfaction:9,katas:["Unsu", "Kanku Shō", "Gojūshiho Dai", "Gojūshiho Shō"],techniques:[],notes:"Les épaules vers l'avant, moins vite, pic linéaire"},
+  {id:67,date:"2026-01-15",type:"Collectif",coach:"Romain",duration:90,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Épaule plus vers l'avant sur les pics, hanche de face sur dai"},
+  {id:68,date:"2026-01-13",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Supaenpei"],techniques:[],notes:"Moins sur l'arrière, plus grand me avancée sur dai"},
+  {id:69,date:"2026-01-12",type:"Perso",coach:"Perso",duration:45,satisfaction:8,katas:["Gojūshiho Shō"],techniques:[],notes:"Rythme équipe de France"},
+  {id:70,date:"2026-01-05",type:"Perso",coach:"Perso, Helvétia",duration:60,satisfaction:8,katas:["Gojūshiho Dai"],techniques:[],notes:""},
+  {id:71,date:"2026-01-04",type:"Perso",coach:"",duration:90,satisfaction:6,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Respi"},
+  {id:72,date:"2026-01-02",type:"Visio",coach:"Perso, Helvétia",duration:70,satisfaction:8,katas:["Unsu"],techniques:[],notes:"Tomber mieux au sol, attention ramener bien avant changement de jambe sur la ligne"},
+  {id:73,date:"2025-12-30",type:"Perso",coach:"",duration:70,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Rythme et respiration"},
+  {id:74,date:"2025-12-14",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Gojūshiho Dai", "Unsu"],techniques:["Mae Geri", "Yoko Geri"],notes:"Sur unsu : plus percutant sur la ligne. Dai : marquer plus le coup de coude"},
+  {id:75,date:"2025-12-14",type:"Collectif",coach:"Romain, Jonathan",duration:120,satisfaction:9,katas:["Unsu", "Gojūshiho Shō"],techniques:["Yoko Geri", "Mae Geri"],notes:"Unsu : balancer plus les shion tsuki plus vite et plus fort"},
+  {id:76,date:"2025-12-11",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "Gojūshiho Shō"],techniques:[],notes:"Sur unsu : balancer les tsuki, pose pied fort. Sur goju: monter les pics"},
+  {id:77,date:"2025-12-09",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Gojūshiho Shō"],techniques:["Kihon (Bases)"],notes:"Armer plus en bas, moins vite, épaule alignées"},
+  {id:78,date:"2025-12-02",type:"Collectif",coach:"Romain",duration:90,satisfaction:7,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Gankaku", "Supaenpei", "Unsu"],techniques:[],notes:"Calibrer mieux kiba, plus gainer"},
+  {id:79,date:"2025-12-01",type:"Perso",coach:"Perso",duration:60,satisfaction:8,katas:["Gojūshiho Shō", "Unsu"],techniques:[],notes:"Corrections"},
+  {id:80,date:"2025-11-29",type:"Collectif",coach:"Olivier",duration:120,satisfaction:6,katas:["Gojūshiho Shō", "Unsu"],techniques:[],notes:"Attention genou qui rentre sur zen, placement hanche sur fudo. Malade"},
+  {id:81,date:"2025-11-29",type:"Collectif",coach:"Olivier",duration:120,satisfaction:7,katas:["Gojūshiho Dai", "Unsu", "Gankaku"],techniques:[],notes:"Rétrécir kiba"},
+  {id:82,date:"2025-11-27",type:"Perso",coach:"Helvétia",duration:90,satisfaction:7,katas:["Gojūshiho Shō", "Unsu", "Kanku Shō"],techniques:[],notes:"Routine d'échauffement compétition"},
+  {id:83,date:"2025-11-25",type:"Collectif",coach:"Romain",duration:120,satisfaction:9,katas:["Gankaku", "Gojūshiho Shō"],techniques:[],notes:"Sur mandji mettre le bras arrière parallèle au sol, sur goju stopper avant de lancer le Mae gueri"},
+  {id:84,date:"2025-11-22",type:"Collectif",coach:"Olivier, Yves",duration:120,satisfaction:7,katas:["Gojūshiho Dai", "Gojūshiho Shō", "Unsu", "Kanku Shō"],techniques:[],notes:"Lever le genoux pour Mae gueri, marquer plus les mandji"},
+  {id:85,date:"2025-11-22",type:"Collectif",coach:"Yves, Olivier",duration:120,satisfaction:7,katas:["Gojūshiho Shō"],techniques:["Kihon (Bases)", "Mae Geri"],notes:"Ne pas remonter sur transitions"},
+  {id:86,date:"2025-11-20",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu", "Kanku Shō", "Supaenpei"],techniques:[],notes:"Ne pas chercher le 2eme pic trop loin, descendre plus sur kiai des goju"},
+  {id:87,date:"2025-11-19",type:"Collectif",coach:"Jonathan",duration:75,satisfaction:6,katas:[],techniques:[],notes:"Point linéaire, aller chercher moins loin sur gyaku tsuki"},
+  {id:88,date:"2025-11-18",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Supaenpei"],techniques:[],notes:"Ne pas aller chercher trop loin sur 2eme pic goju"},
+  {id:89,date:"2025-11-17",type:"Perso",coach:"Helvétia",duration:45,satisfaction:7,katas:["Unsu", "Kanku Shō"],techniques:[],notes:"En quart de kata -> Une fois doucement -> Une fois à fond"},
+  {id:90,date:"2025-11-15",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Gojūshiho Dai", "Gojūshiho Shō", "Unsu", "Kanku Shō"],techniques:[],notes:"Ouvrir plus pic goju, avoir les hanches de face sur les pics dai"},
+  {id:91,date:"2025-11-15",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Unsu", "Gojūshiho Dai"],techniques:["Kihon (Bases)"],notes:"Ne pas rentrer l'épaule sur Mae gueri, fermer les hanches sur les pics"},
+  {id:92,date:"2025-11-12",type:"Perso",coach:"Jonathan",duration:60,satisfaction:7,katas:["Gojūshiho Shō"],techniques:[],notes:"Travail sur les corrections de Jonathan"},
+  {id:93,date:"2025-11-11",type:"Collectif",coach:"Romain",duration:120,satisfaction:5,katas:[],techniques:["Gyaku Zuki", "Kihon (Bases)", "Shuto", "Uke"],notes:"Être plus carré sur tout, rétrécir tout, être gaine tout le temps"},
+  {id:94,date:"2025-10-30",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku", "Supaenpei"],techniques:[],notes:"Sur suparinpei marquer plus le shuto, axer les pics des goju"},
+  {id:95,date:"2025-10-30",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Unsu", "Gojūshiho Shō", "Gojūshiho Dai", "Gankaku", "Supaenpei"],techniques:[],notes:"Sur suparinpei marquer plus le shuto, axer les pics des goju"},
+  {id:96,date:"2025-10-29",type:"Privé",coach:"Helvétia",duration:60,satisfaction:8,katas:["Gojūshiho Shō", "Gankaku", "Kanku Shō"],techniques:[],notes:"Armer les yuko sur gankaku, pas de temps d'appel sur pics goju"},
+  {id:97,date:"2025-10-28",type:"Collectif",coach:"Romain",duration:120,satisfaction:6,katas:["Kanku Shō", "Empi", "Gojūshiho Shō", "Unsu", "Gojūshiho Dai", "Gankaku"],techniques:[],notes:"Rotation plus rapide, taper plus"},
+  {id:98,date:"2025-10-28",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Kanku Shō", "Empi", "Gojūshiho Shō", "Gojūshiho Dai"],techniques:[],notes:"Envoyer ++"},
+  {id:99,date:"2025-10-26",type:"Collectif",coach:"Yves",duration:120,satisfaction:8,katas:["Gojūshiho Dai", "Unsu", "Empi"],techniques:[],notes:"Plus fort les rotations kiba"},
+  {id:100,date:"2025-10-26",type:"Collectif",coach:"Yves",duration:120,satisfaction:8,katas:["Gojūshiho Shō", "Kanku Shō"],techniques:[],notes:"Attention au Mae gueri et aux alignements des épaules"},
+  {id:101,date:"2025-10-24",type:"Collectif",coach:"Romain",duration:120,satisfaction:8,katas:["Supaenpei", "Gojūshiho Dai", "Gojūshiho Shō", "Unsu", "Empi"],techniques:[],notes:"Sur supa prendre moins de temps après le kiai"},
+  {id:102,date:"2025-10-24",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Empi", "Gojūshiho Shō", "Unsu", "Gojūshiho Dai", "Gankaku", "Kanku Shō"],techniques:[],notes:"Attention kiba sur empi"},
+  {id:103,date:"2025-10-22",type:"Privé",coach:"Helvétia",duration:45,satisfaction:8,katas:["Gojūshiho Shō", "Gojūshiho Dai", "Unsu", "Gankaku"],techniques:[],notes:"Plus épurer le travail au niveau des hanches"},
+  {id:104,date:"2025-10-22",type:"Collectif",coach:"Helvétia",duration:120,satisfaction:8,katas:["Empi", "Unsu", "Gojūshiho Shō", "Gojūshiho Dai"],techniques:[],notes:"Posture"},
+  {id:105,date:"2025-10-18",type:"Collectif",coach:"Romain, Olivier",duration:120,satisfaction:8,katas:["Kanku Shō", "Unsu", "Gojūshiho Dai", "Gojūshiho Shō", "Supaenpei", "Gankaku"],techniques:[],notes:"Mae gueri"},
+  {id:106,date:"2025-10-18",type:"Collectif",coach:"Romain",duration:120,satisfaction:7,katas:["Kanku Shō", "Gankaku", "Gojūshiho Dai", "Unsu", "Gojūshiho Shō", "Supaenpei"],techniques:[],notes:"ma posture, Mes pics de goju avec la hanche du bon côté"}
 ];
 
 const mockWeekActivity = [
@@ -137,83 +137,83 @@ const mockWeekActivity = [
 ];
 
 const mockCompetitions = [
-  { id:1, date:"2026-05-09", name:"Championnat de France Ãquipe SÃ©nior", lieu:"Cormeilles-En-Parisis", coach:"Olivier", result:"MÃ©daille d'Argent", hasVideo:true,
+  { id:1, date:"2026-05-09", name:"Championnat de France Équipe Sénior", lieu:"Cormeilles-En-Parisis", coach:"Olivier", result:"Médaille d'Argent", hasVideo:true,
     tours:[
-      { num:1, name:"Demi Finale", kata:"GojÅ«shiho ShÅ", score:"5-0", ok:true, note:"Bonnes sensations" },
-      { num:2, name:"Finale", kata:"Unsu", score:"1-4", ok:false, note:"un peu stressÃ©e et pas trÃ¨s stable mais bien sur le bunkai" },
+      { num:1, name:"Demi Finale", kata:"Gojūshiho Shō", score:"5-0", ok:true, note:"Bonnes sensations" },
+      { num:2, name:"Finale", kata:"Unsu", score:"1-4", ok:false, note:"un peu stressée et pas très stable mais bien sur le bunkai" },
     ]
   },
-  { id:2, date:"2026-04-12", name:"Championnat de France Ãquipe", lieu:"Mulhouse", coach:"Romain", result:"MÃ©daille d'Or", hasVideo:true,
+  { id:2, date:"2026-04-12", name:"Championnat de France Équipe", lieu:"Mulhouse", coach:"Romain", result:"Médaille d'Or", hasVideo:true,
     tours:[
-      { num:1, name:"1er tour", kata:"GojÅ«shiho Dai", score:"5-0", ok:true, note:"" },
-      { num:2, name:"Demi Finale", kata:"GojÅ«shiho ShÅ", score:"3-2", ok:true, note:"" },
+      { num:1, name:"1er tour", kata:"Gojūshiho Dai", score:"5-0", ok:true, note:"" },
+      { num:2, name:"Demi Finale", kata:"Gojūshiho Shō", score:"3-2", ok:true, note:"" },
       { num:3, name:"Finale", kata:"Unsu", score:"5-0", ok:true, note:"" },
     ]
   },
-  { id:3, date:"2026-04-11", name:"Championnat de France Indiv", lieu:"Mulhouse", coach:"Olivier", result:"DÃ©faite au 3Ã¨me tour", hasVideo:true,
+  { id:3, date:"2026-04-11", name:"Championnat de France Indiv", lieu:"Mulhouse", coach:"Olivier", result:"Défaite au 3ème tour", hasVideo:true,
     tours:[
       { num:1, name:"1er tour", kata:"Unsu", score:"5-0", ok:true, note:"" },
-      { num:2, name:"2Ã¨me tour", kata:"GojÅ«shiho ShÅ", score:"5-0", ok:true, note:"" },
-      { num:3, name:"HuitiÃ¨me de Finale", kata:"GojÅ«shiho Dai", score:"2-3", ok:false, note:"" },
+      { num:2, name:"2ème tour", kata:"Gojūshiho Shō", score:"5-0", ok:true, note:"" },
+      { num:3, name:"Huitième de Finale", kata:"Gojūshiho Dai", score:"2-3", ok:false, note:"" },
     ]
   },
-  { id:4, date:"2026-03-08", name:"Liga Nacional 2026", lieu:"Ciudad Real Espagne", coach:"Autre", result:"Perdu au 2Ã¨me tour", hasVideo:true,
-    notes:"Pas de respi donc dur d'Ãªtre a fond. DÃ©Ã§ue d'avoir pas vraiment pu Ãªtre a fond.",
+  { id:4, date:"2026-03-08", name:"Liga Nacional 2026", lieu:"Ciudad Real Espagne", coach:"Autre", result:"Perdu au 2ème tour", hasVideo:true,
+    notes:"Pas de respi donc dur d'être a fond. Déçue d'avoir pas vraiment pu être a fond.",
     tours:[
-      { num:1, name:"1er tour", kata:"GojÅ«shiho ShÅ", score:"3-2", ok:true, note:"Contente de mon Kata, j'ai rÃ©ussi Ã  appliquer des corrections. Peu d'Ã©nergie" },
-      { num:2, name:"2Ã¨me tour", kata:"Unsu", score:"2-3", ok:false, note:"TrÃ¨s peu d'Ã©nergie mais contente de shion tsuki" },
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"3-2", ok:true, note:"Contente de mon Kata, j'ai réussi à appliquer des corrections. Peu d'énergie" },
+      { num:2, name:"2ème tour", kata:"Unsu", score:"2-3", ok:false, note:"Très peu d'énergie mais contente de shion tsuki" },
     ]
   },
-  { id:5, date:"2026-01-17", name:"Milon Cup Junior", lieu:"Luxembourg", coach:"Romain", result:"MÃ©daille de Bronze", hasVideo:true,
+  { id:5, date:"2026-01-17", name:"Milon Cup Junior", lieu:"Luxembourg", coach:"Romain", result:"Médaille de Bronze", hasVideo:true,
     tours:[
-      { num:1, name:"1er tour", kata:"GojÅ«shiho Dai", score:"0-5", ok:false, note:"Contente de mon Kata malgrÃ© le dÃ©sÃ©quilibre" },
-      { num:2, name:"Finale de Bronze", kata:"Supaenpei", score:"5-0", ok:true, note:"Ã part le retourner un peu ratÃ© je l'ai trouvÃ© bien" },
+      { num:1, name:"1er tour", kata:"Gojūshiho Dai", score:"0-5", ok:false, note:"Contente de mon Kata malgré le déséquilibre" },
+      { num:2, name:"Finale de Bronze", kata:"Supaenpei", score:"5-0", ok:true, note:"À part le retourner un peu raté je l'ai trouvé bien" },
     ]
   },
-  { id:6, date:"2026-01-17", name:"Milon Cup SÃ©nior", lieu:"Luxembourg", coach:"Romain", result:"MÃ©daille d'argent", hasVideo:true,
-    notes:"Pour l'Ã©chauffement j'ai fait ce qu'on a fait Ã  Venise : mobilitÃ©, course, Kata entier doucement, puis petites parties a fond.",
+  { id:6, date:"2026-01-17", name:"Milon Cup Sénior", lieu:"Luxembourg", coach:"Romain", result:"Médaille d'argent", hasVideo:true,
+    notes:"Pour l'échauffement j'ai fait ce qu'on a fait à Venise : mobilité, course, Kata entier doucement, puis petites parties a fond.",
     tours:[
-      { num:1, name:"1er tour", kata:"GojÅ«shiho Dai", score:"3-2", ok:true, note:"Je suis contente pour un premier tour" },
-      { num:2, name:"2Ã¨me tour", kata:"Supaenpei", score:"4-1", ok:true, note:"TrÃ¨s bonnes sensations" },
-      { num:3, name:"Demi Finale", kata:"GojÅ«shiho ShÅ", score:"3-2", ok:true, note:"Pas fan du dÃ©but et les pics un peu caca" },
-      { num:4, name:"Finale", kata:"Gankaku", score:"2-3", ok:false, note:"Un peu lente peut Ãªtre trop dans le boum boum" },
+      { num:1, name:"1er tour", kata:"Gojūshiho Dai", score:"3-2", ok:true, note:"Je suis contente pour un premier tour" },
+      { num:2, name:"2ème tour", kata:"Supaenpei", score:"4-1", ok:true, note:"Très bonnes sensations" },
+      { num:3, name:"Demi Finale", kata:"Gojūshiho Shō", score:"3-2", ok:true, note:"Pas fan du début et les pics un peu caca" },
+      { num:4, name:"Finale", kata:"Gankaku", score:"2-3", ok:false, note:"Un peu lente peut être trop dans le boum boum" },
     ]
   },
-  { id:7, date:"2025-12-04", name:"Youth League", lieu:"Venise", coach:"HelvÃ©tia", result:"11Ã¨me", hasVideo:false,
+  { id:7, date:"2025-12-04", name:"Youth League", lieu:"Venise", coach:"Helvétia", result:"11ème", hasVideo:false,
     notes:"Contente des mes 1ers tours mais je reste sur ma faim...",
     tours:[
-      { num:1, name:"1er tour", kata:"GojÅ«shiho ShÅ", score:"23.3", ok:true, note:"Bonnes sensations, mais trÃ¨s stressÃ©e" },
-      { num:2, name:"2Ã¨me tour", kata:"GojÅ«shiho Dai", score:"23.1", ok:true, note:"TrÃ¨s fiÃ¨re" },
-      { num:3, name:"HuitiÃ¨me de Finale", kata:"Supaenpei", score:"22.8", ok:false, note:"Fatigue ressentie Ã  la fin du kata" },
-      { num:4, name:"1er tour de repÃªchage", kata:"Unsu", score:"21.4", ok:false, note:"DÃ©Ã§ue" },
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"23.3", ok:true, note:"Bonnes sensations, mais très stressée" },
+      { num:2, name:"2ème tour", kata:"Gojūshiho Dai", score:"23.1", ok:true, note:"Très fière" },
+      { num:3, name:"Huitième de Finale", kata:"Supaenpei", score:"22.8", ok:false, note:"Fatigue ressentie à la fin du kata" },
+      { num:4, name:"1er tour de repêchage", kata:"Unsu", score:"21.4", ok:false, note:"Déçue" },
     ]
   },
-  { id:8, date:"2025-11-09", name:"Championnat DÃ©partemental", lieu:"Ãpinay-Sous-SÃ©nart", coach:"Hugo", result:"MÃ©daille d'Or", hasVideo:true,
+  { id:8, date:"2025-11-09", name:"Championnat Départemental", lieu:"Épinay-Sous-Sénart", coach:"Hugo", result:"Médaille d'Or", hasVideo:true,
     tours:[
-      { num:1, name:"Finale", kata:"GojÅ«shiho ShÅ", score:"5-0", ok:true, note:"" },
+      { num:1, name:"Finale", kata:"Gojūshiho Shō", score:"5-0", ok:true, note:"" },
     ]
   },
-  { id:9, date:"2025-11-02", name:"Coupe de France Ãquipe", lieu:"Lille", coach:"Romain", result:"MÃ©daille d'Argent", hasVideo:false,
+  { id:9, date:"2025-11-02", name:"Coupe de France Équipe", lieu:"Lille", coach:"Romain", result:"Médaille d'Argent", hasVideo:false,
     tours:[
-      { num:1, name:"Demi Finale", kata:"GojÅ«shiho ShÅ", score:"5-0", ok:true, note:"" },
-      { num:2, name:"Finale", kata:"Kanku ShÅ", score:"0-5", ok:false, note:"" },
+      { num:1, name:"Demi Finale", kata:"Gojūshiho Shō", score:"5-0", ok:true, note:"" },
+      { num:2, name:"Finale", kata:"Kanku Shō", score:"0-5", ok:false, note:"" },
     ]
   },
-  { id:10, date:"2025-11-01", name:"Coupe de France Junior", lieu:"Lille", coach:"Olivier", result:"DÃ©faite au 1er tour", hasVideo:false,
+  { id:10, date:"2025-11-01", name:"Coupe de France Junior", lieu:"Lille", coach:"Olivier", result:"Défaite au 1er tour", hasVideo:false,
     tours:[
-      { num:1, name:"1er tour", kata:"GojÅ«shiho ShÅ", score:"2-3", ok:false, note:"" },
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"2-3", ok:false, note:"" },
     ]
   },
-  { id:11, date:"2025-10-05", name:"Liga Nacional", lieu:"Langreo", coach:"Autre", result:"DÃ©faite au 1er tour", hasVideo:true,
+  { id:11, date:"2025-10-05", name:"Liga Nacional", lieu:"Langreo", coach:"Autre", result:"Défaite au 1er tour", hasVideo:true,
     tours:[
-      { num:1, name:"1er tour", kata:"GojÅ«shiho ShÅ", score:"2-3", ok:false, note:"" },
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"2-3", ok:false, note:"" },
     ]
   },
-  { id:12, date:"2025-09-26", name:"Lion Cup", lieu:"Strassen", coach:"Olivier", result:"MÃ©daille d'Argent", hasVideo:true,
+  { id:12, date:"2025-09-26", name:"Lion Cup", lieu:"Strassen", coach:"Olivier", result:"Médaille d'Argent", hasVideo:true,
     tours:[
-      { num:1, name:"1er tour", kata:"GojÅ«shiho ShÅ", score:"22.8", ok:true, note:"" },
-      { num:2, name:"2Ã¨me tour", kata:"Supaenpei", score:"23", ok:true, note:"" },
-      { num:3, name:"Demi Finale", kata:"GojÅ«shiho Dai", score:"23.6", ok:true, note:"" },
+      { num:1, name:"1er tour", kata:"Gojūshiho Shō", score:"22.8", ok:true, note:"" },
+      { num:2, name:"2ème tour", kata:"Supaenpei", score:"23", ok:true, note:"" },
+      { num:3, name:"Demi Finale", kata:"Gojūshiho Dai", score:"23.6", ok:true, note:"" },
       { num:4, name:"Finale", kata:"Gankaku", score:"23.3", ok:false, note:"" },
     ]
   },
@@ -221,24 +221,24 @@ const mockCompetitions = [
 
 const mockCorrections = [
   { id:2, date:"2025-10-19", trainer:"Jonathan", kata:"Gankaku", content:"Premier coup de coude insuffisant, regarder en bas avant de tourner" },
-  { id:3, date:"2025-10-18", trainer:"Olivier", kata:"Unsu", content:"IkitÃ© trop bas, stabiliser le bunkai final" },
+  { id:3, date:"2025-10-18", trainer:"Olivier", kata:"Unsu", content:"Ikité trop bas, stabiliser le bunkai final" },
 ];
 
 const mockTeam = {
-  "MÃ¨re": [
+  "Mère": [
     { name:"Isabelle Voratovic", email:"isaphoenix@hotmail.fr", phone:"06 10 03 68 28", online:true },
     { name:"Alexandre Voratovic", email:"a.voratovic@isipatrimoine.com", phone:"07 77 05 93 23", online:true },
   ],
-  "EntraÃ®neur": [
-    { name:"HelvÃ©tia Taily", email:"helvetiataily@gmail.com", phone:"07 67 64 20 15", online:true },
+  "Entraîneur": [
+    { name:"Helvétia Taily", email:"helvetiataily@gmail.com", phone:"07 67 64 20 15", online:true },
   ],
-  "AthlÃ¨te": [
+  "Athlète": [
     { name:"Iliana Voratovic", email:"ilianavoratovic@gmail.com", phone:"06 36 49 01 70", online:false },
   ],
 };
 
 const mockPhysique = [
-  // PPG / Full Body (Kevin) â 24 sÃ©ances
+  // PPG / Full Body (Kevin) — 24 séances
   { id:1, date:"2026-06-05", type:"PPG", subType:"Full Body", duration:75, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
   { id:2, date:"2026-06-01", type:"PPG", subType:"Full Body", duration:80, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
   { id:3, date:"2026-05-25", type:"PPG", subType:"Full Body", duration:75, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
@@ -259,34 +259,34 @@ const mockPhysique = [
   { id:18, date:"2026-04-03", type:"PPG", subType:"Full Body", duration:65, satisfaction:7, coach:"Kevin", notes:"", programme:"" },
   { id:19, date:"2026-04-02", type:"PPG", subType:"Full Body", duration:60, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
   { id:20, date:"2026-03-29", type:"PPG", subType:"Full Body", duration:70, satisfaction:8, coach:"Kevin", notes:"", programme:"" },
-  { id:21, date:"2026-03-23", type:"PPG", subType:"Full Body", duration:70, satisfaction:8, coach:"Kevin", notes:"ProblÃ¨me de grip", programme:"" },
+  { id:21, date:"2026-03-23", type:"PPG", subType:"Full Body", duration:70, satisfaction:8, coach:"Kevin", notes:"Problème de grip", programme:"" },
   { id:22, date:"2026-03-20", type:"PPG", subType:"Full Body", duration:60, satisfaction:7, coach:"Kevin", notes:"", programme:"" },
   { id:23, date:"2026-03-18", type:"PPG", subType:"Full Body", duration:60, satisfaction:7, coach:"Kevin", notes:"", programme:"" },
-  { id:24, date:"2025-12-31", type:"PPG", subType:"Full Body", duration:120, satisfaction:8, coach:"HelvÃ©tia", notes:"SÃ©ance Full Body", programme:"SÃ©ance Full Body - Gainage & StabilitÃ©" },
-  // HaltÃ©rophilie (6 sÃ©ances)
-  { id:25, date:"2026-03-11", type:"HaltÃ©rophilie", subType:"HaltÃ©rophilie", duration:60, satisfaction:8, coach:"HelvÃ©tia", notes:"Mal aux bras ð", programme:"HaltÃ©rophilie" },
-  { id:26, date:"2026-02-16", type:"HaltÃ©rophilie", subType:"HaltÃ©rophilie", duration:50, satisfaction:8, coach:"HelvÃ©tia", notes:"Ã§a fait du bien de refaire du physique ð", programme:"HaltÃ©rophilie" },
-  { id:27, date:"2025-12-08", type:"HaltÃ©rophilie", subType:"HaltÃ©rophilie", duration:60, satisfaction:8, coach:"HelvÃ©tia", notes:"Mal aux mains ð", programme:"HaltÃ©rophilie" },
-  { id:28, date:"2025-11-26", type:"HaltÃ©rophilie", subType:"HaltÃ©rophilie", duration:60, satisfaction:8, coach:"HelvÃ©tia", notes:"", programme:"HaltÃ©rophilie" },
-  { id:29, date:"2025-11-10", type:"HaltÃ©rophilie", subType:"HaltÃ©rophilie", duration:60, satisfaction:7, coach:"HelvÃ©tia", notes:"", programme:"HaltÃ©rophilie" },
-  { id:30, date:"2025-10-21", type:"HaltÃ©rophilie", subType:"HaltÃ©rophilie", duration:60, satisfaction:7, coach:"HelvÃ©tia", notes:"", programme:"HaltÃ©rophilie" },
-  // Endurance (5 sÃ©ances)
-  { id:31, date:"2026-03-02", type:"Endurance", subType:"Endurance", duration:60, satisfaction:8, coach:"Michel", distance:"6km", intensite:"ÃlevÃ©e", notes:"IntensitÃ© courte et rÃ©pÃ©tÃ©e" },
-  { id:32, date:"2026-02-24", type:"Endurance", subType:"Endurance", duration:120, satisfaction:8, coach:"JÃ©rÃ©mie", notes:"Travail de vitesse sur courte distance, puis travail sur les 5 Kata" },
+  { id:24, date:"2025-12-31", type:"PPG", subType:"Full Body", duration:120, satisfaction:8, coach:"Helvétia", notes:"Séance Full Body", programme:"Séance Full Body - Gainage & Stabilité" },
+  // Haltérophilie (6 séances)
+  { id:25, date:"2026-03-11", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:8, coach:"Helvétia", notes:"Mal aux bras 😂", programme:"Haltérophilie" },
+  { id:26, date:"2026-02-16", type:"Haltérophilie", subType:"Haltérophilie", duration:50, satisfaction:8, coach:"Helvétia", notes:"ça fait du bien de refaire du physique 😅", programme:"Haltérophilie" },
+  { id:27, date:"2025-12-08", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:8, coach:"Helvétia", notes:"Mal aux mains 😂", programme:"Haltérophilie" },
+  { id:28, date:"2025-11-26", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:8, coach:"Helvétia", notes:"", programme:"Haltérophilie" },
+  { id:29, date:"2025-11-10", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:7, coach:"Helvétia", notes:"", programme:"Haltérophilie" },
+  { id:30, date:"2025-10-21", type:"Haltérophilie", subType:"Haltérophilie", duration:60, satisfaction:7, coach:"Helvétia", notes:"", programme:"Haltérophilie" },
+  // Endurance (5 séances)
+  { id:31, date:"2026-03-02", type:"Endurance", subType:"Endurance", duration:60, satisfaction:8, coach:"Michel", distance:"6km", intensite:"Élevée", notes:"Intensité courte et répétée" },
+  { id:32, date:"2026-02-24", type:"Endurance", subType:"Endurance", duration:120, satisfaction:8, coach:"Jérémie", notes:"Travail de vitesse sur courte distance, puis travail sur les 5 Kata" },
   { id:33, date:"2026-02-18", type:"Endurance", subType:"Endurance", duration:30, satisfaction:7, coach:"Michel", notes:"Relancer le cardio sans surcharge" },
-  { id:34, date:"2025-10-27", type:"Endurance", subType:"Endurance", duration:60, satisfaction:6, coach:"Michel", notes:"AffÃ»tage" },
+  { id:34, date:"2025-10-27", type:"Endurance", subType:"Endurance", duration:60, satisfaction:6, coach:"Michel", notes:"Affûtage" },
   { id:35, date:"2025-10-20", type:"Endurance", subType:"Endurance", duration:60, satisfaction:7, coach:"Michel", notes:"Relancer le cardio sans surcharge" },
-  // ExplosivitÃ© (3 sÃ©ances)
-  { id:36, date:"2026-02-23", type:"ExplosivitÃ©", subType:"ExplosivitÃ©", duration:75, satisfaction:8, coach:"HelvÃ©tia", notes:"HALTÃRO + RENFO â Hang Power Clean, Front Squat, Push Press..." },
-  { id:37, date:"2025-11-24", type:"ExplosivitÃ©", subType:"ExplosivitÃ©", duration:75, satisfaction:8, coach:"HelvÃ©tia", notes:"HALTÃRO + RENFO" },
-  { id:38, date:"2025-10-23", type:"ExplosivitÃ©", subType:"ExplosivitÃ©", duration:60, satisfaction:7, coach:"Michel", notes:"RÃ©sistance Explosive â Circuit burpees/pompes/kihon" },
-  // Technique (1 sÃ©ance)
-  { id:39, date:"2025-11-23", type:"Technique", subType:"Technique", duration:60, satisfaction:7, coach:"Michel", notes:"Tests Physiques â Epreuve 1=9'48 Epreuve 5=VMA 13,3km/h" },
-  // CompÃ©t (1 sÃ©ance)
-  { id:40, date:"2026-02-24", type:"CompÃ©tition", subType:"CompÃ©tition", duration:120, satisfaction:7, coach:"JÃ©rÃ©mie", notes:"Explo + RÃ©visions gammes" },
-  // Full Body sÃ©parÃ© (2 sÃ©ances dÃ©jÃ  dans PPG mais avec type distinct)
-  { id:41, date:"2025-12-12", type:"Full Body", subType:"Full Body", duration:60, satisfaction:7, coach:"", notes:"Travail de gainage : Ãlastique ou cÃ¢ble Ã  hauteur de poitrine pour Pallof Press" },
-  { id:42, date:"2026-05-31", type:"Full Body", subType:"Full Body", duration:120, satisfaction:8, coach:"HelvÃ©tia", notes:"" },
+  // Explosivité (3 séances)
+  { id:36, date:"2026-02-23", type:"Explosivité", subType:"Explosivité", duration:75, satisfaction:8, coach:"Helvétia", notes:"HALTÉRO + RENFO — Hang Power Clean, Front Squat, Push Press..." },
+  { id:37, date:"2025-11-24", type:"Explosivité", subType:"Explosivité", duration:75, satisfaction:8, coach:"Helvétia", notes:"HALTÉRO + RENFO" },
+  { id:38, date:"2025-10-23", type:"Explosivité", subType:"Explosivité", duration:60, satisfaction:7, coach:"Michel", notes:"Résistance Explosive — Circuit burpees/pompes/kihon" },
+  // Technique (1 séance)
+  { id:39, date:"2025-11-23", type:"Technique", subType:"Technique", duration:60, satisfaction:7, coach:"Michel", notes:"Tests Physiques — Epreuve 1=9'48 Epreuve 5=VMA 13,3km/h" },
+  // Compét (1 séance)
+  { id:40, date:"2026-02-24", type:"Compétition", subType:"Compétition", duration:120, satisfaction:7, coach:"Jérémie", notes:"Explo + Révisions gammes" },
+  // Full Body séparé (2 séances déjà dans PPG mais avec type distinct)
+  { id:41, date:"2025-12-12", type:"Full Body", subType:"Full Body", duration:60, satisfaction:7, coach:"", notes:"Travail de gainage : Élastique ou câble à hauteur de poitrine pour Pallof Press" },
+  { id:42, date:"2026-05-31", type:"Full Body", subType:"Full Body", duration:120, satisfaction:8, coach:"Helvétia", notes:"" },
 ];
 
 function useIsMobile() {
@@ -359,14 +359,14 @@ const Toast = ({ message, onClose }) => (
     display:"flex", alignItems:"flex-start", gap:10 }}>
     <Bell size={16} style={{ flexShrink:0, marginTop:2 }}/>
     <div style={{ flex:1 }}>
-      <div style={{ fontWeight:700, fontSize:13 }}>ð¥ SÃ©ance enregistrÃ©e !</div>
+      <div style={{ fontWeight:700, fontSize:13 }}>🥋 Séance enregistrée !</div>
       <div style={{ fontSize:12, opacity:0.85, marginTop:2 }}>{message}</div>
     </div>
-    <button onClick={onClose} style={{ background:"none", border:"none", color:"#fff", cursor:"pointer" }}>â</button>
+    <button onClick={onClose} style={{ background:"none", border:"none", color:"#fff", cursor:"pointer" }}>✕</button>
   </div>
 );
 
-// âââ DASHBOARD âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── DASHBOARD ───────────────────────────────────────────────────────────────
 const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSessions }) => {
   const _now = new Date();
   const _monOff = (_now.getDay() + 6) % 7;
@@ -382,9 +382,9 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
     return d >= startOfWeek && d <= endOfWeek;
   });
 
-  const _MONTHS = ["jan.","fÃ©v.","mar.","avr.","mai","juin","juil.","aoÃ»t","sep.","oct.","nov.","dÃ©c."];
+  const _MONTHS = ["jan.","fév.","mar.","avr.","mai","juin","juil.","août","sep.","oct.","nov.","déc."];
   const _fmt = (d) => `${d.getDate()} ${_MONTHS[d.getMonth()]}`;
-  const weekLabel = `${_fmt(startOfWeek)} â ${_fmt(endOfWeek)} ${endOfWeek.getFullYear()}`;
+  const weekLabel = `${_fmt(startOfWeek)} – ${_fmt(endOfWeek)} ${endOfWeek.getFullYear()}`;
 
   const _days = ["lun.","mar.","mer.","jeu.","ven.","sam.","dim."];
   const weekActivity = _days.map((day, i) => {
@@ -417,7 +417,7 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
     <div>
       <div style={{ background:"linear-gradient(135deg, "+C.primary+" 0%, "+C.accent+" 100%)",
         borderRadius:16, padding:"24px 20px", color:"#fff", marginBottom:20 }}>
-        <div style={{ fontSize:22, fontWeight:800 }}>Bonjour Iliana ð</div>
+        <div style={{ fontSize:22, fontWeight:800 }}>Bonjour Iliana 👋</div>
         <div style={{ fontSize:13, opacity:0.85, marginTop:4 }}>Continuez votre progression vers l'excellence</div>
       </div>
 
@@ -427,8 +427,8 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
           <span style={{ color:C.muted, fontSize:11 }}>{weekLabel}</span>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:8, marginBottom:12 }}>
-          {[{label:"Entr. Club",val:clubCount,color:C.red,page:"karate"},{label:"PrÃ©pa Physique",val:physiqueCount,color:C.blue,page:"physique"},
-            {label:"Entr. Perso",val:persoCount,color:C.muted,page:"karate"},{label:"CompÃ©titions",val:upcomingComps,color:C.yellow,page:"competitions"}].map(s=>(
+          {[{label:"Entr. Club",val:clubCount,color:C.red,page:"karate"},{label:"Prépa Physique",val:physiqueCount,color:C.blue,page:"physique"},
+            {label:"Entr. Perso",val:persoCount,color:C.muted,page:"karate"},{label:"Compétitions",val:upcomingComps,color:C.yellow,page:"competitions"}].map(s=>(
             <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.page)} style={{ background:s.color+"11", border:"1px solid "+s.color+"33", borderRadius:10, padding:"10px 12px", cursor:"pointer" }}>
               <div style={{ fontSize:10, color:s.color, fontWeight:600, marginBottom:2 }}>{s.label}</div>
               <div style={{ fontSize:22, fontWeight:800, color:s.color }}>{s.val}</div>
@@ -436,14 +436,14 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
           ))}
         </div>
         <div style={{ background:C.green+"15", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+C.green }}>
-          <span style={{ color:C.green, fontSize:12 }}>ð¯ <strong>Objectif :</strong> {weekPlan.objectif || "Aucun objectif dÃ©fini"}</span>
+          <span style={{ color:C.green, fontSize:12 }}>🎯 <strong>Objectif :</strong> {weekPlan.objectif || "Aucun objectif défini"}</span>
         </div>
       </div>
 
       <div style={{ background:C.card, borderRadius:16, padding:16, marginBottom:16, border:"1px solid "+C.border }}>
         <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:12 }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="5" y1="6" x2="19" y2="6"/><line x1="5" y1="18" x2="19" y2="18"/><polyline points="9,12 11,10 14,14 16,12"/></svg>
-          <strong style={{ fontSize:13 }}>ActivitÃ© de la semaine</strong>
+          <strong style={{ fontSize:13 }}>Activité de la semaine</strong>
         </div>
         {/* Stats semaine */}
         {(() => {
@@ -451,10 +451,10 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
         const karateW = thisWeek.length;
         const physiqueW = (physiqueSessions||[]).filter(s=>new Date(s.date)>=startOfWeek).length;
         const corrW = mockCorrections.filter(c=>new Date(c.date)>=startOfWeek).length;
-        const compAVenir = (competitions||[]).filter(c=>c.statut==="Ã venir"||(!c.statut&&new Date(c.date)>=now)).length;
+        const compAVenir = (competitions||[]).filter(c=>c.statut==="À venir"||(!c.statut&&new Date(c.date)>=now)).length;
         return (
           <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10, marginBottom:16 }}>
-            {[{icon:"ð¥",label:"KaratÃ©",val:karateW,c:C.red,pg:"karate"},{icon:"ðª",label:"PrÃ©pa",val:physiqueW,c:"#7c3aed",pg:"physique"},{icon:"ð",label:"Corrections",val:corrW,c:C.primary,pg:"corrections"},{icon:"ð",label:"CompÃ©t. Ã  venir",val:compAVenir,c:C.yellow,pg:"competitions"}].map(s=>(
+            {[{icon:"🥋",label:"Karaté",val:karateW,c:C.red,pg:"karate"},{icon:"💪",label:"Prépa",val:physiqueW,c:"#7c3aed",pg:"physique"},{icon:"📝",label:"Corrections",val:corrW,c:C.primary,pg:"corrections"},{icon:"🏆",label:"Compét. à venir",val:compAVenir,c:C.yellow,pg:"competitions"}].map(s=>(
               <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.pg)} style={{ background:s.c+"11", border:"1px solid "+s.c+"44", borderRadius:12, padding:"10px 8px", textAlign:"center", cursor:"pointer" }}>
                 <div style={{ fontSize:22 }}>{s.icon}</div>
                 <div style={{ fontSize:20, fontWeight:800, color:s.c }}>{s.val}</div>
@@ -468,18 +468,18 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
           <BarChart data={weekActivity}>
             <XAxis dataKey="day" tick={{ fontSize:10 }} axisLine={false} tickLine={false} />
             <YAxis hide /><Tooltip />
-            <Bar dataKey="karate" name="ð¥ KaratÃ©" fill={C.red} radius={[4,4,0,0]} />
-            <Bar dataKey="physique" name="ðª PrÃ©pa" fill={C.blue} radius={[4,4,0,0]} />
+            <Bar dataKey="karate" name="🥋 Karaté" fill={C.red} radius={[4,4,0,0]} />
+            <Bar dataKey="physique" name="💪 Prépa" fill={C.blue} radius={[4,4,0,0]} />
             <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize:11 }} />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10, marginTop:16 }}>
-        {[{icon:"ð¥",label:"SÃ©ances karatÃ©",val:sessions.length,c:C.red,pg:"karate"},
-          {icon:"ðª",label:"PrÃ©pa physique",val:(physiqueSessions||[]).length,c:"#7c3aed",pg:"physique"},
-          {icon:"ð",label:"Stages EDF",val:mockStages.length,c:"#1d4ed8",pg:"stage"},
-          {icon:"ð",label:"CompÃ©titions",val:(competitions||[]).length,c:"#f97316",pg:"competitions"}].map(s=>(
+        {[{icon:"🥋",label:"Séances karaté",val:sessions.length,c:C.red,pg:"karate"},
+          {icon:"💪",label:"Prépa physique",val:(physiqueSessions||[]).length,c:"#7c3aed",pg:"physique"},
+          {icon:"🏅",label:"Stages EDF",val:mockStages.length,c:"#1d4ed8",pg:"stage"},
+          {icon:"🏆",label:"Compétitions",val:(competitions||[]).length,c:"#f97316",pg:"competitions"}].map(s=>(
           <div key={s.label} onClick={()=>onNavigate&&onNavigate(s.pg)} style={{ background:s.c, borderRadius:14, padding:"14px", color:"#fff", cursor:"pointer" }}>
             <div style={{ fontSize:20, marginBottom:4 }}>{s.icon}</div>
             <div style={{ fontSize:11, opacity:0.85 }}>{s.label}</div>
@@ -492,16 +492,16 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
   );
 };
 
-// âââ SÃANCES KARATÃ ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-const COACHES = ["HelvÃ©tia","Romain","Olivier","Yves","Jonathan","Hugo","Fernando","JÃ©rÃ©mie","Michel","Perso","Autres"];
-const KATAS_LIST = ["GojÅ«shiho Dai","GojÅ«shiho ShÅ","Unsu","Gankaku","Kanku ShÅ","Kanku Dai","Supaenpei","Empi","SÅchin","Sansai","Bassai Dai","Bassai ShÅ","Jion","Jitte","Hangetsu","NijÅ«shiho","Chinte","Wankan","GojÅ«shiho"];
+// ─── SÉANCES KARATÉ ──────────────────────────────────────────────────────────
+const COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Fernando","Jérémie","Michel","Perso","Autres"];
+const KATAS_LIST = ["Gojūshiho Dai","Gojūshiho Shō","Unsu","Gankaku","Kanku Shō","Kanku Dai","Supaenpei","Empi","Sōchin","Sansai","Bassai Dai","Bassai Shō","Jion","Jitte","Hangetsu","Nijūshiho","Chinte","Wankan","Gojūshiho"];
 const TECHNIQUES_LIST = [
-  "Mae Geri (Coup de pied avant)","Mawashi Geri (Coup de pied circulaire)","Ushiro Geri (Coup de pied arriÃ¨re)",
-  "Yoko Geri (Coup de pied latÃ©ral)","Oi Zuki (Coup de poing direct)","Gyaku Zuki (Coup de poing inverse)",
+  "Mae Geri (Coup de pied avant)","Mawashi Geri (Coup de pied circulaire)","Ushiro Geri (Coup de pied arrière)",
+  "Yoko Geri (Coup de pied latéral)","Oi Zuki (Coup de poing direct)","Gyaku Zuki (Coup de poing inverse)",
   "Uraken (Revers de poing)","Empi (Coup de coude)","Shuto (Tranchant de main)","Uke (Blocages)","Kihon (Bases)"
 ];
-const RESSENTIS = ["ð Excellent","ð TrÃ¨s bon","ð Bon","ð Moyen","ð© Difficile","ð´ FatiguÃ©"];
-const ENERGIES = ["TrÃ¨s bas","Bas","Normal","ÃlevÃ©","TrÃ¨s Ã©levÃ©"];
+const RESSENTIS = ["😃 Excellent","😊 Très bon","🙂 Bon","😐 Moyen","😩 Difficile","😴 Fatigué"];
+const ENERGIES = ["Très bas","Bas","Normal","Élevé","Très élevé"];
 
 const MultiSelect = ({ label, options, selected, onAdd, onRemove, color=C.primary }) => {
   const [open, setOpen] = useState(false);
@@ -513,7 +513,7 @@ const MultiSelect = ({ label, options, selected, onAdd, onRemove, color=C.primar
           {selected.map(item => (
             <span key={item} style={{ background:color+"22", color, borderRadius:20, padding:"3px 10px", fontSize:12, display:"flex", alignItems:"center", gap:4 }}>
               {item}
-              <button onClick={()=>onRemove(item)} style={{ background:"none", border:"none", cursor:"pointer", color, fontSize:14, lineHeight:1, padding:0 }}>Ã</button>
+              <button onClick={()=>onRemove(item)} style={{ background:"none", border:"none", cursor:"pointer", color, fontSize:14, lineHeight:1, padding:0 }}>×</button>
             </span>
           ))}
         </div>
@@ -524,7 +524,7 @@ const MultiSelect = ({ label, options, selected, onAdd, onRemove, color=C.primar
             flex:1, border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13,
             background:"#fff", cursor:"pointer", textAlign:"left", color:C.muted, display:"flex", justifyContent:"space-between", alignItems:"center"
           }}>
-            <span>SÃ©lectionner {label.toLowerCase().replace("(s)","")}</span>
+            <span>Sélectionner {label.toLowerCase().replace("(s)","")}</span>
             <ChevronDown size={14}/>
           </button>
           <button type="button" onClick={()=>setOpen(!open)} style={{ background:color, border:"none", borderRadius:8, padding:"10px 14px", cursor:"pointer", color:"#fff", fontWeight:700, fontSize:16 }}>+</button>
@@ -573,7 +573,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
         await updateDoc(doc(db, "seances", sessionId), { coachFeedback: feedback });
         if (feedback.trim()) {
           const u = getCurrentUser();
-          await notifyNewContent({ type:"notes_coach_seance", title:"ð¬ Retours du coach â sÃ©ance karatÃ©", body:feedback, createdBy:u?.id||"unknown" });
+          await notifyNewContent({ type:"notes_coach_seance", title:"💬 Retours du coach — séance karaté", body:feedback, createdBy:u?.id||"unknown" });
         }
       } catch(e) {}
     }
@@ -602,7 +602,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
     type: "Collectif", duration: "90",
     coaches: [], katas: [], techniques: [],
     focusPoints: "", corrections: "",
-    ressenti: "ð Bon", energie: "Normal",
+    ressenti: "🙂 Bon", energie: "Normal",
     satisfaction: 5, coachFeedback: "", notes: "", lienVideo: "",
   };
   const [form, setForm] = useState(emptyForm);
@@ -614,7 +614,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
       coaches: s.coach ? s.coach.split(", ").filter(Boolean) : [],
       katas: s.katas || [], techniques: s.techniques || [],
       focusPoints: s.focusPoints || "", corrections: s.notes || "",
-      ressenti: s.ressenti || "ð Bon", energie: s.energie || "Normal",
+      ressenti: s.ressenti || "🙂 Bon", energie: s.energie || "Normal",
       satisfaction: s.satisfaction || 5,
       coachFeedback: s.coachFeedback || "", notes: s.additionalNotes || "",
       lienVideo: s.lienVideo || "",
@@ -635,7 +635,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
     "Mois dernier": sessions.filter(s => { const d=new Date(s.date); const n=new Date(); const lm=new Date(n.getFullYear(),n.getMonth()-1,1); return d.getMonth()===lm.getMonth()&&d.getFullYear()===lm.getFullYear(); }).length,
     Corrections: sessions.filter(s => s.notes && s.notes.length>0).length,
     Collectif: sessions.filter(s => s.type==="Collectif").length,
-    PrivÃ©: sessions.filter(s => s.type==="PrivÃ©").length,
+    Privé: sessions.filter(s => s.type==="Privé").length,
     Perso: sessions.filter(s => s.type==="Perso").length,
     Stage: sessions.filter(s => s.type==="Stage").length,
     Visio: sessions.filter(s => s.type==="Visio").length,
@@ -659,7 +659,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
   const avgDur = sessions.length ? Math.round(sessions.reduce((a,b)=>a+b.duration,0)/sessions.length) : 0;
 
   const handleSubmit = async () => {
-    if (!form.date || !form.duration) { showToast("â ï¸ Date et durÃ©e obligatoires"); return; }
+    if (!form.date || !form.duration) { showToast("⚠️ Date et durée obligatoires"); return; }
     setSaving(true);
     try {
       const seance = {
@@ -671,9 +671,9 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
         coach: form.coaches.join(", "), athlete: "Iliana Voratovic"
       };
       if (editingSession) {
-        // Modifier sÃ©ance existante
+        // Modifier séance existante
         setSessions(prev => prev.map(s => s.id === editingSession ? { ...s, ...seance } : s));
-        // Sync sÃ©ance complÃ¨te dans Firestore (partage temps rÃ©el)
+        // Sync séance complète dans Firestore (partage temps réel)
         try {
           if (typeof editingSession === "string") {
             const prevDoc = await getDoc(doc(db, "seances", editingSession));
@@ -681,11 +681,11 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
             await updateDoc(doc(db, "seances", editingSession), seance);
             if (seance.coachFeedback?.trim() && seance.coachFeedback !== prevFeedback) {
               const u = getCurrentUser();
-              await notifyNewContent({ type:"notes_coach_seance", title:"ð¬ Retours du coach â sÃ©ance "+seance.type, body:seance.coachFeedback, createdBy:u?.id||"unknown" });
+              await notifyNewContent({ type:"notes_coach_seance", title:"💬 Retours du coach — séance "+seance.type, body:seance.coachFeedback, createdBy:u?.id||"unknown" });
             }
           }
         } catch(fe) { console.warn("Firestore update skipped:", fe.code); }
-        // Sync lienVideo dans Firestore si prÃ©sent
+        // Sync lienVideo dans Firestore si présent
         if (seance.lienVideo) {
           const videoId = "perso_" + editingSession;
           const q = query(collection(db, "video_links"), where("videoId", "==", videoId));
@@ -693,13 +693,13 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
           if (snap.empty) await addDoc(collection(db, "video_links"), { videoId, lien: seance.lienVideo, updatedAt: serverTimestamp() });
           else await updateDoc(doc(db, "video_links", snap.docs[0].id), { lien: seance.lienVideo, updatedAt: serverTimestamp() });
         }
-        showToast("SÃ©ance modifiÃ©e avec succÃ¨s â");
+        showToast("Séance modifiée avec succès ✓");
       } else {
-        // Nouvelle sÃ©ance â sauvegarder localement d'abord (non-bloquant)
+        // Nouvelle séance — sauvegarder localement d'abord (non-bloquant)
         const newId = Date.now();
         setSessions(prev => [{ id: newId, ...seance }, ...prev]);
-        showToast("SÃ©ance "+form.type+" â "+form.duration+" min enregistrÃ©e â");
-        // Firestore en arriÃ¨re-plan (ne bloque pas si permission refusÃ©e)
+        showToast("Séance "+form.type+" — "+form.duration+" min enregistrée ✓");
+        // Firestore en arrière-plan (ne bloque pas si permission refusée)
         try {
           const uid = getCurrentUser()?.id;
           await enregistrerSeance(seance, uid);
@@ -713,7 +713,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
     setSaving(false);
   };
 
-  const emoji = (sat) => sat>=9?"ð":sat>=7?"ð":sat>=6?"ð":sat>=4?"ð":"ð";
+  const emoji = (sat) => sat>=9?"😃":sat>=7?"😊":sat>=6?"🙂":sat>=4?"😐":"😔";
 
   const SelectField = ({ label, value, options, onChange, style={} }) => (
     <div style={style}>
@@ -731,11 +731,11 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
 
   return (
     <div>
-      <SectionHeader icon="ð¥" title="SÃ©ances de KaratÃ©" subtitle="Suivez votre progression technique et vos entraÃ®nements ð¥·" color={C.red}
-        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.red, fontSize:12 }}><Plus size={12}/> Nouvelle sÃ©ance</Btn>} />
+      <SectionHeader icon="🥋" title="Séances de Karaté" subtitle="Suivez votre progression technique et vos entraînements 🥷" color={C.red}
+        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.red, fontSize:12 }}><Plus size={12}/> Nouvelle séance</Btn>} />
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
-        {[{label:"SÃ©ances totales",val:sessions.length,c:C.red},{label:"DurÃ©e moyenne",val:avgDur+" min",c:C.orange},{label:"Satisfaction moy.",val:avgSat+"/10",c:C.yellow}].map(s=>(
+        {[{label:"Séances totales",val:sessions.length,c:C.red},{label:"Durée moyenne",val:avgDur+" min",c:C.orange},{label:"Satisfaction moy.",val:avgSat+"/10",c:C.yellow}].map(s=>(
           <div key={s.label} style={{ background:C.card, borderRadius:12, padding:"12px", border:"1px solid "+C.border, textAlign:"center" }}>
             <div style={{ fontSize:11, color:C.muted }}>{s.label}</div>
             <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.val}</div>
@@ -750,27 +750,27 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
       </div>
 
       <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:8, marginBottom:16 }}>
-        {["ALL","Cette semaine","Ce mois-ci","Mois dernier","Corrections","Collectif","PrivÃ©","Perso","Stage","Visio"].map(f=>(
+        {["ALL","Cette semaine","Ce mois-ci","Mois dernier","Corrections","Collectif","Privé","Perso","Stage","Visio"].map(f=>(
           <FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} count={counts[f]} />
         ))}
       </div>
 
-      <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{filtered.length} sÃ©ance{filtered.length>1?"s":""}</div>
+      <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{filtered.length} séance{filtered.length>1?"s":""}</div>
 
       {filtered.map(s=>(
         <div key={s.id} style={{ background:C.card, borderRadius:14, border:"2px solid "+C.red+(expandedIdK===s.id?"99":"33"), padding:16, marginBottom:12, cursor:"pointer" }} onClick={()=>{ setExpandedIdK(expandedIdK===s.id?null:s.id); trackViewK(s); }}>
           <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
             <div>
               <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                <span style={{ fontSize:16 }}>{s.ressenti>=9?"ð¤©":s.ressenti>=7?"ð":s.ressenti>=5?"ð":s.ressenti>=3?"ð«¤":s.ressenti>=1?"ð":"ð"}</span>
-                <span style={{ fontWeight:700, fontSize:14 }}>EntraÃ®nement {s.type}</span>
+                <span style={{ fontSize:16 }}>{s.ressenti>=9?"🤩":s.ressenti>=7?"😃":s.ressenti>=5?"😐":s.ressenti>=3?"🫤":s.ressenti>=1?"😒":"😐"}</span>
+                <span style={{ fontWeight:700, fontSize:14 }}>Entraînement {s.type}</span>
               </div>
-              <div style={{ color:C.muted, fontSize:11 }}>{s.date}{s.coach?" Â· "+s.coach:""}</div>
+              <div style={{ color:C.muted, fontSize:11 }}>{s.date}{s.coach?" · "+s.coach:""}</div>
             </div>
             <div style={{ display:"flex", gap:6 }}>
               {s.lienVideo && (
-                <button onClick={(e)=>{e.stopPropagation();window.open(s.lienVideo,"_blank");}} title="Voir la vidÃ©o" style={{ background:C.primary+"22", border:"1px solid "+C.primary+"44", borderRadius:6, padding:"3px 8px", cursor:"pointer", color:C.primary, fontSize:11, display:"flex", alignItems:"center", gap:3 }}>
-                  <Video size={12}/> VidÃ©o
+                <button onClick={(e)=>{e.stopPropagation();window.open(s.lienVideo,"_blank");}} title="Voir la vidéo" style={{ background:C.primary+"22", border:"1px solid "+C.primary+"44", borderRadius:6, padding:"3px 8px", cursor:"pointer", color:C.primary, fontSize:11, display:"flex", alignItems:"center", gap:3 }}>
+                  <Video size={12}/> Vidéo
                 </button>
               )}
               <button onClick={(e)=>{e.stopPropagation();openEdit(s);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary }}><Edit2 size={13}/></button>
@@ -778,12 +778,12 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
             </div>
           </div>
           <div style={{ display:"flex", gap:16, marginBottom:s.katas?.length>0||s.notes?8:0 }}>
-            <span style={{ fontSize:12, color:C.muted }}>â± <strong style={{ color:C.text }}>{s.duration} min</strong></span>
-            {s.ressenti?<span style={{ fontSize:12, color:C.muted }}>{s.ressenti>=9?"ð¤©":s.ressenti>=7?"ð":s.ressenti>=5?"ð":s.ressenti>=3?"ð«¤":s.ressenti>=1?"ð":"ð"} <strong style={{ color:C.text }}>{s.ressenti}/10</strong></span>:null}<span style={{ fontSize:12, color:C.muted }}>ð¥ <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
+            <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
+            {s.ressenti?<span style={{ fontSize:12, color:C.muted }}>{s.ressenti>=9?"🤩":s.ressenti>=7?"😃":s.ressenti>=5?"😐":s.ressenti>=3?"🫤":s.ressenti>=1?"😒":"😐"} <strong style={{ color:C.text }}>{s.ressenti}/10</strong></span>:null}<span style={{ fontSize:12, color:C.muted }}>🥋 <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
           </div>
           {s.katas && s.katas.length>0 && (
             <div style={{ marginBottom:6 }}>
-              <div style={{ fontSize:11, fontWeight:600, marginBottom:4, color:C.muted }}>Katas pratiquÃ©s :</div>
+              <div style={{ fontSize:11, fontWeight:600, marginBottom:4, color:C.muted }}>Katas pratiqués :</div>
               <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>{s.katas.map(k=><Badge key={k} label={k} color={C.primary}/>)}</div>
             </div>
           )}
@@ -795,36 +795,36 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
           )}
           {s.notes && (
             <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.orange }}>
-              <div style={{ fontSize:11, color:C.orange, whiteSpace:"pre-wrap" }}>â  Corrections : {s.notes}</div>
+              <div style={{ fontSize:11, color:C.orange, whiteSpace:"pre-wrap" }}>⚠ Corrections : {s.notes}</div>
             </div>
           )}
           {s.coachFeedback && expandedIdK!==s.id && (
             <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green, marginTop:6 }}>
-              <div style={{ fontSize:11, color:C.green, whiteSpace:"pre-wrap" }}>ð¬ Retours coach : {s.coachFeedback}</div>
+              <div style={{ fontSize:11, color:C.green, whiteSpace:"pre-wrap" }}>💬 Retours coach : {s.coachFeedback}</div>
             </div>
           )}
           {expandedIdK===s.id && (
             <div style={{ marginTop:10, borderTop:"1px solid "+C.border, paddingTop:10 }}>
               {s.energie && s.energie!=="Normal" && (
                 <div style={{ marginBottom:6 }}>
-                  <span style={{ fontSize:11, fontWeight:600, color:C.muted }}>â¡ Niveau de difficultÃ© : </span>
+                  <span style={{ fontSize:11, fontWeight:600, color:C.muted }}>⚡ Niveau de difficulté : </span>
                   <span style={{ fontSize:11, fontWeight:700, color:C.orange }}>{s.energie}</span>
                 </div>
               )}
               {s.focusPoints && (
                 <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.blue, marginBottom:8 }}>
-                  <div style={{ fontSize:11, color:C.blue, whiteSpace:"pre-wrap" }}>ð¯ <strong>Points de focus :</strong> {s.focusPoints}</div>
+                  <div style={{ fontSize:11, color:C.blue, whiteSpace:"pre-wrap" }}>🎯 <strong>Points de focus :</strong> {s.focusPoints}</div>
                 </div>
               )}
               <div>
-                <div style={{ fontSize:11, fontWeight:600, color:C.muted, marginBottom:4 }}>ð¬ Feedback du Coach</div>
+                <div style={{ fontSize:11, fontWeight:600, color:C.muted, marginBottom:4 }}>💬 Feedback du Coach</div>
                 {feedbackEditIdK===s.id ? (
                   <div onClick={e=>e.stopPropagation()}>
-                    <textarea value={feedbackTextK} onChange={e=>setFeedbackTextK(e.target.value)} placeholder="Ãcrire un feedback..." rows={3}
+                    <textarea value={feedbackTextK} onChange={e=>setFeedbackTextK(e.target.value)} placeholder="Écrire un feedback..." rows={3}
                       style={{ width:"100%", border:"1.5px solid "+C.primary, borderRadius:8, padding:"8px 10px", fontSize:12, boxSizing:"border-box", resize:"none", outline:"none" }}/>
                     <div style={{ display:"flex", gap:8, marginTop:6, justifyContent:"flex-end" }}>
                       <button onClick={()=>{setFeedbackEditIdK(null);setFeedbackTextK("");}} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:6, padding:"5px 12px", fontSize:11, cursor:"pointer" }}>Annuler</button>
-                      <button onClick={()=>saveKarateFeedback(s.id, feedbackTextK)} style={{ background:C.primary, border:"none", borderRadius:6, padding:"5px 12px", fontSize:11, fontWeight:700, color:"#fff", cursor:"pointer" }}>ð¾ Enregistrer</button>
+                      <button onClick={()=>saveKarateFeedback(s.id, feedbackTextK)} style={{ background:C.primary, border:"none", borderRadius:6, padding:"5px 12px", fontSize:11, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
                     </div>
                   </div>
                 ) : (
@@ -834,7 +834,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                 )}
               </div>
               {currentUser&&(currentUser.id==="alexandre"||currentUser.id==="iliana")&&(sessionViews[String(s.id)]||[]).filter(uid=>uid!=="alexandre"&&uid!=="iliana").length>0&&(
-                <div style={{fontSize:10,color:C.muted,marginTop:8,textAlign:"right"}}>ð lu par {(sessionViews[String(s.id)]||[]).filter(uid=>uid!=="alexandre"&&uid!=="iliana").map(uid=>({"helvetia":"HelvÃ©tia","isabelle":"Isabelle","kevin":"Kevin"}[uid]||uid)).join(", ")}</div>
+                <div style={{fontSize:10,color:C.muted,marginTop:8,textAlign:"right"}}>👁 lu par {(sessionViews[String(s.id)]||[]).filter(uid=>uid!=="alexandre"&&uid!=="iliana").map(uid=>({"helvetia":"Helvétia","isabelle":"Isabelle","kevin":"Kevin"}[uid]||uid)).join(", ")}</div>
               )}
             </div>
           )}
@@ -849,41 +849,41 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
 
             {/* Header formulaire */}
             <div style={{ background:"linear-gradient(135deg, "+C.red+", "+C.orange+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between", alignItems:"center", position:"sticky", top:0, zIndex:10 }}>
-              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>{editingSession ? "Modifier la sÃ©ance" : "Nouvelle sÃ©ance de karatÃ©"}</div>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>{editingSession ? "Modifier la séance" : "Nouvelle séance de karaté"}</div>
               <button onClick={closeForm} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
             </div>
 
             <div style={{ padding:"20px 24px" }}>
-              {/* Ligne 1: Date, Type, DurÃ©e */}
+              {/* Ligne 1: Date, Type, Durée */}
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:16 }}>
                 <div>
                   <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Date *</label>
                   <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))}
                     style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box" }} />
                 </div>
-                <SelectField label="Type de sÃ©ance *" value={form.type} onChange={v=>setForm(f=>({...f,type:v}))}
-                  options={["Collectif","PrivÃ©","Perso","Stage","Visio"]} />
+                <SelectField label="Type de séance *" value={form.type} onChange={v=>setForm(f=>({...f,type:v}))}
+                  options={["Collectif","Privé","Perso","Stage","Visio"]} />
                 <div>
-                  <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>DurÃ©e (minutes) *</label>
+                  <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Durée (minutes) *</label>
                   <input type="number" placeholder="120" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))}
                     style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box" }} />
                 </div>
               </div>
 
-              {/* EntraÃ®neurs */}
-              <MultiSelect label="EntraÃ®neur(s)" options={COACHES} selected={form.coaches}
+              {/* Entraîneurs */}
+              <MultiSelect label="Entraîneur(s)" options={COACHES} selected={form.coaches}
                 onAdd={v=>setForm(f=>({...f,coaches:[...f.coaches,v]}))}
                 onRemove={v=>setForm(f=>({...f,coaches:f.coaches.filter(c=>c!==v)}))}
                 color={C.primary} />
 
               {/* Katas */}
-              <MultiSelect label="Katas pratiquÃ©s" options={KATAS_LIST} selected={form.katas}
+              <MultiSelect label="Katas pratiqués" options={KATAS_LIST} selected={form.katas}
                 onAdd={v=>setForm(f=>({...f,katas:[...f.katas,v]}))}
                 onRemove={v=>setForm(f=>({...f,katas:f.katas.filter(k=>k!==v)}))}
                 color={C.primary} />
 
               {/* Techniques */}
-              <MultiSelect label="Techniques travaillÃ©es" options={TECHNIQUES_LIST} selected={form.techniques}
+              <MultiSelect label="Techniques travaillées" options={TECHNIQUES_LIST} selected={form.techniques}
                 onAdd={v=>setForm(f=>({...f,techniques:[...f.techniques,v]}))}
                 onRemove={v=>setForm(f=>({...f,techniques:f.techniques.filter(t=>t!==v)}))}
                 color={C.orange} />
@@ -891,27 +891,27 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
               {/* Points de focus */}
               <div style={{ marginBottom:16 }}>
                 <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Points de focus</label>
-                <textarea rows={3} placeholder="Sur quoi vous Ãªtes-vous concentrÃ©..." value={form.focusPoints}
+                <textarea rows={3} placeholder="Sur quoi vous êtes-vous concentré..." value={form.focusPoints}
                   onChange={e=>setForm(f=>({...f,focusPoints:e.target.value}))}
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
               </div>
 
               {/* Corrections */}
               <div style={{ marginBottom:16 }}>
-                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Corrections Ã  travailler</label>
-                <textarea rows={3} placeholder="Points techniques Ã  amÃ©liorer..." value={form.corrections}
+                <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>Corrections à travailler</label>
+                <textarea rows={3} placeholder="Points techniques à améliorer..." value={form.corrections}
                   onChange={e=>setForm(f=>({...f,corrections:e.target.value}))}
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
               </div>
 
-              {/* Ressenti + Niveau de DifficultÃ© */}
+              {/* Ressenti + Niveau de Difficulté */}
               <div style={{ marginBottom:16 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
                   <label style={{ fontSize:13, fontWeight:600 }}>Ressenti</label>
                   <span style={{ fontSize:18, fontWeight:800, color:C.red }}>{form.ressenti||5}/10</span>
                 </div>
                 <input type="range" min={1} max={10} value={form.ressenti||5} onChange={e=>setForm(f=>({...f,ressenti:parseInt(e.target.value)}))} style={{ width:"100%", accentColor:C.red, marginBottom:12 }} />
-                <SelectField label="Niveau de DifficultÃ©" value={form.energie} onChange={v=>setForm(f=>({...f,energie:v}))} options={ENERGIES} />
+                <SelectField label="Niveau de Difficulté" value={form.energie} onChange={v=>setForm(f=>({...f,energie:v}))} options={ENERGIES} />
               </div>
 
               {/* Satisfaction technique slider */}
@@ -936,10 +936,10 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }} />
               </div>
 
-              {/* Lien vidÃ©o â Type Perso + coach Perso ou HelvÃ©tia */}
-              {form.type === "Perso" && form.coaches.some(c => c === "Perso" || c === "HelvÃ©tia") && (
+              {/* Lien vidéo — Type Perso + coach Perso ou Helvétia */}
+              {form.type === "Perso" && form.coaches.some(c => c === "Perso" || c === "Helvétia") && (
                 <div style={{ marginBottom:16 }}>
-                  <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>ð Lien VidÃ©o (Google Drive, YouTubeâ¦)</label>
+                  <label style={{ fontSize:13, fontWeight:600, display:"block", marginBottom:6 }}>🔗 Lien Vidéo (Google Drive, YouTube…)</label>
                   <input type="text" placeholder="https://drive.google.com/..."
                     value={form.lienVideo||""}
                     onChange={e=>setForm(f=>({...f,lienVideo:e.target.value}))}
@@ -961,7 +961,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
                   <X size={14}/> Annuler
                 </button>
                 <button onClick={handleSubmit} disabled={saving} style={{ background:C.red, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer", display:"flex", alignItems:"center", gap:6, opacity:saving?0.7:1 }}>
-                  ð¾ {saving ? "Enregistrement..." : editingSession ? "Modifier" : "Enregistrer"}
+                  💾 {saving ? "Enregistrement..." : editingSession ? "Modifier" : "Enregistrer"}
                 </button>
               </div>
             </div>
@@ -973,7 +973,7 @@ const SeancesKarate = ({ sessions, setSessions, showToast }) => {
 };
 
 
-// âââ TABLEAU DE VISUALISATION (Vision Board) ââââââââââââââââââââââââââââââââââ
+// ─── TABLEAU DE VISUALISATION (Vision Board) ──────────────────────────────────
 const VisionBoard = ({ sessions }) => {
   const byMonth = {};
   sessions.forEach(s => {
@@ -985,9 +985,9 @@ const VisionBoard = ({ sessions }) => {
   });
   const monthData = Object.entries(byMonth).sort().slice(-6).map(([m, v]) => ({
     month: m.substring(5)+" "+m.substring(0,4),
-    sÃ©ances: v.count,
+    séances: v.count,
     satisfaction: parseFloat((v.totalSat/v.count).toFixed(1)),
-    durÃ©e: Math.round(v.totalDur/v.count),
+    durée: Math.round(v.totalDur/v.count),
   }));
 
   const kataCount = {};
@@ -997,15 +997,15 @@ const VisionBoard = ({ sessions }) => {
 
   return (
     <div>
-      <SectionHeader icon="ð" title="Tableau de visualisation" subtitle="Vue d'ensemble de votre progression" color={C.primary} />
+      <SectionHeader icon="📊" title="Tableau de visualisation" subtitle="Vue d'ensemble de votre progression" color={C.primary} />
 
       <div style={{ background:C.card, borderRadius:16, padding:16, marginBottom:16, border:"1px solid "+C.border }}>
-        <div style={{ fontWeight:700, marginBottom:12, fontSize:14 }}>SÃ©ances par mois (6 derniers mois)</div>
+        <div style={{ fontWeight:700, marginBottom:12, fontSize:14 }}>Séances par mois (6 derniers mois)</div>
         <ResponsiveContainer width="100%" height={180}>
           <BarChart data={monthData}>
             <XAxis dataKey="month" tick={{ fontSize:10 }} axisLine={false} tickLine={false}/>
             <YAxis hide/><Tooltip/>
-            <Bar dataKey="sÃ©ances" fill={C.primary} radius={[4,4,0,0]}/>
+            <Bar dataKey="séances" fill={C.primary} radius={[4,4,0,0]}/>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -1022,7 +1022,7 @@ const VisionBoard = ({ sessions }) => {
       </div>
 
       <div style={{ background:C.card, borderRadius:16, padding:16, border:"1px solid "+C.border }}>
-        <div style={{ fontWeight:700, marginBottom:12, fontSize:14 }}>Katas les plus travaillÃ©s</div>
+        <div style={{ fontWeight:700, marginBottom:12, fontSize:14 }}>Katas les plus travaillés</div>
         <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
           {topKatas.map(([kata, count], i) => (
             <div key={kata} style={{ display:"flex", alignItems:"center", gap:10 }}>
@@ -1040,41 +1040,41 @@ const VisionBoard = ({ sessions }) => {
   );
 };
 
-// âââ STAGE ÃQUIPE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── STAGE ÉQUIPE ─────────────────────────────────────────────────────────────
 const mockStages = [
-  { id:1, date:"2026-01-31", satisfaction:9, katas:["GojÅ«shiho ShÅ","GojÅ«shiho Dai","Empi"], duration:240,
-    focus:"Passage mode compÃ©tition en quart de Kata enchaÃ®nÃ©s",
-    corrections:"Les mains plus tendus, tendre plus la jambe arriÃ¨re",
-    retours:"TrÃ¨s bien, corrigÃ©" },
-  { id:2, date:"2026-01-29", satisfaction:8, katas:["Empi","GojÅ«shiho ShÅ","GojÅ«shiho Dai"], duration:120,
+  { id:1, date:"2026-01-31", satisfaction:9, katas:["Gojūshiho Shō","Gojūshiho Dai","Empi"], duration:240,
+    focus:"Passage mode compétition en quart de Kata enchaînés",
+    corrections:"Les mains plus tendus, tendre plus la jambe arrière",
+    retours:"Très bien, corrigé" },
+  { id:2, date:"2026-01-29", satisfaction:8, katas:["Empi","Gojūshiho Shō","Gojūshiho Dai"], duration:120,
     focus:"Parties importantes dans les kata",
     corrections:"Plus de frappe", retours:"" },
-  { id:3, date:"2026-01-11", satisfaction:9, katas:["GojÅ«shiho ShÅ","Unsu"], duration:105,
+  { id:3, date:"2026-01-11", satisfaction:9, katas:["Gojūshiho Shō","Unsu"], duration:105,
     focus:"Partie importante dans unsu et goju",
-    corrections:"Tendre plus jambe arriÃ¨re", retours:"" },
-  { id:4, date:"2026-01-10", satisfaction:8, katas:["Empi","GojÅ«shiho ShÅ","GojÅ«shiho Dai"], duration:150,
-    focus:"Passage mode compÃ©tition avec Julia et Louise",
-    corrections:"Empi : plus d'impact, pas d'appel avec pied arriÃ¨re. Dai : revoir rythme ligne kiba, plus de maintien. Sho : attention Mae gueri du dÃ©but", retours:"" },
-  { id:5, date:"2026-01-09", satisfaction:7, katas:["GojÅ«shiho ShÅ","GojÅ«shiho Dai","Unsu"], duration:260,
+    corrections:"Tendre plus jambe arrière", retours:"" },
+  { id:4, date:"2026-01-10", satisfaction:8, katas:["Empi","Gojūshiho Shō","Gojūshiho Dai"], duration:150,
+    focus:"Passage mode compétition avec Julia et Louise",
+    corrections:"Empi : plus d'impact, pas d'appel avec pied arrière. Dai : revoir rythme ligne kiba, plus de maintien. Sho : attention Mae gueri du début", retours:"" },
+  { id:5, date:"2026-01-09", satisfaction:7, katas:["Gojūshiho Shō","Gojūshiho Dai","Unsu"], duration:260,
     focus:"Le matin : les goju en quart 4 fois. L'aprem : dai entier+demi et unsu en quart 4 fois",
     corrections:"Attention trajectoires, plus d'impact, plus d'intention au bout des doigts", retours:"" },
-  { id:6, date:"2026-01-08", satisfaction:8, katas:["Empi","GojÅ«shiho ShÅ"], duration:120,
-    focus:"Travail commun sur empi, goju. Ãquipe sur empi chaque demi 4 fois",
-    corrections:"Empi : tourner la tÃªte sur gedan barai, regarder le poignet avant le 1er kiai", retours:"" },
-  { id:7, date:"2025-12-21", satisfaction:8, katas:["Empi","GojÅ«shiho Dai","Unsu"], duration:240,
+  { id:6, date:"2026-01-08", satisfaction:8, katas:["Empi","Gojūshiho Shō"], duration:120,
+    focus:"Travail commun sur empi, goju. Équipe sur empi chaque demi 4 fois",
+    corrections:"Empi : tourner la tête sur gedan barai, regarder le poignet avant le 1er kiai", retours:"" },
+  { id:7, date:"2025-12-21", satisfaction:8, katas:["Empi","Gojūshiho Dai","Unsu"], duration:240,
     focus:"Empi 2eme + dai, unsu + bunkai 2eme partie",
-    corrections:"Empi : Tirer l'iquitÃ© sur le kokutsu avant le saut. Dai : plus d'intention sur les temps lents. Unsu 2: ne pas tordre le poignet sur le 1er mouvement",
+    corrections:"Empi : Tirer l'iquité sur le kokutsu avant le saut. Dai : plus d'intention sur les temps lents. Unsu 2: ne pas tordre le poignet sur le 1er mouvement",
     retours:"Travailler au club les bras sur empi et le coup de pied de unsu" },
-  { id:8, date:"2025-12-20", satisfaction:8, katas:["Empi","GojÅ«shiho ShÅ","Unsu"], duration:240,
+  { id:8, date:"2025-12-20", satisfaction:8, katas:["Empi","Gojūshiho Shō","Unsu"], duration:240,
     focus:"Empi + sho, unsu 1ere partie + bunkai",
-    corrections:"Empi : se laisser plus tomber sur la montÃ©e de genoux. Sho : ne pas aller chercher trop large au dÃ©but. Unsu : tomber plus vite au sol",
-    retours:"TrÃ¨s bien le unsu. Temps dÃ©but de empi : 1 2,1 2,12" },
+    corrections:"Empi : se laisser plus tomber sur la montée de genoux. Sho : ne pas aller chercher trop large au début. Unsu : tomber plus vite au sol",
+    retours:"Très bien le unsu. Temps début de empi : 1 2,1 2,12" },
   { id:9, date:"2025-12-19", satisfaction:8, katas:["Empi"], duration:120,
     focus:"Harmonisation empi",
-    corrections:"Tier les Ã©paules en opposition, se laisser tomber apres monter de genoux en posant les pieds 12", retours:"" },
-  { id:10, date:"2025-10-12", satisfaction:7, katas:["GojÅ«shiho ShÅ","GojÅ«shiho Dai","Unsu"], duration:240,
+    corrections:"Tier les épaules en opposition, se laisser tomber apres monter de genoux en posant les pieds 12", retours:"" },
+  { id:10, date:"2025-10-12", satisfaction:7, katas:["Gojūshiho Shō","Gojūshiho Dai","Unsu"], duration:240,
     focus:"Cours normalement avec tout le monde puis 3 katas : sho, dai, unsu",
-    corrections:"Lucas m'a dit de rÃ©trÃ©cir mes positions pour descendre plus, et de faire attention Ã  mes axes au niveau du haut du corps (je tire trop les Ã©paules)",
+    corrections:"Lucas m'a dit de rétrécir mes positions pour descendre plus, et de faire attention à mes axes au niveau du haut du corps (je tire trop les épaules)",
     retours:"" },
 ];
 
@@ -1103,14 +1103,14 @@ const StageEquipe = () => {
       const vDoc = await getDoc(vRef);
       if (!vDoc.exists()) {
         await setDoc(vRef, { viewedAt: serverTimestamp(), userId: u.id, sessionId: String(s.id), type: "edf" });
-        await notifyNewContent({ type:"session_viewed", title:"ð Stage EDF ouvert", body:(u.prenom||u.id)+" a ouvert le stage du "+(s.date||""), createdBy:u.id });
+        await notifyNewContent({ type:"session_viewed", title:"👁 Stage EDF ouvert", body:(u.prenom||u.id)+" a ouvert le stage du "+(s.date||""), createdBy:u.id });
       }
     } catch(e) {}
   };
 
   const avgSat = stages.length ? (stages.reduce((a,b)=>a+b.satisfaction,0)/stages.length).toFixed(1) : 0;
   const avgDur = stages.length ? Math.round(stages.reduce((a,b)=>a+b.duration,0)/stages.length) : 0;
-  const emoji = (s) => s>=9?"ð":s>=8?"ð":s>=7?"ð":"ð";
+  const emoji = (s) => s>=9?"😃":s>=8?"😊":s>=7?"🙂":"😐";
 
   const openAdd = () => { setForm(EMPTY_STAGE); setEditingId(null); setShowForm(true); };
   const openEdit = (s) => { setForm({...s, duration:String(s.duration), katas:s.katas||[]}); setEditingId(s.id); setShowForm(true); };
@@ -1121,7 +1121,6 @@ const StageEquipe = () => {
     const s = { ...form, duration: parseInt(form.duration), katas: form.katas||[] };
     if (editingId) { setStages(prev=>prev.map(x=>x.id===editingId?{...x,...s}:x)); }
     else { setStages(prev=>[{id:Date.now(),...s},...prev]); }
-
     // firestore_edf — persistance Firestore
     if (!editingId) {
       try {
@@ -1132,13 +1131,14 @@ const StageEquipe = () => {
         });
       } catch(eFS) { console.error("[save_edf]", eFS); }
     }
-    // notif_edf — notification push création séance Stage EDF
+    // notif_edf — notification push creation Stage EDF
     notifyNewContent({
       type: "nouveau_stage_edf",
-      title: "\uD83D\uDCCB Nouvelle s\u00E9ance Stage EDF",
-      body: "S\u00E9ance du " + (form.date || "") + (form.duration ? " \u2014 " + form.duration + " min" : ""),
+      title: "Nouvelle seance Stage EDF",
+      body: "Seance du " + (form.date || "") + (form.duration ? " - " + form.duration + " min" : ""),
       createdBy: currentUser?.email || "coach"
-    }).catch(e => console.error("[notif_edf]", e));    setShowForm(false);
+    }).catch(eN => console.error("[notif_edf]", eN));
+    setShowForm(false);
   };
 
   const StageSF = ({ label, value, options, onChange }) => (
@@ -1152,11 +1152,11 @@ const StageEquipe = () => {
 
   return (
     <div>
-      <SectionHeader icon="ð" title="Stages Ãquipe de France" subtitle="Suivez vos entraÃ®nements avec l'Ã©lite nationale ð«ð·" color="#1D4ED8"
+      <SectionHeader icon="🏅" title="Stages Équipe de France" subtitle="Suivez vos entraînements avec l'élite nationale 🇫🇷" color="#1D4ED8"
         action={<Btn onClick={openAdd} color="#fff" style={{ color:"#1D4ED8", fontSize:12 }}><Plus size={12}/> Nouveau stage</Btn>} />
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
-        {[{l:"Stages totaux",v:stages.length,c:"#1D4ED8"},{l:"DurÃ©e moyenne",v:avgDur+" min",c:C.orange},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.yellow}].map(s=>(
+        {[{l:"Stages totaux",v:stages.length,c:"#1D4ED8"},{l:"Durée moyenne",v:avgDur+" min",c:C.orange},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.yellow}].map(s=>(
           <div key={s.l} style={{ background:C.card, borderRadius:12, padding:12, border:"1px solid "+C.border, textAlign:"center" }}>
             <div style={{ fontSize:11, color:C.muted }}>{s.l}</div>
             <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.v}</div>
@@ -1165,7 +1165,7 @@ const StageEquipe = () => {
       </div>
 
       <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:16 }}>
-        <div style={{ fontWeight:700, fontSize:13, marginBottom:10, color:C.orange }}>â  Corrections rÃ©centes Ã  travailler</div>
+        <div style={{ fontWeight:700, fontSize:13, marginBottom:10, color:C.orange }}>⚠ Corrections récentes à travailler</div>
         {stages.filter(s=>s.corrections).slice(0,3).map(s=>(
           <div key={s.id} style={{ background:C.orange+"11", borderRadius:8, padding:"8px 12px", marginBottom:8, borderLeft:"3px solid "+C.orange }}>
             <div style={{ fontSize:11, color:C.orange, fontWeight:600, marginBottom:2 }}>{s.date}</div>
@@ -1179,30 +1179,30 @@ const StageEquipe = () => {
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
             <div>
               <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                <span style={{ fontSize:16 }}>{s.ressenti>=9?"ð¤©":s.ressenti>=7?"ð":s.ressenti>=5?"ð":s.ressenti>=3?"ð«¤":s.ressenti>=1?"ð":"ð"}</span>
-                <span style={{ fontWeight:700, fontSize:14 }}>Stage Ãquipe de France</span>
+                <span style={{ fontSize:16 }}>{s.ressenti>=9?"🤩":s.ressenti>=7?"😃":s.ressenti>=5?"😐":s.ressenti>=3?"🫤":s.ressenti>=1?"😒":"😐"}</span>
+                <span style={{ fontWeight:700, fontSize:14 }}>Stage Équipe de France</span>
               </div>
               <div style={{ color:C.muted, fontSize:11 }}>{s.date}</div>
             </div>
             <div style={{ display:"flex", gap:5 }}>
               <button onClick={(e)=>{e.stopPropagation();openEdit(s);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={13}/></button>
-              <button onClick={(e)=>{e.stopPropagation();openCopy(s);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>â§</button>
+              <button onClick={(e)=>{e.stopPropagation();openCopy(s);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
               <button onClick={(e)=>{e.stopPropagation();handleDelete(s.id);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={13}/></button>
             </div>
           </div>
           <div style={{ display:"flex", gap:16, marginBottom:8 }}>
-            <span style={{ fontSize:12, color:C.muted }}>â± <strong style={{ color:C.text }}>{s.duration} min</strong></span>
-            {s.ressenti?<span style={{ fontSize:12, color:C.muted }}>{s.ressenti>=9?"ð¤©":s.ressenti>=7?"ð":s.ressenti>=5?"ð":s.ressenti>=3?"ð«¤":s.ressenti>=1?"ð":"ð"} <strong style={{ color:C.text }}>{s.ressenti}/10</strong></span>:null}<span style={{ fontSize:12, color:C.muted }}>ð¥ <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
+            <span style={{ fontSize:12, color:C.muted }}>⏱ <strong style={{ color:C.text }}>{s.duration} min</strong></span>
+            {s.ressenti?<span style={{ fontSize:12, color:C.muted }}>{s.ressenti>=9?"🤩":s.ressenti>=7?"😃":s.ressenti>=5?"😐":s.ressenti>=3?"🫤":s.ressenti>=1?"😒":"😐"} <strong style={{ color:C.text }}>{s.ressenti}/10</strong></span>:null}<span style={{ fontSize:12, color:C.muted }}>🥋 <strong style={{ color:C.text }}>{s.satisfaction}/10</strong></span>
           </div>
           {s.katas && s.katas.length>0 && (
             <div style={{ marginBottom:6 }}>
-              <div style={{ fontSize:11, fontWeight:600, marginBottom:4, color:C.muted }}>Katas pratiquÃ©s :</div>
+              <div style={{ fontSize:11, fontWeight:600, marginBottom:4, color:C.muted }}>Katas pratiqués :</div>
               <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>{s.katas.map(k=><Badge key={k} label={k} color="#1D4ED8"/>)}</div>
             </div>
           )}
-          {s.focus && <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.blue }}><div style={{ fontSize:11, color:C.blue, whiteSpace:"pre-wrap" }}>ð¯ <strong>Focus :</strong> {s.focus}</div></div>}
-          {s.corrections && <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.orange }}><div style={{ fontSize:11, color:C.orange, whiteSpace:"pre-wrap" }}>â  <strong>Corrections :</strong> {s.corrections}</div></div>}
-          {s.retours && <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green }}><div style={{ fontSize:11, color:C.green, whiteSpace:"pre-wrap" }}>ð¬ <strong>Retours :</strong> {s.retours}</div></div>}
+          {s.focus && <div style={{ background:C.blue+"11", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.blue }}><div style={{ fontSize:11, color:C.blue, whiteSpace:"pre-wrap" }}>🎯 <strong>Focus :</strong> {s.focus}</div></div>}
+          {s.corrections && <div style={{ background:C.orange+"15", borderRadius:8, padding:"6px 10px", marginBottom:6, borderLeft:"3px solid "+C.orange }}><div style={{ fontSize:11, color:C.orange, whiteSpace:"pre-wrap" }}>⚠ <strong>Corrections :</strong> {s.corrections}</div></div>}
+          {s.retours && <div style={{ background:C.green+"15", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.green }}><div style={{ fontSize:11, color:C.green, whiteSpace:"pre-wrap" }}>💬 <strong>Retours :</strong> {s.retours}</div></div>}
         </div>
       ))}
 
@@ -1217,7 +1217,7 @@ const StageEquipe = () => {
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date *</label>
                   <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>DurÃ©e (min) *</label>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Durée (min) *</label>
                   <input type="number" placeholder="240" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
@@ -1237,13 +1237,13 @@ const StageEquipe = () => {
                 </div>
               </div>
               <div style={{ marginBottom:14 }}>
-                <StageSF label="Niveau de DifficultÃ©" value={form.niveauDiff||"Normal"} onChange={v=>setForm(f=>({...f,niveauDiff:v}))} options={["TrÃ¨s Bas","Bas","Normal","ÃlevÃ©","TrÃ¨s ÃlevÃ©"]} />
+                <StageSF label="Niveau de Difficulté" value={form.niveauDiff||"Normal"} onChange={v=>setForm(f=>({...f,niveauDiff:v}))} options={["Très Bas","Bas","Normal","Élevé","Très Élevé"]} />
               </div>
-              <MultiSelect label="Katas pratiquÃ©s" options={KATAS_LIST} selected={form.katas||[]}
+              <MultiSelect label="Katas pratiqués" options={KATAS_LIST} selected={form.katas||[]}
                 onAdd={v=>setForm(f=>({...f,katas:[...(f.katas||[]),v]}))}
                 onRemove={v=>setForm(f=>({...f,katas:(f.katas||[]).filter(k=>k!==v)}))}
                 color="#1D4ED8" />
-              {[["Focus de la sÃ©ance","focus","Points travaillÃ©s, objectifs..."],["Corrections","corrections","Points Ã  corriger..."],["Feedback du Coach","retours","Feedback des coachs..."]].map(([l,k,p])=>(
+              {[["Focus de la séance","focus","Points travaillés, objectifs..."],["Corrections","corrections","Points à corriger..."],["Feedback du Coach","retours","Feedback des coachs..."]].map(([l,k,p])=>(
                 <div key={k} style={{ marginBottom:14 }}>
                   <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
                   <textarea rows={3} placeholder={p} value={form[k]||""} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))}
@@ -1252,7 +1252,7 @@ const StageEquipe = () => {
               ))}
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={handleSave} style={{ background:"#1D4ED8", border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>ð¾ {editingId?"Modifier":"Enregistrer"}</button>
+                <button onClick={handleSave} style={{ background:"#1D4ED8", border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 {editingId?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
@@ -1262,14 +1262,14 @@ const StageEquipe = () => {
   );
 };
 
-// âââ PRÃPA PHYSIQUE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-const PHYS_TYPES = ["PPG","Force","ExplosivitÃ©","Full Body","HaltÃ©rophilie","Endurance","Vitesse","Technique","RÃ©cupÃ©ration","CompÃ©tition"];
-const PHYS_COACHES = ["Kevin","HelvÃ©tia","Romain","Olivier","Michel","JÃ©rÃ©mie","Hugo","Jonathan","Yves","Autre"];
-const INTENSITES = ["Faible","Moyenne","ÃlevÃ©e","Maximale"];
-const STATUTS_PHYS = ["Ã venir","TerminÃ©e","Non rÃ©alisÃ©"];
-const RESSENTIS_PHYS = ["ð Excellent","ð TrÃ¨s bon","ð Bon","ð Moyen","ð FatiguÃ©","ð© ÃpuisÃ©"];
+// ─── PRÉPA PHYSIQUE ─────────────────────────────────────────────────────────
+const PHYS_TYPES = ["PPG","Force","Explosivité","Full Body","Haltérophilie","Endurance","Vitesse","Technique","Récupération","Compétition"];
+const PHYS_COACHES = ["Kevin","Helvétia","Romain","Olivier","Michel","Jérémie","Hugo","Jonathan","Yves","Autre"];
+const INTENSITES = ["Faible","Moyenne","Élevée","Maximale"];
+const STATUTS_PHYS = ["À venir","Terminée","Non réalisé"];
+const RESSENTIS_PHYS = ["😃 Excellent","😊 Très bon","🙂 Bon","😐 Moyen","😔 Fatigué","😩 Épuisé"];
 const EX_TYPES = ["Classique","Bi-set","Tri-set","Super-set","Circuit","HIIT"];
-const EXERCISE_MODES = ["PPG","Force","ExplosivitÃ©","Full Body","HaltÃ©rophilie","Circuit","HIIT"];
+const EXERCISE_MODES = ["PPG","Force","Explosivité","Full Body","Haltérophilie","Circuit","HIIT"];
 
 const mkSerie = () => ({ id: Date.now()+Math.random(), reps:"", poids:"" });
 const mkSubEx = () => ({ id: Date.now()+Math.random(), nom:"", videoUrl:"", repsCibles:"", reposEntre:"", reposApres:"", series:[mkSerie()] });
@@ -1289,16 +1289,16 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
       const vDoc = await getDoc(vRef);
       if (!vDoc.exists()) {
         await setDoc(vRef, { viewedAt: serverTimestamp(), userId: u.id, sessionId: String(s.id), type: "physique" });
-        await notifyNewContent({ type:"session_viewed", title:"ð SÃ©ance physique ouverte", body:(u.prenom||u.id)+" a ouvert la sÃ©ance du "+(s.date||"")+(s.type?" â "+s.type:"")+(s.duration?" Â· "+s.duration+"min":""), createdBy:u.id });
+        await notifyNewContent({ type:"session_viewed", title:"👁 Séance physique ouverte", body:(u.prenom||u.id)+" a ouvert la séance du "+(s.date||"")+(s.type?" — "+s.type:"")+(s.duration?" · "+s.duration+"min":""), createdBy:u.id });
       }
     } catch(e) {}
   };
   const todayStr = new Date().toISOString().split("T")[0];
-  const EMPTY = { date:todayStr, type:"PPG", duration:"", intensite:"Moyenne", statut:"Ã venir", programme:"", coach:"", exercises:[] };
+  const EMPTY = { date:todayStr, type:"PPG", duration:"", intensite:"Moyenne", statut:"À venir", programme:"", coach:"", exercises:[] };
   const [form, setForm] = useState(EMPTY);
 
-  const FILTER_LABELS = ["Toutes","Semaine","ð¥ PPG","ðª Force","â¡ ExplosivitÃ©","ðï¸ HaltÃ©ro","ð¥ Full Body","ð Endurance","ð§ RÃ©cup","ð CompÃ©t","â¡ Vitesse","ð¯ Technique"];
-  const typeMap = { "ð¥ PPG":"PPG","ðª Force":"Force","â¡ ExplosivitÃ©":"ExplosivitÃ©","ðï¸ HaltÃ©ro":"HaltÃ©rophilie","ð¥ Full Body":"Full Body","ð Endurance":"Endurance","ð§ RÃ©cup":"RÃ©cupÃ©ration","ð CompÃ©t":"CompÃ©tition","â¡ Vitesse":"Vitesse","ð¯ Technique":"Technique" };
+  const FILTER_LABELS = ["Toutes","Semaine","🔥 PPG","💪 Force","⚡ Explosivité","🏋️ Haltéro","🔥 Full Body","🏃 Endurance","🧘 Récup","🏆 Compét","⚡ Vitesse","🎯 Technique"];
+  const typeMap = { "🔥 PPG":"PPG","💪 Force":"Force","⚡ Explosivité":"Explosivité","🏋️ Haltéro":"Haltérophilie","🔥 Full Body":"Full Body","🏃 Endurance":"Endurance","🧘 Récup":"Récupération","🏆 Compét":"Compétition","⚡ Vitesse":"Vitesse","🎯 Technique":"Technique" };
   const filterCount = (f) => {
     if (f==="Toutes") return all.length;
     if (f==="Semaine") { const n=new Date(); const w=new Date(n); w.setDate(n.getDate()-n.getDay()); return all.filter(s=>new Date(s.date)>=w).length; }
@@ -1327,22 +1327,22 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
   const updSubSerie = (eid, sid, srid, fld, val) => setForm(f=>({...f,exercises:f.exercises.map(e=>e.id===eid?{...e,sousExercices:e.sousExercices.map(s=>s.id===sid?{...s,series:s.series.map(r=>r.id===srid?{...r,[fld]:val}:r)}:s)}:e)}));
 
   const handleSave = async () => {
-    if (!form.date || !form.duration) { showToast&&showToast("Date et durÃ©e obligatoires","error"); return; }
+    if (!form.date || !form.duration) { showToast&&showToast("Date et durée obligatoires","error"); return; }
     setSaving(true);
     try {
       const data = {...form, duration:parseInt(form.duration)};
       if (editingId) {
         await setDoc(doc(db,"physique_sessions",String(editingId)), data, {merge:true});
-        showToast&&showToast("SÃ©ance modifiÃ©e","success");
+        showToast&&showToast("Séance modifiée","success");
       } else {
-        // v42: forcer le refresh du token Firebase Auth avant d'Ã©crire
+        // v42: forcer le refresh du token Firebase Auth avant d'écrire
         try {
           const _fb = auth.currentUser;
           if (_fb) { await _fb.getIdToken(true); }
-          else { console.error("[v42] auth.currentUser null â Ã©criture sans auth!"); }
+          else { console.error("[v42] auth.currentUser null — écriture sans auth!"); }
         } catch(te) { console.warn("[v42] token refresh failed:", te.code, te.message); }
         const _ref42 = await addDoc(collection(db,"physique_sessions"), {...data, createdAt:serverTimestamp()});
-        // v44 â notification push sÃ©ance physique
+        // v44 — notification push séance physique
         await addDoc(collection(db, "notifications_queue"), {
           type: "nouvelle_seance_physique",
           athlete: "Iliana Voratovic",
@@ -1355,17 +1355,17 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
           sent: false
         });
         console.log("[v42] addDoc OK id:", _ref42.id, "type:", data.type, "uid:", auth.currentUser?.uid);
-        showToast&&showToast("SÃ©ance enregistrÃ©e â","success");
+        showToast&&showToast("Séance enregistrée ✓","success");
         try {
           const u = getCurrentUser();
-          const statLabel = data.statut ? " Â· "+data.statut : "";
-          await notifyNewContent({ type:"new_physique_session", title:"ð Nouvelle sÃ©ance physique â "+data.type, body:"SÃ©ance du "+(data.date||"")+" Â· "+(data.duration||"")+" min"+statLabel, createdBy:u?.id||"unknown" });
+          const statLabel = data.statut ? " · "+data.statut : "";
+          await notifyNewContent({ type:"new_physique_session", title:"📅 Nouvelle séance physique — "+data.type, body:"Séance du "+(data.date||"")+" · "+(data.duration||"")+" min"+statLabel, createdBy:u?.id||"unknown" });
         } catch(ne) {}
       }
-      if (data.statut === "TerminÃ©e" || data.statut === "Terminee") {
+      if (data.statut === "Terminée" || data.statut === "Terminee") {
         try {
           const u = getCurrentUser();
-          await notifyNewContent({ type:"seance_physique_terminee", title:"ðª SÃ©ance physique terminÃ©e â "+data.type, body:"SÃ©ance du "+(data.date||"")+" Â· "+(data.duration||"")+" min"+(data.programme?" Â· "+data.programme:""), createdBy:u?.id||"unknown" });
+          await notifyNewContent({ type:"seance_physique_terminee", title:"💪 Séance physique terminée — "+data.type, body:"Séance du "+(data.date||"")+" · "+(data.duration||"")+" min"+(data.programme?" · "+data.programme:""), createdBy:u?.id||"unknown" });
         } catch(ne) {}
       }
       setForm(EMPTY); setShowForm(false); setEditingId(null);
@@ -1377,7 +1377,7 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Supprimer cette sÃ©ance ?")) return;
+    if (!window.confirm("Supprimer cette séance ?")) return;
     deleteDoc(doc(db,"physique_sessions",String(id))).catch(console.error);
   };
 
@@ -1390,17 +1390,17 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
     await addDoc(collection(db, "physique_sessions"), { ...copy, date: new Date().toISOString().split("T")[0], _source: "duplicate" });
   };
 
-  const typeColor = (t) => ({"PPG":"#7c3aed","Full Body":"#7c3aed","Force":C.blue,"HaltÃ©rophilie":C.blue,"Endurance":C.green,"ExplosivitÃ©":C.orange,"CompÃ©tition":C.yellow,"Technique":C.primary}[t]||C.primary);
+  const typeColor = (t) => ({"PPG":"#7c3aed","Full Body":"#7c3aed","Force":C.blue,"Haltérophilie":C.blue,"Endurance":C.green,"Explosivité":C.orange,"Compétition":C.yellow,"Technique":C.primary}[t]||C.primary);
 
   const SeriesBlock = ({ series, onAdd, onDel, onUpd }) => (
     <div style={{marginTop:10}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-        <span style={{fontSize:12,fontWeight:600}}>SÃ©ries</span>
-        <button onClick={onAdd} style={{background:"none",border:"1.5px solid "+C.primary,borderRadius:6,padding:"3px 10px",fontSize:11,fontWeight:600,color:C.primary,cursor:"pointer"}}>+ Ajouter une sÃ©rie</button>
+        <span style={{fontSize:12,fontWeight:600}}>Séries</span>
+        <button onClick={onAdd} style={{background:"none",border:"1.5px solid "+C.primary,borderRadius:6,padding:"3px 10px",fontSize:11,fontWeight:600,color:C.primary,cursor:"pointer"}}>+ Ajouter une série</button>
       </div>
       {series.map(sr=>(
         <div key={sr.id} style={{display:"flex",gap:8,marginBottom:6,alignItems:"center"}}>
-          <input placeholder="Reps effectuÃ©es" value={sr.reps} onChange={e=>onUpd(sr.id,"reps",e.target.value)} style={{...inp,flex:1}}/>
+          <input placeholder="Reps effectuées" value={sr.reps} onChange={e=>onUpd(sr.id,"reps",e.target.value)} style={{...inp,flex:1}}/>
           <input placeholder="Poids (kg)" value={sr.poids} onChange={e=>onUpd(sr.id,"poids",e.target.value)} style={{...inp,flex:1}}/>
           <button onClick={()=>onDel(sr.id)} style={{background:"none",border:"none",cursor:"pointer",color:C.red,padding:4}}><X size={14}/></button>
         </div>
@@ -1410,11 +1410,11 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
 
   return (
     <div>
-      <SectionHeader icon="ðª" title="PrÃ©paration Physique" subtitle="Suivez toutes vos sÃ©ances de prÃ©paration physique" color="#7c3aed"
-        action={<button onClick={()=>{setForm(EMPTY);setEditingId(null);setShowForm(true);}} style={{background:G,border:"none",borderRadius:8,padding:"8px 16px",fontSize:12,fontWeight:700,color:"#fff",cursor:"pointer"}}>+ Nouvelle sÃ©ance</button>}/>
+      <SectionHeader icon="💪" title="Préparation Physique" subtitle="Suivez toutes vos séances de préparation physique" color="#7c3aed"
+        action={<button onClick={()=>{setForm(EMPTY);setEditingId(null);setShowForm(true);}} style={{background:G,border:"none",borderRadius:8,padding:"8px 16px",fontSize:12,fontWeight:700,color:"#fff",cursor:"pointer"}}>+ Nouvelle séance</button>}/>
 
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:14}}>
-        {[{l:"SÃ©ances totales",v:all.length,c:"#7c3aed"},{l:"Cette semaine",v:filterCount("Semaine"),c:C.green},{l:"PPG / Full Body",v:all.filter(s=>["PPG","Full Body"].includes(s.type)).length,c:C.orange}].map(s=>(
+        {[{l:"Séances totales",v:all.length,c:"#7c3aed"},{l:"Cette semaine",v:filterCount("Semaine"),c:C.green},{l:"PPG / Full Body",v:all.filter(s=>["PPG","Full Body"].includes(s.type)).length,c:C.orange}].map(s=>(
           <div key={s.l} style={{background:C.card,borderRadius:12,padding:12,border:"1px solid "+C.border,textAlign:"center"}}>
             <div style={{fontSize:11,color:C.muted}}>{s.l}</div>
             <div style={{fontSize:18,fontWeight:800,color:s.c}}>{s.v}</div>
@@ -1426,25 +1426,25 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
         {FILTER_LABELS.map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} count={filterCount(f)}/>)}
       </div>
 
-      <div style={{color:C.muted,fontSize:12,marginBottom:12}}>{filtered.length} sÃ©ance{filtered.length!==1?"s":""}</div>
+      <div style={{color:C.muted,fontSize:12,marginBottom:12}}>{filtered.length} séance{filtered.length!==1?"s":""}</div>
 
       {filtered.length===0
-        ? <EmptyState icon={<Dumbbell size={24}/>} title="Aucune sÃ©ance" sub="Ajoutez votre premiÃ¨re sÃ©ance de prÃ©pa physique" action={{label:"Nouvelle sÃ©ance",fn:()=>setShowForm(true)}}/>
+        ? <EmptyState icon={<Dumbbell size={24}/>} title="Aucune séance" sub="Ajoutez votre première séance de prépa physique" action={{label:"Nouvelle séance",fn:()=>setShowForm(true)}}/>
         : filtered.map(s=>(
           <div key={s.id} style={{background:C.card,borderRadius:14,padding:14,border:"1px solid "+(expandedIdP===s.id?"#7c3aed":C.border),marginBottom:10,cursor:"pointer"}} onClick={()=>{ setExpandedIdP(expandedIdP===s.id?null:s.id); trackViewP(s); }}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
               <div>
                 <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:4}}>
                   <span style={{background:typeColor(s.type),color:"#fff",borderRadius:6,padding:"2px 8px",fontSize:11,fontWeight:700}}>{s.type}</span>
-                  {s.statut&&<span style={{background:s.statut==="TerminÃ©e"?C.green+"22":s.statut==="Ã venir"?C.primary+"22":C.muted+"22",color:s.statut==="TerminÃ©e"?C.green:s.statut==="Ã venir"?C.primary:C.muted,borderRadius:6,padding:"2px 8px",fontSize:10,fontWeight:600}}>{s.statut}</span>}
+                  {s.statut&&<span style={{background:s.statut==="Terminée"?C.green+"22":s.statut==="À venir"?C.primary+"22":C.muted+"22",color:s.statut==="Terminée"?C.green:s.statut==="À venir"?C.primary:C.muted,borderRadius:6,padding:"2px 8px",fontSize:10,fontWeight:600}}>{s.statut}</span>}
                 </div>
                 <div style={{fontSize:13,fontWeight:700,color:C.text}}>{new Date(s.date).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
-                <div style={{fontSize:12,color:C.muted,marginTop:2}}>{s.duration} min{s.intensite?" Â· "+s.intensite:""}{s.coach?" Â· "+s.coach:""}{s.programme?" Â· "+s.programme:""}</div>
-                {s.exercises&&s.exercises.length>0&&<div style={{fontSize:11,color:"#7c3aed",marginTop:4}}>ðª {s.exercises.length} exercice{s.exercises.length>1?"s":""}</div>}
+                <div style={{fontSize:12,color:C.muted,marginTop:2}}>{s.duration} min{s.intensite?" · "+s.intensite:""}{s.coach?" · "+s.coach:""}{s.programme?" · "+s.programme:""}</div>
+                {s.exercises&&s.exercises.length>0&&<div style={{fontSize:11,color:"#7c3aed",marginTop:4}}>💪 {s.exercises.length} exercice{s.exercises.length>1?"s":""}</div>}
               </div>
               <div style={{display:"flex",gap:8}}>
-                <button onClick={(e)=>{e.stopPropagation();openEdit(s);}} style={{background:"none",border:"1.5px solid "+C.border,borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer"}}>âï¸</button>
-                <button onClick={(e)=>{e.stopPropagation();handleDuplicate(s);}} style={{background:"none",border:"1.5px solid #7c3aed",borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer",color:"#7c3aed"}} title="Dupliquer">â§</button>
+                <button onClick={(e)=>{e.stopPropagation();openEdit(s);}} style={{background:"none",border:"1.5px solid "+C.border,borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer"}}>✏️</button>
+                <button onClick={(e)=>{e.stopPropagation();handleDuplicate(s);}} style={{background:"none",border:"1.5px solid #7c3aed",borderRadius:6,padding:"5px 10px",fontSize:11,cursor:"pointer",color:"#7c3aed"}} title="Dupliquer">⧉</button>
                 <button onClick={(e)=>{e.stopPropagation();handleDelete(String(s.id));}} style={{background:"none",border:"none",cursor:"pointer",color:C.red}}><Trash2 size={14}/></button>
               </div>
             </div>
@@ -1455,11 +1455,11 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
                     <div style={{fontSize:12,fontWeight:700,color:"#7c3aed"}}>{idx+1}. {ex.nom}</div>
                     {ex.repsCibles&&<div style={{fontSize:11,color:C.muted,marginTop:2,whiteSpace:"pre-wrap"}}>{ex.repsCibles}</div>}
                     {ex.series&&ex.series.filter(sr=>sr.reps||sr.poids).length>0&&(
-                      <div style={{fontSize:11,color:C.text,marginTop:2}}>{ex.series.filter(sr=>sr.reps||sr.poids).map((sr,si)=>"S"+(si+1)+": "+sr.reps+(sr.poids?" @"+sr.poids+"kg":"")).join(" Â· ")}</div>
+                      <div style={{fontSize:11,color:C.text,marginTop:2}}>{ex.series.filter(sr=>sr.reps||sr.poids).map((sr,si)=>"S"+(si+1)+": "+sr.reps+(sr.poids?" @"+sr.poids+"kg":"")).join(" · ")}</div>
                     )}
                     {ex.sousExercices&&ex.sousExercices.map(sx=>(
                       <div key={sx.id} style={{marginTop:4,paddingLeft:10,borderLeft:"2px solid #7c3aed44"}}>
-                        <div style={{fontSize:11,fontWeight:600,color:"#7c3aed99"}}>â³ {sx.nom}</div>
+                        <div style={{fontSize:11,fontWeight:600,color:"#7c3aed99"}}>↳ {sx.nom}</div>
                         {sx.repsCibles&&<div style={{fontSize:10,color:C.muted}}>{sx.repsCibles}</div>}
                       </div>
                     ))}
@@ -1475,7 +1475,7 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:1000,overflowY:"auto",padding:"20px 0"}} onClick={e=>{if(e.target===e.currentTarget)setShowForm(false);}}>
           <div style={{background:"#fff",borderRadius:16,width:"min(700px,95vw)",margin:"0 auto"}}>
             <div style={{background:G,borderRadius:"16px 16px 0 0",padding:"20px 24px"}}>
-              <div style={{fontSize:18,fontWeight:800,color:"#fff"}}>{editingId?"Modifier la sÃ©ance":"Nouvelle sÃ©ance"}</div>
+              <div style={{fontSize:18,fontWeight:800,color:"#fff"}}>{editingId?"Modifier la séance":"Nouvelle séance"}</div>
             </div>
             <div style={{padding:24}}>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14,marginBottom:14}}>
@@ -1485,10 +1485,10 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
                     {PHYS_TYPES.map(t=><option key={t}>{t}</option>)}
                   </select>
                 </div>
-                <div><label style={lbl}>DurÃ©e (minutes) *</label><input type="number" min="1" placeholder="ex: 60" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} style={inp}/></div>
+                <div><label style={lbl}>Durée (minutes) *</label><input type="number" min="1" placeholder="ex: 60" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} style={inp}/></div>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
-                <div><label style={lbl}>IntensitÃ©</label>
+                <div><label style={lbl}>Intensité</label>
                   <select value={form.intensite} onChange={e=>setForm(f=>({...f,intensite:e.target.value}))} style={inp}>
                     {INTENSITES.map(t=><option key={t}>{t}</option>)}
                   </select>
@@ -1501,23 +1501,23 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
               </div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
                 <div><label style={lbl}>Nom du programme</label><input placeholder="Ex: Programme Semaine 1" value={form.programme} onChange={e=>setForm(f=>({...f,programme:e.target.value}))} style={inp}/></div>
-                <div><label style={lbl}>Coach / PrÃ©parateur</label>
+                <div><label style={lbl}>Coach / Préparateur</label>
                   <select value={form.coach} onChange={e=>setForm(f=>({...f,coach:e.target.value}))} style={inp}>
-                    <option value="">SÃ©lectionner...</option>
+                    <option value="">Sélectionner...</option>
                     {PHYS_COACHES.map(c=><option key={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
               {hasExMode&&(
                 <div style={{background:"#7c3aed11",border:"1.5px solid #7c3aed33",borderRadius:10,padding:"12px 16px",marginBottom:16}}>
-                  <div style={{fontSize:13,fontWeight:700,color:"#7c3aed"}}>ðª Mode Force/ExplosivitÃ©/Full Body activÃ©</div>
+                  <div style={{fontSize:13,fontWeight:700,color:"#7c3aed"}}>💪 Mode Force/Explosivité/Full Body activé</div>
                   <div style={{fontSize:12,color:"#7c3aed99",marginTop:2}}>Vous pouvez maintenant ajouter votre programme d'exercices ci-dessous</div>
                 </div>
               )}
               {hasExMode&&(
                 <div style={{marginBottom:16}}>
                   <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
-                    <span style={{fontSize:16}}>ð¹</span>
+                    <span style={{fontSize:16}}>📹</span>
                     <span style={{fontSize:15,fontWeight:700}}>Programme d'exercices</span>
                   </div>
                   {form.exercises.map((ex,ei)=>(
@@ -1534,11 +1534,11 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
                           </select>
                         </div>
                       </div>
-                      <div style={{marginBottom:12}}><label style={lbl}>Lien vidÃ©o (optionnel)</label><input placeholder="URL YouTube/Vimeo" value={ex.videoUrl} onChange={e=>updEx(ex.id,"videoUrl",e.target.value)} style={inp}/></div>
+                      <div style={{marginBottom:12}}><label style={lbl}>Lien vidéo (optionnel)</label><input placeholder="URL YouTube/Vimeo" value={ex.videoUrl} onChange={e=>updEx(ex.id,"videoUrl",e.target.value)} style={inp}/></div>
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:12}}>
                         <div><label style={lbl}>Reps cibles</label><input placeholder="Ex: 8-12, Max, 30s" value={ex.repsCibles} onChange={e=>updEx(ex.id,"repsCibles",e.target.value)} style={inp}/></div>
                         <div><label style={lbl}>Repos entre reps (s)</label><input type="number" value={ex.reposEntre} onChange={e=>updEx(ex.id,"reposEntre",e.target.value)} style={inp}/></div>
-                        <div><label style={lbl}>Repos aprÃ¨s exercice (s)</label><input type="number" value={ex.reposApres} onChange={e=>updEx(ex.id,"reposApres",e.target.value)} style={inp}/></div>
+                        <div><label style={lbl}>Repos après exercice (s)</label><input type="number" value={ex.reposApres} onChange={e=>updEx(ex.id,"reposApres",e.target.value)} style={inp}/></div>
                       </div>
                       <SeriesBlock series={ex.series} onAdd={()=>addSerie(ex.id)} onDel={sid=>delSerie(ex.id,sid)} onUpd={(sid,fld,val)=>updSerie(ex.id,sid,fld,val)}/>
                       {["Bi-set","Tri-set","Super-set"].includes(ex.typeEx)&&(
@@ -1554,11 +1554,11 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
                                 <button onClick={()=>delSubEx(ex.id,sx.id)} style={{background:"none",border:"none",cursor:"pointer",color:C.red}}><X size={14}/></button>
                               </div>
                               <input placeholder="Nom du sous-exercice" value={sx.nom} onChange={e=>updSubEx(ex.id,sx.id,"nom",e.target.value)} style={{...inp,marginBottom:8}}/>
-                              <input placeholder="Lien vidÃ©o (optionnel)" value={sx.videoUrl} onChange={e=>updSubEx(ex.id,sx.id,"videoUrl",e.target.value)} style={{...inp,marginBottom:8}}/>
+                              <input placeholder="Lien vidéo (optionnel)" value={sx.videoUrl} onChange={e=>updSubEx(ex.id,sx.id,"videoUrl",e.target.value)} style={{...inp,marginBottom:8}}/>
                               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:8}}>
                                 <input placeholder="Reps cibles" value={sx.repsCibles} onChange={e=>updSubEx(ex.id,sx.id,"repsCibles",e.target.value)} style={inp}/>
                                 <input type="number" placeholder="Repos entre (s)" value={sx.reposEntre} onChange={e=>updSubEx(ex.id,sx.id,"reposEntre",e.target.value)} style={inp}/>
-                                <input type="number" placeholder="Repos aprÃ¨s (s)" value={sx.reposApres} onChange={e=>updSubEx(ex.id,sx.id,"reposApres",e.target.value)} style={inp}/>
+                                <input type="number" placeholder="Repos après (s)" value={sx.reposApres} onChange={e=>updSubEx(ex.id,sx.id,"reposApres",e.target.value)} style={inp}/>
                               </div>
                               <SeriesBlock series={sx.series} onAdd={()=>addSubSerie(ex.id,sx.id)} onDel={srid=>delSubSerie(ex.id,sx.id,srid)} onUpd={(srid,fld,val)=>updSubSerie(ex.id,sx.id,srid,fld,val)}/>
                             </div>
@@ -1572,7 +1572,7 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
               )}
               <div style={{display:"flex",gap:10,justifyContent:"flex-end",marginTop:16,paddingTop:16,borderTop:"1px solid "+C.border}}>
                 <button onClick={()=>setShowForm(false)} style={{background:"none",border:"1.5px solid "+C.border,borderRadius:8,padding:"10px 20px",fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:6}}><X size={14}/> Annuler</button>
-                <button onClick={handleSave} disabled={saving} style={{background:G,border:"none",borderRadius:8,padding:"10px 24px",fontSize:13,fontWeight:700,color:"#fff",cursor:"pointer",opacity:saving?0.7:1}}>ð¾ {editingId?"Modifier":"Enregistrer"}</button>
+                <button onClick={handleSave} disabled={saving} style={{background:G,border:"none",borderRadius:8,padding:"10px 24px",fontSize:13,fontWeight:700,color:"#fff",cursor:"pointer",opacity:saving?0.7:1}}>💾 {editingId?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
@@ -1582,9 +1582,9 @@ const PrepaPhysique = ({ physiqueSessions, setPhysiqueSessions, showToast }) => 
   );
 };
 
-// âââ COMPÃTITIONS âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-const COMP_COACHES = ["HelvÃ©tia","Romain","Olivier","Yves","Jonathan","Hugo","JÃ©rÃ©mie","Michel","Autre"];
-const TOUR_NOMS = ["1er tour","2Ã¨me tour","3Ã¨me tour","HuitiÃ¨me de Finale","Quart de Finale","Demi Finale","Finale","Finale de Bronze","1er tour de repÃªchage","2Ã¨me tour de repÃªchage"];
+// ─── COMPÉTITIONS ─────────────────────────────────────────────────────────────
+const COMP_COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Jérémie","Michel","Autre"];
+const TOUR_NOMS = ["1er tour","2ème tour","3ème tour","Huitième de Finale","Quart de Finale","Demi Finale","Finale","Finale de Bronze","1er tour de repêchage","2ème tour de repêchage"];
 const FLAG_SCORES = ["5-0","4-1","3-2","2-3","1-4","0-5","7-0","6-1","5-2","4-3","3-4","2-5","1-6","0-7"];
 
 const RESULT_COLOR = (r) => {
@@ -1592,12 +1592,12 @@ const RESULT_COLOR = (r) => {
   if (r.includes("Or")) return C.yellow;
   if (r.includes("Argent")) return "#94A3B8";
   if (r.includes("Bronze")) return "#CD7F32";
-  if (r.includes("DÃ©faite") || r.includes("Perdu")) return C.red;
+  if (r.includes("Défaite") || r.includes("Perdu")) return C.red;
   return C.orange;
 };
 
-const EMPTY_COMP = { nom:"", date:"", lieu:"", statut:"Ã venir", coach:"", resultat:"", recordPerso:false, tours:[], lienVideo:"", notes:"" };
-const EMPTY_TOUR = { nom:"1er tour", kata:"GojÅ«shiho ShÅ", scoreType:"Drapeaux", score:"5-0", ok:true, note:"" };
+const EMPTY_COMP = { nom:"", date:"", lieu:"", statut:"À venir", coach:"", resultat:"", recordPerso:false, tours:[], lienVideo:"", notes:"" };
+const EMPTY_TOUR = { nom:"1er tour", kata:"Gojūshiho Shō", scoreType:"Drapeaux", score:"5-0", ok:true, note:"" };
 
 const Competitions = ({ competitions, setCompetitions }) => {
   const allMonths = [...new Set(
@@ -1609,7 +1609,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
       })
   )];
   const [activeMois, setActiveMois] = useState(allMonths[0] || "");
-  // Auto-sÃ©lectionner le mois le plus rÃ©cent quand Firestore charge
+  // Auto-sélectionner le mois le plus récent quand Firestore charge
   useEffect(() => {
     if (allMonths.length > 0 && !activeMois) setActiveMois(allMonths[0]);
   }, [allMonths.length]);
@@ -1620,7 +1620,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
   const openAdd = () => { setForm(EMPTY_COMP); setEditId(null); setShowForm(true); };
   const openEdit = (c) => { setForm({...c, nom: c.nom||c.name||"", resultat: c.resultat||c.result||""}); setEditId(c.id); setShowForm(true); };
-  const openCopy = (c) => { if (!window.confirm("Copier "+(c.nom||"cette compÃ©tition")+" ?")) return; if (!window.confirm("Copier "+(c.nom||"cette compÃ©tition")+" ?")) return; setForm({...c, nom:(c.nom||c.name||"")+" (copie)", resultat:c.resultat||c.result||"", date: new Date().toISOString().split("T")[0]}); setEditId(null); setShowForm(true); };
+  const openCopy = (c) => { if (!window.confirm("Copier "+(c.nom||"cette compétition")+" ?")) return; if (!window.confirm("Copier "+(c.nom||"cette compétition")+" ?")) return; setForm({...c, nom:(c.nom||c.name||"")+" (copie)", resultat:c.resultat||c.result||"", date: new Date().toISOString().split("T")[0]}); setEditId(null); setShowForm(true); };
 
   const addTour = () => {
     if (!newTour.nom || !newTour.kata) return;
@@ -1632,35 +1632,35 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
   const isSavingRef = useRef(false);
   const handleSave = async () => {
-    if (isSavingRef.current) { console.log("[v49] handleSave ignorÃ© (dÃ©jÃ  en cours)"); return; }
+    if (isSavingRef.current) { console.log("[v49] handleSave ignoré (déjà en cours)"); return; }
     isSavingRef.current = true;
     if (!form.nom || !form.date) { isSavingRef.current = false; return; }
     if (editId) {
-      // v43: mettre Ã  jour dans Firestore
+      // v43: mettre à jour dans Firestore
       try {
         const { id: _fid, ...formData } = form;
       await setDoc(doc(db, "competitions", String(editId)), { ...formData, updatedAt: serverTimestamp() }, { merge: true });
-      console.log("[v50] setDoc OK â editId:", editId, "date:", form.date, "nom:", form.nom);
-        // v46 â notification push mise Ã  jour compÃ©tition
+      console.log("[v50] setDoc OK — editId:", editId, "date:", form.date, "nom:", form.nom);
+        // v46 — notification push mise à jour compétition
         try {
-          console.log("[v46] Ãcriture notifications_queue (edit compÃ©t):", form.nom);
+          console.log("[v46] Écriture notifications_queue (edit compét):", form.nom);
           await addDoc(collection(db, "notifications_queue"), {
             type: "competition_modifiee",
-            title: "ð CompÃ©tition mise Ã  jour",
-            body: (form.nom || "CompÃ©tition") + " â " + (form.date || ""),
+            title: "🏆 Compétition mise à jour",
+            body: (form.nom || "Compétition") + " — " + (form.date || ""),
             athlete: "Iliana Voratovic",
             nom: form.nom || "",
             date: form.date || "",
             createdAt: serverTimestamp(),
             sent: false
           });
-          console.log("[v46] notifications_queue (edit) OK â");
+          console.log("[v46] notifications_queue (edit) OK ✓");
         } catch(notifErr) {
           console.error("[v46] ERREUR notifications_queue (edit):", notifErr.code, notifErr.message);
         }
-      } catch(e) { console.error("[v43] Erreur update compÃ©tition:", e.code, e.message); }
-    // v50: retirÃ© â onSnapshot (L3377+) est la seule source de vÃ©ritÃ©
-      // Sync lienVideo dans Firestore si prÃ©sent
+      } catch(e) { console.error("[v43] Erreur update compétition:", e.code, e.message); }
+    // v50: retiré — onSnapshot (L3377+) est la seule source de vérité
+      // Sync lienVideo dans Firestore si présent
       if (form.lienVideo) {
         try {
           const videoId = "comp_" + editId;
@@ -1668,57 +1668,57 @@ const Competitions = ({ competitions, setCompetitions }) => {
           const snap = await getDocs(q);
           if (snap.empty) await addDoc(collection(db, "video_links"), { videoId, lien: form.lienVideo, updatedAt: serverTimestamp() });
           else await updateDoc(doc(db, "video_links", snap.docs[0].id), { lien: form.lienVideo, updatedAt: serverTimestamp() });
-        } catch(e) { console.error("Erreur sync vidÃ©o compÃ©t:", e); }
+        } catch(e) { console.error("Erreur sync vidéo compét:", e); }
       }
     } else {
       // v43: sauvegarder dans Firestore
       try {
                 const { id: _fid2, ...formData2 } = form;
         const ref = await addDoc(collection(db, "competitions"), { ...formData2, hasVideo: !!form.lienVideo, createdAt: serverTimestamp() });
-        // v46 â notification push nouvelle compÃ©tition
+        // v46 — notification push nouvelle compétition
         try {
-          console.log("[v46] Ãcriture notifications_queue (nouvelle compÃ©t):", form.nom);
+          console.log("[v46] Écriture notifications_queue (nouvelle compét):", form.nom);
           await addDoc(collection(db, "notifications_queue"), {
             type: "nouvelle_competition",
-            title: "ð Nouvelle compÃ©tition",
-            body: (form.nom || "CompÃ©tition") + " â " + (form.date || ""),
+            title: "🏆 Nouvelle compétition",
+            body: (form.nom || "Compétition") + " — " + (form.date || ""),
             athlete: "Iliana Voratovic",
             nom: form.nom || "",
             date: form.date || "",
             createdAt: serverTimestamp(),
             sent: false
           });
-          console.log("[v46] notifications_queue (nouvelle) OK â");
+          console.log("[v46] notifications_queue (nouvelle) OK ✓");
         } catch(notifErr) {
           console.error("[v46] ERREUR notifications_queue (nouvelle):", notifErr.code, notifErr.message);
         }
-        // v47: supprimÃ© â l'onSnapshot (L3377) gÃ¨re dÃ©jÃ  la mise Ã  jour, Ã©vite la duplication
-        // v47: supprimÃ© â onSnapshot gÃ¨re dÃ©jÃ  la mise Ã  jour â Ã©vite la duplication
+        // v47: supprimé — l'onSnapshot (L3377) gère déjà la mise à jour, évite la duplication
+        // v47: supprimé — onSnapshot gère déjà la mise à jour → évite la duplication
         // // setCompetitions(prev => [{ id: ref.id, ...form, hasVideo: !!form.lienVideo }, ...prev]);
         if (form.lienVideo) {
           try {
             await addDoc(collection(db, "video_links"), { videoId: "comp_" + ref.id, lien: form.lienVideo, updatedAt: serverTimestamp() });
-          } catch(e) { console.error("Erreur sync vidÃ©o compÃ©t:", e); }
+          } catch(e) { console.error("Erreur sync vidéo compét:", e); }
         }
       } catch(e) {
-        console.error("[v43] Erreur save compÃ©tition:", e.code, e.message);
+        console.error("[v43] Erreur save compétition:", e.code, e.message);
         const newId = Date.now();
         setCompetitions(prev => [{ id: newId, ...form, hasVideo: !!form.lienVideo }, ...prev]);
       }
     }
     if (typeof showToast === 'function') {
-      showToast(editId ? "CompÃ©tition mise Ã  jour â" : "CompÃ©tition ajoutÃ©e â", "success");
+      showToast(editId ? "Compétition mise à jour ✓" : "Compétition ajoutée ✓", "success");
     }
-    if (typeof showToast === 'function') showToast(editId ? "CompÃ©tition mise Ã  jour â" : "CompÃ©tition ajoutÃ©e â", "success");
+    if (typeof showToast === 'function') showToast(editId ? "Compétition mise à jour ✓" : "Compétition ajoutée ✓", "success");
     isSavingRef.current = false;
     setShowForm(false);
   };
 
   const handleDelete = (id) => {
-    if (!window.confirm("Supprimer cette compÃ©tition ?")) return;
+    if (!window.confirm("Supprimer cette compétition ?")) return;
     // v43: supprimer de Firestore
-    deleteDoc(doc(db, "competitions", String(id))).catch(e => console.error("[v43] Erreur delete compÃ©tition:", e));
-    // v50: retirÃ© â onSnapshot gÃ¨re la suppression
+    deleteDoc(doc(db, "competitions", String(id))).catch(e => console.error("[v43] Erreur delete compétition:", e));
+    // v50: retiré — onSnapshot gère la suppression
   };
 
   const filteredComps = competitions
@@ -1740,11 +1740,11 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
   return (
     <div>
-      <SectionHeader icon="ð" title="CompÃ©titions" subtitle="Suivez vos performances et rÃ©sultats ð¥" color={C.orange}
-        action={<Btn onClick={openAdd} color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle compÃ©tition</Btn>} />
+      <SectionHeader icon="🏆" title="Compétitions" subtitle="Suivez vos performances et résultats 🥇" color={C.orange}
+        action={<Btn onClick={openAdd} color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle compétition</Btn>} />
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:14 }}>
-        {[{l:"CompÃ©titions",v:competitions.length,c:C.orange},{l:"Victoires",v:competitions.filter(c=>c.result?.includes("Or")||c.result?.includes("1er")).length,c:C.yellow},{l:"Avec vidÃ©o",v:competitions.filter(c=>c.lienVideo||c.hasVideo).length,c:C.primary}].map(s=>(
+        {[{l:"Compétitions",v:competitions.length,c:C.orange},{l:"Victoires",v:competitions.filter(c=>c.result?.includes("Or")||c.result?.includes("1er")).length,c:C.yellow},{l:"Avec vidéo",v:competitions.filter(c=>c.lienVideo||c.hasVideo).length,c:C.primary}].map(s=>(
           <div key={s.l} style={{ background:C.card, borderRadius:12, padding:12, border:"1px solid "+C.border, textAlign:"center" }}>
             <div style={{ fontSize:11, color:C.muted }}>{s.l}</div>
             <div style={{ fontSize:16, fontWeight:800, color:s.c }}>{s.v}</div>
@@ -1757,7 +1757,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
         {allMonths.map(m=><FilterPill key={m} label={m} active={activeMois===m} onClick={()=>setActiveMois(m)} />)}
       </div>
 
-      {filteredComps.length === 0 && <EmptyState icon={<Trophy size={24}/>} title="Aucune compÃ©tition ce mois" sub="Essayez un autre mois" action={{ label:"Ajouter", fn:openAdd }}/>}
+      {filteredComps.length === 0 && <EmptyState icon={<Trophy size={24}/>} title="Aucune compétition ce mois" sub="Essayez un autre mois" action={{ label:"Ajouter", fn:openAdd }}/>}
 
       {filteredComps.map(c=>(
         <div key={c.id} style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12 }}>
@@ -1766,30 +1766,30 @@ const Competitions = ({ competitions, setCompetitions }) => {
             <div style={{ display:"flex", gap:5, flexShrink:0 }}>
               {(c.lienVideo || c.hasVideo) && (
                 <button onClick={()=>c.lienVideo&&window.open(c.lienVideo,"_blank")} style={{ background:C.primary+"22", border:"1px solid "+C.primary+"44", borderRadius:8, padding:"4px 8px", fontSize:11, color:C.primary, cursor:"pointer", display:"flex", alignItems:"center", gap:4 }}>
-                  <Video size={12}/> VidÃ©o
+                  <Video size={12}/> Vidéo
                 </button>
               )}
               <button onClick={()=>openEdit(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={13}/></button>
-              <button onClick={()=>openCopy(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>â§</button>
+              <button onClick={()=>openCopy(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
               <button onClick={()=>handleDelete(c.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={13}/></button>
             </div>
           </div>
-          <div style={{ color:C.muted, fontSize:11, marginBottom:10 }}>ð {c.date} Â· ð {c.lieu} Â· ð¤ {c.coach}</div>
+          <div style={{ color:C.muted, fontSize:11, marginBottom:10 }}>📅 {c.date} · 📍 {c.lieu} · 👤 {c.coach}</div>
           {(c.result||c.resultat) && (
             <div style={{ background:RESULT_COLOR(c.result||c.resultat)+"22", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+RESULT_COLOR(c.result||c.resultat), marginBottom:12 }}>
-              <span style={{ color:RESULT_COLOR(c.result||c.resultat), fontWeight:700, fontSize:13 }}>ð RÃ©sultat : {c.result||c.resultat}</span>
+              <span style={{ color:RESULT_COLOR(c.result||c.resultat), fontWeight:700, fontSize:13 }}>🏆 Résultat : {c.result||c.resultat}</span>
             </div>
           )}
           {c.tours && c.tours.length > 0 && (
             <>
-              <div style={{ fontWeight:600, fontSize:12, marginBottom:8, color:C.muted }}>Tours de la compÃ©tition :</div>
+              <div style={{ fontWeight:600, fontSize:12, marginBottom:8, color:C.muted }}>Tours de la compétition :</div>
               {c.tours.map((t,i)=>(
                 <div key={i} style={{ background:C.bg, borderRadius:10, padding:"10px 12px", marginBottom:8, display:"flex", alignItems:"flex-start", gap:10 }}>
                   <div style={{ flex:1 }}>
                     <div style={{ display:"flex", gap:6, marginBottom:4, flexWrap:"wrap" }}>
                       <Badge label={"Tour "+t.num} color={C.orange}/><span style={{ fontWeight:600, fontSize:13 }}>{t.name||t.nom}</span>
                     </div>
-                    <div style={{ fontSize:12, color:C.muted }}>Kata: <strong style={{ color:C.text }}>{t.kata}</strong> Â· Score: <strong style={{ color:C.text }}>{t.score}</strong></div>
+                    <div style={{ fontSize:12, color:C.muted }}>Kata: <strong style={{ color:C.text }}>{t.kata}</strong> · Score: <strong style={{ color:C.text }}>{t.score}</strong></div>
                     {t.note && <div style={{ fontSize:11, color:C.muted, marginTop:2, fontStyle:"italic" }}>{t.note}</div>}
                   </div>
                   {t.ok ? <CheckCircle2 color={C.green} size={18}/> : <XCircle color={C.red} size={18}/>}
@@ -1799,7 +1799,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
           )}
           {(c.notes||c.note) && (
             <div style={{ background:C.primary+"11", borderRadius:8, padding:"6px 10px", borderLeft:"3px solid "+C.primary, marginTop:6 }}>
-              <div style={{ fontSize:11, color:C.primary }}>ð {c.notes||c.note}</div>
+              <div style={{ fontSize:11, color:C.primary }}>📝 {c.notes||c.note}</div>
             </div>
           )}
         </div>
@@ -1809,11 +1809,11 @@ const Competitions = ({ competitions, setCompetitions }) => {
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
           <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
             <div style={{ background:"linear-gradient(135deg, "+C.orange+", "+C.yellow+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between", position:"sticky", top:0, zIndex:10 }}>
-              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>{editId ? "Modifier" : "Nouvelle"} compÃ©tition</div>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>{editId ? "Modifier" : "Nouvelle"} compétition</div>
               <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
             </div>
             <div style={{ padding:"20px 24px" }}>
-              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Nom de la compÃ©tition *</label>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Nom de la compétition *</label>
                 <input type="text" value={form.nom} onChange={e=>setForm(f=>({...f,nom:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date *</label>
@@ -1822,12 +1822,12 @@ const Competitions = ({ competitions, setCompetitions }) => {
                   <input type="text" value={form.lieu} onChange={e=>setForm(f=>({...f,lieu:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
-                <CompSF label="Statut" value={form.statut} options={["Ã venir","TerminÃ©e","AnnulÃ©e"]} onChange={v=>setForm(f=>({...f,statut:v}))} />
-                <CompSF label="Coach" value={form.coach} options={["SÃ©lectionner...", ...COMP_COACHES]} onChange={v=>setForm(f=>({...f,coach:v}))} />
+                <CompSF label="Statut" value={form.statut} options={["À venir","Terminée","Annulée"]} onChange={v=>setForm(f=>({...f,statut:v}))} />
+                <CompSF label="Coach" value={form.coach} options={["Sélectionner...", ...COMP_COACHES]} onChange={v=>setForm(f=>({...f,coach:v}))} />
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>RÃ©sultat</label>
-                  <input type="text" placeholder="MÃ©daille d'or..." value={form.resultat} onChange={e=>setForm(f=>({...f,resultat:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Résultat</label>
+                  <input type="text" placeholder="Médaille d'or..." value={form.resultat} onChange={e=>setForm(f=>({...f,resultat:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
                 <div style={{ display:"flex", alignItems:"center", gap:8, paddingTop:22 }}>
                   <input type="checkbox" checked={form.recordPerso} onChange={e=>setForm(f=>({...f,recordPerso:e.target.checked}))} style={{ width:16, height:16 }}/>
                   <label style={{ fontSize:13 }}>Record personnel</label>
@@ -1836,11 +1836,11 @@ const Competitions = ({ competitions, setCompetitions }) => {
 
               {/* Tours */}
               <div style={{ marginBottom:14 }}>
-                <div style={{ fontWeight:600, fontSize:13, marginBottom:10 }}>Tours de la compÃ©tition</div>
+                <div style={{ fontWeight:600, fontSize:13, marginBottom:10 }}>Tours de la compétition</div>
                 {form.tours.map((t,i)=>(
                   <div key={i} style={{ background:C.bg, borderRadius:10, padding:"10px 12px", marginBottom:8, display:"flex", justifyContent:"space-between", alignItems:"center", fontSize:12 }}>
-                    <span>Tour {t.num} Â· <strong>{t.nom}</strong> Â· {t.kata} Â· <strong>{t.score}</strong> Â· {t.ok?"â":"â"}</span>
-                    <button onClick={()=>removeTour(i)} style={{ background:"none", border:"none", color:C.red, cursor:"pointer", fontSize:16 }}>Ã</button>
+                    <span>Tour {t.num} · <strong>{t.nom}</strong> · {t.kata} · <strong>{t.score}</strong> · {t.ok?"✅":"❌"}</span>
+                    <button onClick={()=>removeTour(i)} style={{ background:"none", border:"none", color:C.red, cursor:"pointer", fontSize:16 }}>×</button>
                   </div>
                 ))}
                 <div style={{ background:C.bg, borderRadius:10, padding:14, border:"1px dashed "+C.border }}>
@@ -1850,7 +1850,7 @@ const Competitions = ({ competitions, setCompetitions }) => {
                     <CompSF label="Kata" value={newTour.kata} options={KATAS_LIST} onChange={v=>setNewTour(t=>({...t,kata:v}))} />
                   </div>
                   <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:10 }}>
-                    <CompSF label="Type de score" value={newTour.scoreType} options={["Drapeaux","ChiffrÃ©"]} onChange={v=>setNewTour(t=>({...t,scoreType:v,score:v==="Drapeaux"?"5-0":""}))} />
+                    <CompSF label="Type de score" value={newTour.scoreType} options={["Drapeaux","Chiffré"]} onChange={v=>setNewTour(t=>({...t,scoreType:v,score:v==="Drapeaux"?"5-0":""}))} />
                     <div>
                       <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Score</label>
                       {newTour.scoreType === "Drapeaux" ? (
@@ -1868,19 +1868,19 @@ const Competitions = ({ competitions, setCompetitions }) => {
                   </div>
                   <div style={{ display:"flex", gap:8, alignItems:"center", marginBottom:10 }}>
                     <input type="checkbox" checked={newTour.ok} onChange={e=>setNewTour(t=>({...t,ok:e.target.checked}))} style={{ width:16, height:16 }}/>
-                    <label style={{ fontSize:13 }}>QualifiÃ© / Victoire</label>
+                    <label style={{ fontSize:13 }}>Qualifié / Victoire</label>
                   </div>
                   <button onClick={addTour} style={{ background:C.orange+"22", border:"1px solid "+C.orange, borderRadius:8, padding:"8px 16px", fontSize:12, color:C.orange, cursor:"pointer", fontWeight:600 }}>+ Ajouter ce tour</button>
                 </div>
               </div>
 
-              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>ð¬ Lien vidÃ©o (Google Drive, YouTubeâ¦)</label>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>🎬 Lien vidéo (Google Drive, YouTube…)</label>
                 <input type="text" placeholder="https://..." value={form.lienVideo} onChange={e=>setForm(f=>({...f,lienVideo:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Notes</label>
                 <textarea rows={3} value={form.notes} onChange={e=>setForm(f=>({...f,notes:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={handleSave} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>ð¾ {editId?"Modifier":"Enregistrer"}</button>
+                <button onClick={handleSave} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 {editId?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
@@ -1890,9 +1890,9 @@ const Competitions = ({ competitions, setCompetitions }) => {
   );
 };
 
-// âââ CORRECTIONS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-const CORR_COACHES = ["HelvÃ©tia","Romain","Olivier","Yves","Jonathan","Hugo","JÃ©rÃ©mie","Michel","Fernando","Perso","Autre"];
-const CORR_CATEGORIES = ["Technique","Position","Rythme","KimÃ©","Autre"];
+// ─── CORRECTIONS ──────────────────────────────────────────────────────────────
+const CORR_COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Jérémie","Michel","Fernando","Perso","Autre"];
+const CORR_CATEGORIES = ["Technique","Position","Rythme","Kimé","Autre"];
 
 const Corrections = ({ sessions }) => {
   const [activeFilter, setActiveFilter] = useState("Toutes");
@@ -1901,7 +1901,7 @@ const Corrections = ({ sessions }) => {
   const [form, setForm] = useState({ kata:"", entraineur:"", date:"", categorie:"Technique", commentaires:"", coachFeedback:"" });
 
   const sessionCorrs = sessions.filter(s=>s.notes&&s.notes.length>0).map((s,i)=>({
-    id:1000+i, date:s.date, trainer:s.coach||"EntraÃ®neur", kata:s.katas?.[0]||"", content:s.notes
+    id:1000+i, date:s.date, trainer:s.coach||"Entraîneur", kata:s.katas?.[0]||"", content:s.notes
   }));
 
   const [extraCorrs, setExtraCorrs] = useState([]);
@@ -1955,7 +1955,7 @@ const Corrections = ({ sessions }) => {
       </div>
       <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
         <button onClick={()=>openEdit(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:2 }}><Edit2 size={12}/></button>
-        <button onClick={()=>openCopy(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>â§</button>
+        <button onClick={()=>openCopy(c)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted, padding:2, fontSize:11 }}>⧉</button>
         <button onClick={()=>handleDeleteCorr(c.id)} style={{ background:"none", border:"none", cursor:"pointer", color:C.red, padding:2 }}><Trash2 size={12}/></button>
       </div>
     </div>
@@ -1974,10 +1974,10 @@ const Corrections = ({ sessions }) => {
 
   return (
     <div>
-      <SectionHeader icon="â±" title="Corrections" subtitle="Points techniques Ã  travailler" color={C.orange}
+      <SectionHeader icon="⏱" title="Corrections" subtitle="Points techniques à travailler" color={C.orange}
         action={<Btn onClick={()=>{setEditingCorr(null);setForm({kata:"",entraineur:"",date:new Date().toISOString().split("T")[0],categorie:"Technique",commentaires:"",coachFeedback:""});setShowForm(true);}} color="#fff" style={{ color:C.orange, fontSize:12 }}><Plus size={12}/> Nouvelle correction</Btn>} />
       <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap" }}>
-        {["Toutes","Par semaine","Par entraÃ®neur","Par kata"].map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} />)}
+        {["Toutes","Par semaine","Par entraîneur","Par kata"].map(f=><FilterPill key={f} label={f} active={activeFilter===f} onClick={()=>setActiveFilter(f)} />)}
       </div>
       <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{allCorrections.length} corrections</div>
 
@@ -1986,13 +1986,13 @@ const Corrections = ({ sessions }) => {
         c => getWeekKey(c.date),
         (key, list) => { const d = new Date(key); const end = new Date(d); end.setDate(d.getDate()+6); return `Semaine du ${d.toLocaleDateString("fr-FR")} au ${end.toLocaleDateString("fr-FR")} (${list.length})`; }
       )}
-      {activeFilter === "Par entraÃ®neur" && renderGrouped(
-        c => c.trainer || "Non renseignÃ©",
-        (key, list) => `${key} â ${list.length} correction${list.length>1?"s":""}`
+      {activeFilter === "Par entraîneur" && renderGrouped(
+        c => c.trainer || "Non renseigné",
+        (key, list) => `${key} — ${list.length} correction${list.length>1?"s":""}`
       )}
       {activeFilter === "Par kata" && renderGrouped(
-        c => c.kata || "Non renseignÃ©",
-        (key, list) => `${key} â ${list.length} correction${list.length>1?"s":""}`
+        c => c.kata || "Non renseigné",
+        (key, list) => `${key} — ${list.length} correction${list.length>1?"s":""}`
       )}
 
       {showForm && (
@@ -2006,19 +2006,19 @@ const Corrections = ({ sessions }) => {
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Kata *</label>
                   <select value={form.kata} onChange={e=>setForm(f=>({...f,kata:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
-                    <option>SÃ©lectionner un kata</option>
+                    <option>Sélectionner un kata</option>
                     {KATAS_LIST.map(k=><option key={k}>{k}</option>)}
                   </select></div>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>EntraÃ®neur *</label>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Entraîneur *</label>
                   <select value={form.entraineur} onChange={e=>setForm(f=>({...f,entraineur:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
-                    <option>SÃ©lectionner un entraÃ®neur</option>
+                    <option>Sélectionner un entraîneur</option>
                     {CORR_COACHES.map(c=><option key={c}>{c}</option>)}
                   </select></div>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date</label>
                   <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>CatÃ©gorie</label>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Catégorie</label>
                   <select value={form.categorie} onChange={e=>setForm(f=>({...f,categorie:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
                     {CORR_CATEGORIES.map(c=><option key={c}>{c}</option>)}
                   </select></div>
@@ -2031,7 +2031,7 @@ const Corrections = ({ sessions }) => {
                   style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={handleSave} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>ð¾ Enregistrer</button>
+                <button onClick={handleSave} style={{ background:C.orange, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
               </div>
             </div>
           </div>
@@ -2041,31 +2041,31 @@ const Corrections = ({ sessions }) => {
   );
 };
 
-// âââ VIDÃOS âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-const VIDEOS_CATEGORIES = ["Kata","CompÃ©tition","EntraÃ®nement","Technique","Autre"];
+// ─── VIDÉOS ───────────────────────────────────────────────────────────────────
+const VIDEOS_CATEGORIES = ["Kata","Compétition","Entraînement","Technique","Autre"];
 const mockVideos = {
-  "ð CompÃ©titions": [
-    { id:1, titre:"9 mai 2026 â Championnat de France Ãquipe SÃ©nior", date:"2026-05-09", cat:"CompÃ©t." },
-    { id:2, titre:"12 avr. 2026 â Championnat de France Ãquipe", date:"2026-04-12", cat:"CompÃ©t." },
-    { id:3, titre:"11 avr. 2026 â Championnat de France Indiv", date:"2026-04-11", cat:"CompÃ©t." },
-    { id:4, titre:"8 mars 2026 â Liga Nacional 2026", date:"2026-03-08", cat:"CompÃ©t." },
-    { id:5, titre:"17 janv. 2026 â Milon Cup Junior", date:"2026-01-17", cat:"CompÃ©t." },
-    { id:6, titre:"17 janv. 2026 â Milon Cup SÃ©nior", date:"2026-01-17", cat:"CompÃ©t." },
-    { id:7, titre:"9 nov. 2025 â Championnat DÃ©partemental", date:"2025-11-09", cat:"CompÃ©t." },
-    { id:8, titre:"5 oct. 2025 â Liga Nacional", date:"2025-10-05", cat:"CompÃ©t." },
-    { id:9, titre:"26 sept. 2025 â Lion Cup", date:"2025-09-26", cat:"CompÃ©t." },
+  "🏆 Compétitions": [
+    { id:1, titre:"9 mai 2026 – Championnat de France Équipe Sénior", date:"2026-05-09", cat:"Compét." },
+    { id:2, titre:"12 avr. 2026 – Championnat de France Équipe", date:"2026-04-12", cat:"Compét." },
+    { id:3, titre:"11 avr. 2026 – Championnat de France Indiv", date:"2026-04-11", cat:"Compét." },
+    { id:4, titre:"8 mars 2026 – Liga Nacional 2026", date:"2026-03-08", cat:"Compét." },
+    { id:5, titre:"17 janv. 2026 – Milon Cup Junior", date:"2026-01-17", cat:"Compét." },
+    { id:6, titre:"17 janv. 2026 – Milon Cup Sénior", date:"2026-01-17", cat:"Compét." },
+    { id:7, titre:"9 nov. 2025 – Championnat Départemental", date:"2025-11-09", cat:"Compét." },
+    { id:8, titre:"5 oct. 2025 – Liga Nacional", date:"2025-10-05", cat:"Compét." },
+    { id:9, titre:"26 sept. 2025 – Lion Cup", date:"2025-09-26", cat:"Compét." },
   ],
-  "ðª Cours Persos": [
-    { id:10, titre:"17 mai 2026 â GojÅ«shiho Dai, Supaenpei", date:"2026-05-17", cat:"Perso" },
-    { id:11, titre:"13 mai 2026 â GojÅ«shiho Dai", date:"2026-05-13", cat:"Perso" },
-    { id:12, titre:"12 mai 2026 â Supaenpei", date:"2026-05-12", cat:"Perso" },
-    { id:13, titre:"6 mai 2026 â Unsu, GojÅ«shiho ShÅ, GojÅ«shiho Dai", date:"2026-05-06", cat:"Perso" },
-    { id:14, titre:"30 avr. 2026 â Sansai", date:"2026-04-30", cat:"Perso" },
-    { id:15, titre:"28 avr. 2026 â Supaenpei", date:"2026-04-28", cat:"Perso" },
-    { id:16, titre:"25 avr. 2026 â Gankaku", date:"2026-04-25", cat:"Perso" },
-    { id:17, titre:"21 avr. 2026 â GojÅ«shiho ShÅ", date:"2026-04-21", cat:"Perso" },
-    { id:18, titre:"18 avr. 2026 â Unsu", date:"2026-04-18", cat:"Perso" },
-    { id:19, titre:"16 avr. 2026 â GojÅ«shiho Dai", date:"2026-04-16", cat:"Perso" },
+  "💪 Cours Persos": [
+    { id:10, titre:"17 mai 2026 – Gojūshiho Dai, Supaenpei", date:"2026-05-17", cat:"Perso" },
+    { id:11, titre:"13 mai 2026 – Gojūshiho Dai", date:"2026-05-13", cat:"Perso" },
+    { id:12, titre:"12 mai 2026 – Supaenpei", date:"2026-05-12", cat:"Perso" },
+    { id:13, titre:"6 mai 2026 – Unsu, Gojūshiho Shō, Gojūshiho Dai", date:"2026-05-06", cat:"Perso" },
+    { id:14, titre:"30 avr. 2026 – Sansai", date:"2026-04-30", cat:"Perso" },
+    { id:15, titre:"28 avr. 2026 – Supaenpei", date:"2026-04-28", cat:"Perso" },
+    { id:16, titre:"25 avr. 2026 – Gankaku", date:"2026-04-25", cat:"Perso" },
+    { id:17, titre:"21 avr. 2026 – Gojūshiho Shō", date:"2026-04-21", cat:"Perso" },
+    { id:18, titre:"18 avr. 2026 – Unsu", date:"2026-04-18", cat:"Perso" },
+    { id:19, titre:"16 avr. 2026 – Gojūshiho Dai", date:"2026-04-16", cat:"Perso" },
   ],
 };
 
@@ -2075,14 +2075,14 @@ const Videos = ({ competitions, sessions }) => {
   const [form, setForm] = useState({ titre:"", categorie:"Kata", date:"", lien:"", description:"" });
   const [editLinkId, setEditLinkId] = useState(null);
   const [linkInput, setLinkInput] = useState("");
-  // Liens stockÃ©s dans Firestore (partagÃ©s entre tous les utilisateurs)
+  // Liens stockés dans Firestore (partagés entre tous les utilisateurs)
   const [videoLinks, setVideoLinks] = useState({});
 
   useEffect(() => {
     // Charger localStorage en base (liens existants)
     let localLinks = {};
     try { localLinks = JSON.parse(localStorage.getItem("kp_video_links")||"{}"); } catch {}
-    // Puis fusionner avec Firestore (liens partagÃ©s entre utilisateurs)
+    // Puis fusionner avec Firestore (liens partagés entre utilisateurs)
     getDocs(collection(db, "video_links")).then(snap => {
       const links = { ...localLinks };
       snap.docs.forEach(d => { if (d.data().videoId && d.data().lien) links[d.data().videoId] = d.data().lien; });
@@ -2092,26 +2092,26 @@ const Videos = ({ competitions, sessions }) => {
     });
   }, []);
 
-  // Toutes les sÃ©ances Perso â lien depuis la sÃ©ance OU depuis videoLinks local
+  // Toutes les séances Perso — lien depuis la séance OU depuis videoLinks local
   const persoVideos = (sessions || [])
     .filter(s => s.type === "Perso")
     .sort((a,b) => b.date.localeCompare(a.date))
     .map(s => ({
       id: "perso_"+s.id,
       titre: new Date(s.date).toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"})
-             + " â " + (s.katas&&s.katas.length ? s.katas.join(", ") : "SÃ©ance perso"),
+             + " – " + (s.katas&&s.katas.length ? s.katas.join(", ") : "Séance perso"),
       date: s.date, cat: "Perso",
       lien: s.lienVideo || videoLinks["perso_"+s.id] || null,
     }));
 
-  // Toutes les compÃ©titions â lien depuis la compÃ©t OU depuis videoLinks local
+  // Toutes les compétitions — lien depuis la compét OU depuis videoLinks local
   const compVideos = (competitions || [])
     .sort((a,b) => b.date.localeCompare(a.date))
     .map(c => ({
       id: "comp_"+c.id,
       titre: new Date(c.date).toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"})
-             + " â " + (c.name||c.nom||"CompÃ©tition"),
-      date: c.date, cat: "CompÃ©t.",
+             + " – " + (c.name||c.nom||"Compétition"),
+      date: c.date, cat: "Compét.",
       lien: c.lienVideo || videoLinks["comp_"+c.id] || null,
     }));
 
@@ -2149,7 +2149,7 @@ const Videos = ({ competitions, sessions }) => {
     setEditLinkId(null);
   };
 
-  const PERSO_VIDEOS = [...persoVideos, ...extraVideos.filter(v=>v.cat!=="CompÃ©t.")];
+  const PERSO_VIDEOS = [...persoVideos, ...extraVideos.filter(v=>v.cat!=="Compét.")];
 
   const renderGrid = (videos) => (
     <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12 }}>
@@ -2157,7 +2157,7 @@ const Videos = ({ competitions, sessions }) => {
         <div key={v.id} onClick={()=>openVideo(v)} style={{ background:"#1a1a2e", borderRadius:12, overflow:"hidden", cursor: (v.lien||v.url) ? "pointer" : "default", opacity:(v.lien||v.url)?1:0.7 }}>
           <div style={{ height:90, display:"flex", alignItems:"center", justifyContent:"center", color: (v.lien||v.url) ? "#ffffff88" : "#ffffff33", position:"relative" }}>
             <Video size={28}/>
-            {(v.lien||v.url) && <div style={{ position:"absolute", bottom:6, right:6, background:"#ffffff22", borderRadius:4, padding:"2px 6px", fontSize:9, color:"#fff" }}>â¶ Ouvrir</div>}
+            {(v.lien||v.url) && <div style={{ position:"absolute", bottom:6, right:6, background:"#ffffff22", borderRadius:4, padding:"2px 6px", fontSize:9, color:"#fff" }}>▶ Ouvrir</div>}
           </div>
           <div style={{ padding:"8px 10px", background:C.card, borderTop:"1px solid "+C.border }}>
             <div style={{ fontSize:11, fontWeight:600, marginBottom:3, color:C.text, lineHeight:1.3 }}>{v.titre}</div>
@@ -2173,10 +2173,10 @@ const Videos = ({ competitions, sessions }) => {
 
   return (
     <div>
-      <SectionHeader icon="ð¬" title="VidÃ©os" subtitle="BibliothÃ¨que de vidÃ©os d'entraÃ®nement" color="#DC2626"
-        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:"#DC2626", fontSize:12 }}><Plus size={12}/> Ajouter une vidÃ©o</Btn>} />
+      <SectionHeader icon="🎬" title="Vidéos" subtitle="Bibliothèque de vidéos d'entraînement" color="#DC2626"
+        action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:"#DC2626", fontSize:12 }}><Plus size={12}/> Ajouter une vidéo</Btn>} />
 
-      {[["ð CompÃ©titions", compVideos], ["ðª Cours Persos", PERSO_VIDEOS]].map(([section, videos])=>(
+      {[["🏆 Compétitions", compVideos], ["💪 Cours Persos", PERSO_VIDEOS]].map(([section, videos])=>(
         <div key={section} style={{ marginBottom:24 }}>
           <div style={{ background:C.yellow+"22", borderRadius:12, padding:"12px 16px", marginBottom:12, display:"flex", justifyContent:"space-between", alignItems:"center", border:"1px solid "+C.yellow+"44" }}>
             <span style={{ fontWeight:700, fontSize:14, color:C.orange }}>{section}</span>
@@ -2184,9 +2184,9 @@ const Videos = ({ competitions, sessions }) => {
           </div>
           {videos.length > 0 ? renderGrid(videos) : (
             <div style={{ background:C.bg, borderRadius:10, padding:"14px 16px", border:"1px dashed "+C.border }}>
-              <div style={{ color:C.muted, fontSize:12 }}>Aucune vidÃ©o pour l'instant.</div>
+              <div style={{ color:C.muted, fontSize:12 }}>Aucune vidéo pour l'instant.</div>
               <div style={{ color:C.muted, fontSize:11, marginTop:4 }}>
-                {section.includes("CompÃ©t") ? "â Ajoutez un lien vidÃ©o dans la fiche d'une compÃ©tition (onglet CompÃ©titions)." : "â Ajoutez un lien vidÃ©o dans la fiche d'une sÃ©ance Perso (onglet SÃ©ances KaratÃ©)."}
+                {section.includes("Compét") ? "→ Ajoutez un lien vidéo dans la fiche d'une compétition (onglet Compétitions)." : "→ Ajoutez un lien vidéo dans la fiche d'une séance Perso (onglet Séances Karaté)."}
               </div>
             </div>
           )}
@@ -2196,14 +2196,14 @@ const Videos = ({ competitions, sessions }) => {
       {editLinkId && (
         <div style={{ position:"fixed", inset:0, background:"#00000099", zIndex:300, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }} onClick={()=>setEditLinkId(null)}>
           <div style={{ background:"#fff", borderRadius:16, padding:24, width:"100%", maxWidth:420 }} onClick={e=>e.stopPropagation()}>
-            <div style={{ fontWeight:800, fontSize:16, marginBottom:6 }}>ð Lien vidÃ©o</div>
-            <div style={{ fontSize:12, color:C.muted, marginBottom:12 }}>Colle le lien Google Drive ou YouTube.<br/>Tu peux aussi l'ajouter directement dans la fiche sÃ©ance ou compÃ©tition.</div>
+            <div style={{ fontWeight:800, fontSize:16, marginBottom:6 }}>🔗 Lien vidéo</div>
+            <div style={{ fontSize:12, color:C.muted, marginBottom:12 }}>Colle le lien Google Drive ou YouTube.<br/>Tu peux aussi l'ajouter directement dans la fiche séance ou compétition.</div>
             <input autoFocus type="url" placeholder="https://drive.google.com/..." value={linkInput} onChange={e=>setLinkInput(e.target.value)}
               onKeyDown={e=>e.key==="Enter"&&saveVideoLink()}
               style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:13, boxSizing:"border-box", marginBottom:14 }}/>
             <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
               <button onClick={()=>setEditLinkId(null)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"8px 16px", fontSize:13, cursor:"pointer" }}>Annuler</button>
-              <button onClick={saveVideoLink} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"8px 20px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>Ouvrir â¶</button>
+              <button onClick={saveVideoLink} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"8px 20px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>Ouvrir ▶</button>
             </div>
           </div>
         </div>
@@ -2213,27 +2213,27 @@ const Videos = ({ competitions, sessions }) => {
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
           <div style={{ background:"#fff", width:"100%", maxHeight:"85vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
             <div style={{ background:"linear-gradient(135deg, #DC2626, #F97316)", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
-              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle vidÃ©o</div>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>Nouvelle vidéo</div>
               <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
             </div>
             <div style={{ padding:"20px 24px" }}>
               <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Titre *</label>
                 <input type="text" value={form.titre} onChange={e=>setForm(f=>({...f,titre:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>CatÃ©gorie</label>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Catégorie</label>
                   <select value={form.categorie} onChange={e=>setForm(f=>({...f,categorie:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
                     {VIDEOS_CATEGORIES.map(c=><option key={c}>{c}</option>)}
                   </select></div>
                 <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date</label>
                   <input type="date" value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               </div>
-              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>ð Lien vidÃ©o (Google Drive, YouTubeâ¦)</label>
+              <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>🔗 Lien vidéo (Google Drive, YouTube…)</label>
                 <input type="text" placeholder="https://..." value={form.lien} onChange={e=>setForm(f=>({...f,lien:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Description</label>
                 <textarea rows={3} value={form.description} onChange={e=>setForm(f=>({...f,description:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={handleSave} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>ð¾ Enregistrer</button>
+                <button onClick={handleSave} style={{ background:"#DC2626", border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
               </div>
             </div>
           </div>
@@ -2243,45 +2243,45 @@ const Videos = ({ competitions, sessions }) => {
   );
 };
 
-// âââ NUTRITION ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-const MEAL_TYPES = ["Petit dÃ©jeuner","DÃ©jeuner","DÃ®ner","Collation"];
+// ─── NUTRITION ────────────────────────────────────────────────────────────────
+const MEAL_TYPES = ["Petit déjeuner","Déjeuner","Dîner","Collation"];
 
 const Nutrition = () => {
   const [showRepas, setShowRepas] = useState(false);
   const [showPesee, setShowPesee] = useState(false);
-  const [formRepas, setFormRepas] = useState({ date:new Date().toISOString().split("T")[0], type:"DÃ©jeuner", description:"", calories:"", proteines:"", glucides:"", lipides:"", hydratation:"" });
+  const [formRepas, setFormRepas] = useState({ date:new Date().toISOString().split("T")[0], type:"Déjeuner", description:"", calories:"", proteines:"", glucides:"", lipides:"", hydratation:"" });
   const [formPesee, setFormPesee] = useState({ date:new Date().toISOString().split("T")[0], poids:"" });
 
   return (
     <div>
-      <SectionHeader icon="ð¥" title="Nutrition" subtitle="Suivez votre alimentation et hydratation" color={C.green}
+      <SectionHeader icon="🥗" title="Nutrition" subtitle="Suivez votre alimentation et hydratation" color={C.green}
         action={<div style={{ display:"flex", gap:8 }}>
-          <Btn onClick={()=>setShowPesee(true)} color="#fff" style={{ color:C.green, fontSize:12 }}>â Ajouter pesÃ©e</Btn>
+          <Btn onClick={()=>setShowPesee(true)} color="#fff" style={{ color:C.green, fontSize:12 }}>⚖ Ajouter pesée</Btn>
           <Btn onClick={()=>setShowRepas(true)} color="#fff" style={{ color:C.green, fontSize:12 }}><Plus size={12}/> Ajouter un repas</Btn>
         </div>} />
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, marginBottom:16 }}>
         <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
-          <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>RÃ©sumÃ© du jour</div>
+          <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>Résumé du jour</div>
           <div style={{ display:"flex", justifyContent:"space-between", padding:"6px 0", borderBottom:"1px solid "+C.border }}>
             <span style={{ fontSize:12 }}>Calories</span><strong style={{ color:C.red }}>0</strong>
           </div>
           <div style={{ display:"flex", justifyContent:"space-between", padding:"6px 0" }}>
-            <span style={{ fontSize:12 }}>ð§ Hydratation</span><strong style={{ color:C.blue }}>0.0 L</strong>
+            <span style={{ fontSize:12 }}>💧 Hydratation</span><strong style={{ color:C.blue }}>0.0 L</strong>
           </div>
         </div>
         <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
-          <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>RÃ©partition des macros</div>
-          <div style={{ color:C.muted, fontSize:12, textAlign:"center", paddingTop:10 }}>Aucune donnÃ©e pour aujourd'hui</div>
+          <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>Répartition des macros</div>
+          <div style={{ color:C.muted, fontSize:12, textAlign:"center", paddingTop:10 }}>Aucune donnée pour aujourd'hui</div>
         </div>
         <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
-          <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>â Poids actuel</div>
+          <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>⚖ Poids actuel</div>
           <div style={{ fontSize:28, fontWeight:800, color:C.primary, textAlign:"center" }}>54.2 kg</div>
-          <div style={{ fontSize:11, color:C.green, textAlign:"center" }}>â -0.1 kg</div>
+          <div style={{ fontSize:11, color:C.green, textAlign:"center" }}>↘ -0.1 kg</div>
         </div>
       </div>
       <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16 }}>
         <div style={{ fontWeight:600, marginBottom:10, fontSize:13 }}>Historique des repas</div>
-        <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:20 }}>Aucun repas enregistrÃ©</div>
+        <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:20 }}>Aucun repas enregistré</div>
       </div>
 
       {showRepas && (
@@ -2303,7 +2303,7 @@ const Nutrition = () => {
               <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Description</label>
                 <textarea rows={2} value={formRepas.description} onChange={e=>setFormRepas(f=>({...f,description:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10, marginBottom:14 }}>
-                {[["Calories","calories"],["ProtÃ©ines (g)","proteines"],["Glucides (g)","glucides"],["Lipides (g)","lipides"]].map(([l,k])=>(
+                {[["Calories","calories"],["Protéines (g)","proteines"],["Glucides (g)","glucides"],["Lipides (g)","lipides"]].map(([l,k])=>(
                   <div key={k}><label style={{ fontSize:11, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
                     <input type="number" value={formRepas[k]} onChange={e=>setFormRepas(f=>({...f,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
                 ))}
@@ -2312,7 +2312,7 @@ const Nutrition = () => {
                 <input type="number" step="0.1" value={formRepas.hydratation} onChange={e=>setFormRepas(f=>({...f,hydratation:e.target.value}))} style={{ width:"50%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowRepas(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={()=>setShowRepas(false)} style={{ background:C.green, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>ð¾ Enregistrer</button>
+                <button onClick={()=>setShowRepas(false)} style={{ background:C.green, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
               </div>
             </div>
           </div>
@@ -2322,7 +2322,7 @@ const Nutrition = () => {
       {showPesee && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"center", justifyContent:"center" }} onClick={()=>setShowPesee(false)}>
           <div style={{ background:"#fff", borderRadius:20, padding:28, width:340 }} onClick={e=>e.stopPropagation()}>
-            <div style={{ fontWeight:800, fontSize:17, marginBottom:20 }}>â Ajouter une pesÃ©e</div>
+            <div style={{ fontWeight:800, fontSize:17, marginBottom:20 }}>⚖ Ajouter une pesée</div>
             <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Date</label>
               <input type="date" value={formPesee.date} onChange={e=>setFormPesee(f=>({...f,date:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
             <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Poids (kg)</label>
@@ -2338,58 +2338,58 @@ const Nutrition = () => {
   );
 };
 
-// âââ SOMMEIL ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-const QUALITE_SOMMEIL = ["ð´ Excellent","ð Bon","ð Moyen","ð Mauvais","ð« TrÃ¨s mauvais"];
-const RESSENTI_REVEIL = ["ð TrÃ¨s reposÃ©","â¨ ReposÃ©","ð Correct","ð´ FatiguÃ©","ð© ÃpuisÃ©"];
+// ─── SOMMEIL ──────────────────────────────────────────────────────────────────
+const QUALITE_SOMMEIL = ["😴 Excellent","😊 Bon","😐 Moyen","😕 Mauvais","😫 Très mauvais"];
+const RESSENTI_REVEIL = ["🌟 Très reposé","✨ Reposé","👍 Correct","😴 Fatigué","😩 Épuisé"];
 
 const Sommeil = () => {
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ date:"", coucher:"", reveil:"", heures:"", qualite:"ð Bon", reveils:"0", ressentiReveil:"â¨ ReposÃ©", sommeilProfond:false, facteurs:"", reves:"", notes:"" });
+  const [form, setForm] = useState({ date:"", coucher:"", reveil:"", heures:"", qualite:"😊 Bon", reveils:"0", ressentiReveil:"✨ Reposé", sommeilProfond:false, facteurs:"", reves:"", notes:"" });
 
   return (
     <div>
-      <SectionHeader icon="ð" title="Suivi du Sommeil" subtitle="Optimisez votre rÃ©cupÃ©ration et vos performances ð´" color={C.primary}
+      <SectionHeader icon="🌙" title="Suivi du Sommeil" subtitle="Optimisez votre récupération et vos performances 😴" color={C.primary}
         action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Ajouter une nuit</Btn>} />
-      <EmptyState icon={<Moon size={24}/>} title="Aucune nuit enregistrÃ©e" sub="Commencez Ã  suivre votre sommeil pour optimiser votre rÃ©cupÃ©ration"
-        action={{ label:"Enregistrer ma premiÃ¨re nuit", fn:()=>setShowForm(true) }} />
+      <EmptyState icon={<Moon size={24}/>} title="Aucune nuit enregistrée" sub="Commencez à suivre votre sommeil pour optimiser votre récupération"
+        action={{ label:"Enregistrer ma première nuit", fn:()=>setShowForm(true) }} />
 
       {showForm && (
         <div style={{ position:"fixed", inset:0, background:"#00000077", zIndex:200, display:"flex", alignItems:"flex-end" }} onClick={()=>setShowForm(false)}>
           <div style={{ background:"#fff", width:"100%", maxHeight:"92vh", overflowY:"auto", borderRadius:"20px 20px 0 0" }} onClick={e=>e.stopPropagation()}>
             <div style={{ background:"linear-gradient(135deg, #4C1D95, "+C.primary+")", padding:"18px 24px", borderRadius:"20px 20px 0 0", display:"flex", justifyContent:"space-between" }}>
-              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>ð Nouvelle nuit de sommeil</div>
+              <div style={{ fontWeight:800, fontSize:18, color:"#fff" }}>🌙 Nouvelle nuit de sommeil</div>
               <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
             </div>
             <div style={{ padding:"20px 24px" }}>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:12, marginBottom:14 }}>
-                {[["Date *","date","date"],["Heure de coucher","coucher","time"],["Heure de rÃ©veil","reveil","time"],["Heures de sommeil *","heures","number"]].map(([l,k,t])=>(
+                {[["Date *","date","date"],["Heure de coucher","coucher","time"],["Heure de réveil","reveil","time"],["Heures de sommeil *","heures","number"]].map(([l,k,t])=>(
                   <div key={k}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
                     <input type={t} value={form[k]} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
                 ))}
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:14 }}>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>QualitÃ© du sommeil</label>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Qualité du sommeil</label>
                   <select value={form.qualite} onChange={e=>setForm(f=>({...f,qualite:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
                     {QUALITE_SOMMEIL.map(q=><option key={q}>{q}</option>)}
                   </select></div>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>RÃ©veils nocturnes</label>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Réveils nocturnes</label>
                   <input type="number" min="0" value={form.reveils} onChange={e=>setForm(f=>({...f,reveils:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
-                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Ressenti au rÃ©veil</label>
+                <div><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Ressenti au réveil</label>
                   <select value={form.ressentiReveil} onChange={e=>setForm(f=>({...f,ressentiReveil:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, background:"#fff" }}>
                     {RESSENTI_REVEIL.map(r=><option key={r}>{r}</option>)}
                   </select></div>
               </div>
               <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:14 }}>
                 <input type="checkbox" checked={form.sommeilProfond} onChange={e=>setForm(f=>({...f,sommeilProfond:e.target.checked}))} style={{ width:16, height:16 }}/>
-                <label style={{ fontSize:13 }}>Sensation de sommeil profond et rÃ©parateur ð¤</label>
+                <label style={{ fontSize:13 }}>Sensation de sommeil profond et réparateur 💤</label>
               </div>
-              {[["Facteurs ayant influencÃ© le sommeil","facteurs"],["RÃªves / Cauchemars","reves"],["Notes","notes"]].map(([l,k])=>(
+              {[["Facteurs ayant influencé le sommeil","facteurs"],["Rêves / Cauchemars","reves"],["Notes","notes"]].map(([l,k])=>(
                 <div key={k} style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
                   <textarea rows={2} value={form[k]} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               ))}
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end", marginTop:6 }}>
                 <button onClick={()=>setShowForm(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={handleSave} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>ð¾ {editingPlan?"Modifier":"Enregistrer"}</button>
+                <button onClick={handleSave} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 {editingPlan?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
@@ -2399,7 +2399,7 @@ const Sommeil = () => {
   );
 };
 
-// âââ CHAT âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── CHAT ─────────────────────────────────────────────────────────────────────
 const Chat = ({ authUser }) => {
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
@@ -2422,7 +2422,7 @@ const Chat = ({ authUser }) => {
     const text = msg.trim();
     setMsg("");
     try {
-      const senderName = (authUser?.displayName?.split(" ")[0]) || authUser?.email?.split("@")[0] || "Ãquipe";
+      const senderName = (authUser?.displayName?.split(" ")[0]) || authUser?.email?.split("@")[0] || "Équipe";
       await addDoc(collection(db, "chat_messages"), {
         text,
         sender: senderName,
@@ -2445,13 +2445,13 @@ const Chat = ({ authUser }) => {
   return (
     <div style={{ display:"flex", flexDirection:"column", height:"calc(100dvh - 130px)" }}>
       <div style={{ background:"linear-gradient(135deg, "+C.blue+" 60%, "+C.primary+")", borderRadius:14, padding:"16px 18px", color:"#fff", marginBottom:12, display:"flex", alignItems:"center", gap:10 }}>
-        <MessageCircle size={20}/><div><div style={{ fontWeight:800, fontSize:16 }}>Chat Ãquipe</div><div style={{ fontSize:11, opacity:0.8 }}>{messages.length} message{messages.length!==1?"s":""}</div></div>
+        <MessageCircle size={20}/><div><div style={{ fontWeight:800, fontSize:16 }}>Chat Équipe</div><div style={{ fontSize:11, opacity:0.8 }}>{messages.length} message{messages.length!==1?"s":""}</div></div>
       </div>
 
       <div style={{ flex:1, background:C.card, borderRadius:14, border:"1px solid "+C.border, marginBottom:10, overflowY:"auto", padding:16, display:"flex", flexDirection:"column", gap:10 }}>
         {messages.length === 0 && (
           <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", color:C.muted, fontSize:13 }}>
-            Aucun message â soyez le premier Ã  Ã©crire ð
+            Aucun message — soyez le premier à écrire 👋
           </div>
         )}
         {messages.map(m => (
@@ -2471,7 +2471,7 @@ const Chat = ({ authUser }) => {
       <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:10, display:"flex", gap:8, alignItems:"center" }}>
         <input value={msg} onChange={e=>setMsg(e.target.value)}
           onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&send()}
-          placeholder="Ãcrivez votre message..."
+          placeholder="Écrivez votre message..."
           style={{ flex:1, border:"none", outline:"none", fontSize:14, background:"transparent" }} />
         <button style={{ background:C.primary, border:"none", borderRadius:8, padding:"8px 12px", cursor:"pointer", color:"#fff", display:"flex", alignItems:"center" }}
           onClick={send}><Send size={15}/></button>
@@ -2480,18 +2480,18 @@ const Chat = ({ authUser }) => {
   );
 };
 
-// âââ ÃQUIPE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-const ROLES = ["AthlÃ¨te","Coach","PrÃ©parateur physique","PrÃ©parateur mental","Parent"];
-const ROLE_EMOJI = { "AthlÃ¨te":"ð¥","Coach":"ð","PrÃ©parateur physique":"ðª","PrÃ©parateur mental":"ð§ ","Parent":"ð¨âð©âð§" };
+// ─── ÉQUIPE ───────────────────────────────────────────────────────────────────
+const ROLES = ["Athlète","Coach","Préparateur physique","Préparateur mental","Parent"];
+const ROLE_EMOJI = { "Athlète":"🥋","Coach":"🏆","Préparateur physique":"💪","Préparateur mental":"🧠","Parent":"👨‍👩‍👧" };
 
 const MEMBERS_DEFAULT = [
-  { firestoreId:"default_iliana",    prenom:"Iliana",    nom:"Voratovic", role:"AthlÃ¨te",  email:"ilianavoratovic@gmail.com",     telephone:"06 36 49 01 70" },
+  { firestoreId:"default_iliana",    prenom:"Iliana",    nom:"Voratovic", role:"Athlète",  email:"ilianavoratovic@gmail.com",     telephone:"06 36 49 01 70" },
   { firestoreId:"default_isabelle",  prenom:"Isabelle",  nom:"Voratovic", role:"Parent",   email:"isaphoenix@hotmail.fr",         telephone:"06 10 03 68 28" },
   { firestoreId:"default_alexandre", prenom:"Alexandre", nom:"Voratovic", role:"Parent",   email:"a.voratovic@isipatrimoine.com", telephone:"07 77 05 93 23" },
-  { firestoreId:"default_helvetia",  prenom:"HelvÃ©tia",  nom:"Taily",     role:"Coach",    email:"helvetiataily@gmail.com",       telephone:"07 67 64 20 15" },
+  { firestoreId:"default_helvetia",  prenom:"Helvétia",  nom:"Taily",     role:"Coach",    email:"helvetiataily@gmail.com",       telephone:"07 67 64 20 15" },
 ];
 
-const EMPTY_FORM = { prenom:"", nom:"", role:"AthlÃ¨te", email:"", telephone:"" };
+const EMPTY_FORM = { prenom:"", nom:"", role:"Athlète", email:"", telephone:"" };
 
 const Equipe = ({ currentUser, onIdentify }) => {
   const [members, setMembers] = useState(MEMBERS_DEFAULT);
@@ -2555,7 +2555,7 @@ const Equipe = ({ currentUser, onIdentify }) => {
   const handleInvite = async (m) => {
     const emailNorm = (m.email || "").trim().toLowerCase();
     if (!emailNorm) return;
-    // Ajouter Ã  la liste blanche Firestore si pas dÃ©jÃ  prÃ©sent
+    // Ajouter à la liste blanche Firestore si pas déjà présent
     try {
       const q = query(collection(db, "allowed_emails"), where("email", "==", emailNorm));
       const snap = await getDocs(q);
@@ -2564,16 +2564,16 @@ const Equipe = ({ currentUser, onIdentify }) => {
       }
     } catch(e) { console.error("Erreur ajout allowlist:", e); }
     // Ouvrir Gmail
-    const subject = encodeURIComponent("Invitation â KaratÃ© Pro SKB Elite");
+    const subject = encodeURIComponent("Invitation – Karaté Pro SKB Elite");
     const body = encodeURIComponent(
       "Bonjour " + m.prenom + ",\n\n" +
-      "Tu es invitÃ©Â·e Ã  accÃ©der Ã  l'application KaratÃ© Pro SKB Elite.\n\n" +
-      "ð AccÃ©der Ã  l'app : " + APP_URL + "\n\n" +
-      "Pour crÃ©er ton compte :\n" +
-      "â¢ Clique sur Â« Continuer avec Google Â» si tu as un compte Google\n" +
-      "â¢ Ou clique sur Â« Connexion par email Â» pour crÃ©er un mot de passe\n\n" +
-      "â ï¸ Utilise bien cette adresse email : " + emailNorm + "\n\n" +
-      "Ã bientÃ´t !\n" +
+      "Tu es invité·e à accéder à l'application Karaté Pro SKB Elite.\n\n" +
+      "🔗 Accéder à l'app : " + APP_URL + "\n\n" +
+      "Pour créer ton compte :\n" +
+      "• Clique sur « Continuer avec Google » si tu as un compte Google\n" +
+      "• Ou clique sur « Connexion par email » pour créer un mot de passe\n\n" +
+      "⚠️ Utilise bien cette adresse email : " + emailNorm + "\n\n" +
+      "À bientôt !\n" +
       "Alexandre"
     );
     const gmailUrl = "https://mail.google.com/mail/?view=cm&to=" + encodeURIComponent(emailNorm) + "&su=" + subject + "&body=" + body;
@@ -2584,23 +2584,23 @@ const Equipe = ({ currentUser, onIdentify }) => {
 
   return (
     <div>
-      <SectionHeader icon="ð¥" title="L'Ã©quipe" subtitle="Personnes ayant accÃ¨s Ã  l'application" color={C.primary}
+      <SectionHeader icon="👥" title="L'équipe" subtitle="Personnes ayant accès à l'application" color={C.primary}
         action={<Btn onClick={openAdd} color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Ajouter</Btn>} />
 
       {currentUser ? (
         <div style={{ background:C.primary+"15", border:"1px solid "+C.primary+"33", borderRadius:10, padding:"10px 14px", marginBottom:16, fontSize:13, color:C.primary, fontWeight:600 }}>
-          â IdentifiÃ©Â·e en tant que <strong>{currentUser.fullName || currentUser.name}</strong>
+          ✅ Identifié·e en tant que <strong>{currentUser.fullName || currentUser.name}</strong>
         </div>
       ) : (
         <div style={{ background:"#FEF3C7", border:"1px solid #F59E0B55", borderRadius:10, padding:"10px 14px", marginBottom:16, fontSize:13, color:"#92400E" }}>
-          ð¤ Appuyez sur <strong>"C'est moi"</strong> pour vous identifier
+          👤 Appuyez sur <strong>"C'est moi"</strong> pour vous identifier
         </div>
       )}
 
-      {loading ? <div style={{ textAlign:"center", color:C.muted, padding:20 }}>Chargementâ¦</div> : members.map(m => {
+      {loading ? <div style={{ textAlign:"center", color:C.muted, padding:20 }}>Chargement…</div> : members.map(m => {
         const identId = getIdentityId(m);
         const isMe = currentUser?.id === identId || currentUser?.firestoreId === m.firestoreId;
-        const emoji = ROLE_EMOJI[m.role] || "ð¤";
+        const emoji = ROLE_EMOJI[m.role] || "👤";
         return (
           <div key={m.firestoreId} style={{ background:C.card, borderRadius:12, border:"2px solid "+(isMe?C.primary:C.border), padding:14, marginBottom:10, display:"flex", alignItems:"flex-start", gap:12 }}>
             <div style={{ width:44, height:44, borderRadius:"50%", background:isMe?C.primary:C.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, flexShrink:0, overflow:"hidden", position:"relative" }}>
@@ -2609,17 +2609,17 @@ const Equipe = ({ currentUser, onIdentify }) => {
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{ fontWeight:700, fontSize:14 }}>{m.prenom} {m.nom}</div>
               <Badge label={m.role} color={C.primary} />
-              <div style={{ marginTop:5, fontSize:11, color:C.muted }}>â {m.email}</div>
-              <div style={{ fontSize:11, color:C.muted }}>ð {m.telephone}</div>
+              <div style={{ marginTop:5, fontSize:11, color:C.muted }}>✉ {m.email}</div>
+              <div style={{ fontSize:11, color:C.muted }}>📞 {m.telephone}</div>
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:5, flexShrink:0 }}>
               <button onClick={() => onIdentify({ id:identId, name:m.prenom, fullName:m.prenom+" "+m.nom, role:m.role })}
                 style={{ background:isMe?C.primary:C.bg, color:isMe?"#fff":C.primary, border:"1.5px solid "+C.primary, borderRadius:8, padding:"5px 9px", fontSize:11, fontWeight:700, cursor:"pointer" }}>
-                {isMe ? "â Moi" : "C'est moi"}
+                {isMe ? "✓ Moi" : "C'est moi"}
               </button>
               <button onClick={() => handleInvite(m)}
                 style={{ background:"none", color:C.muted, border:"1.5px solid "+C.border, borderRadius:8, padding:"5px 9px", fontSize:11, cursor:"pointer" }}>
-                ð§ Inviter
+                📧 Inviter
               </button>
               <button onClick={() => openEdit(m)}
                 style={{ background:"none", border:"none", cursor:"pointer", color:C.primary, padding:"2px 0" }}>
@@ -2642,13 +2642,13 @@ const Equipe = ({ currentUser, onIdentify }) => {
       {viewMember && (() => {
         const m = viewMember;
         const photo = localStorage.getItem("kp_member_photo_"+m.firestoreId);
-        const emoji = ROLE_EMOJI[m.role] || "ð¤";
+        const emoji = ROLE_EMOJI[m.role] || "👤";
         return (
           <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:300, display:"flex", alignItems:"flex-end" }} onClick={()=>setViewMember(null)}>
             <div style={{ background:"#fff", width:"100%", maxHeight:"85vh", overflowY:"auto", borderRadius:"20px 20px 0 0", padding:"24px 20px" }} onClick={e=>e.stopPropagation()}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
                 <div style={{ fontWeight:800, fontSize:18 }}>Fiche membre</div>
-                <button onClick={()=>setViewMember(null)} style={{ background:"none", border:"none", fontSize:20, cursor:"pointer" }}>â</button>
+                <button onClick={()=>setViewMember(null)} style={{ background:"none", border:"none", fontSize:20, cursor:"pointer" }}>✕</button>
               </div>
               <div style={{ textAlign:"center", marginBottom:20 }}>
                 <div style={{ position:"relative", display:"inline-block" }}>
@@ -2656,7 +2656,7 @@ const Equipe = ({ currentUser, onIdentify }) => {
                     {photo ? <img src={photo} style={{ width:"100%", height:"100%", objectFit:"cover" }}/> : emoji}
                   </div>
                   <label style={{ position:"absolute", bottom:8, right:0, background:C.primary, borderRadius:"50%", width:30, height:30, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", border:"2px solid #fff" }}>
-                    <span style={{ color:"#fff", fontSize:14 }}>ð·</span>
+                    <span style={{ color:"#fff", fontSize:14 }}>📷</span>
                     <input type="file" accept="image/*" style={{ display:"none" }} onChange={e=>{
                       const f=e.target.files[0]; if(!f)return;
                       const r=new FileReader(); r.onload=ev=>{
@@ -2671,7 +2671,7 @@ const Equipe = ({ currentUser, onIdentify }) => {
                 <Badge label={m.role} color={C.primary}/>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:20 }}>
-                {[["â Email",m.email],["ð TÃ©lÃ©phone",m.telephone]].map(([l,v])=>v?(
+                {[["✉ Email",m.email],["📞 Téléphone",m.telephone]].map(([l,v])=>v?(
                   <div key={l} style={{ background:C.bg, borderRadius:10, padding:"10px 12px" }}>
                     <div style={{ fontSize:10, color:C.muted, marginBottom:2 }}>{l.split(" ")[0]+" "+l.split(" ").slice(1).join(" ")}</div>
                     <div style={{ fontSize:13, fontWeight:600, wordBreak:"break-all" }}>{v}</div>
@@ -2681,11 +2681,11 @@ const Equipe = ({ currentUser, onIdentify }) => {
               <div style={{ display:"flex", gap:10 }}>
                 <button onClick={()=>{openEdit(m); setViewMember(null);}}
                   style={{ flex:1, background:C.primary, border:"none", borderRadius:10, padding:"12px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>
-                  âï¸ Modifier
+                  ✏️ Modifier
                 </button>
                 <button onClick={()=>handleInvite(m)}
                   style={{ flex:1, background:"none", border:"1.5px solid "+C.border, borderRadius:10, padding:"12px", fontSize:13, fontWeight:600, cursor:"pointer" }}>
-                  ð§ Inviter
+                  📧 Inviter
                 </button>
               </div>
             </div>
@@ -2700,7 +2700,7 @@ const Equipe = ({ currentUser, onIdentify }) => {
               <div style={{ fontWeight:800, fontSize:17 }}>{editingMember ? "Modifier" : "Ajouter"} un membre</div>
               <button onClick={() => setShowForm(false)} style={{ background:"none", border:"none", cursor:"pointer" }}><X size={20}/></button>
             </div>
-            {[["PrÃ©nom *","prenom","text"],["Nom *","nom","text"],["Email *","email","email"],["TÃ©lÃ©phone","telephone","tel"]].map(([label,key,type]) => (
+            {[["Prénom *","prenom","text"],["Nom *","nom","text"],["Email *","email","email"],["Téléphone","telephone","tel"]].map(([label,key,type]) => (
               <div key={key} style={{ marginBottom:14 }}>
                 <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:5 }}>{label}</label>
                 <input type={type} value={form[key]} onChange={e => setForm(f=>({...f,[key]:e.target.value}))}
@@ -2708,7 +2708,7 @@ const Equipe = ({ currentUser, onIdentify }) => {
               </div>
             ))}
             <div style={{ marginBottom:20 }}>
-              <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:5 }}>RÃ´le</label>
+              <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:5 }}>Rôle</label>
               <select value={form.role} onChange={e => setForm(f=>({...f,role:e.target.value}))}
                 style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 12px", fontSize:14, background:"#fff" }}>
                 {ROLES.map(r => <option key={r} value={r}>{ROLE_EMOJI[r]} {r}</option>)}
@@ -2717,7 +2717,7 @@ const Equipe = ({ currentUser, onIdentify }) => {
             <div style={{ display:"flex", gap:10 }}>
               <button onClick={() => setShowForm(false)} style={{ flex:1, padding:12, borderRadius:10, border:"1.5px solid "+C.border, background:"none", fontSize:14, cursor:"pointer" }}>Annuler</button>
               <button onClick={handleSave} disabled={saving} style={{ flex:2, padding:12, borderRadius:10, border:"none", background:C.primary, color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer", opacity:saving?0.7:1 }}>
-                {saving ? "Enregistrementâ¦" : "Enregistrer"}
+                {saving ? "Enregistrement…" : "Enregistrer"}
               </button>
             </div>
           </div>
@@ -2727,13 +2727,13 @@ const Equipe = ({ currentUser, onIdentify }) => {
   );
 };
 
-// âââ PROFIL âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── PROFIL ───────────────────────────────────────────────────────────────────
 const Profil = ({ sessions, competitions, authUser }) => {
   const [showEdit, setShowEdit] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(() => localStorage.getItem("kp_profile_photo") || null);
   const [profile, setProfile] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("kp_profile") || "null") || { prenom:"Iliana", nom:"Voratovic", email:"ilianavoratovic@gmail.com", sport:"KaratÃ© Kata", club:"SKB Elite", dateNaissance:"", ville:"" }; }
-    catch { return { prenom:"Iliana", nom:"Voratovic", email:"ilianavoratovic@gmail.com", sport:"KaratÃ© Kata", club:"SKB Elite", dateNaissance:"", ville:"" }; }
+    try { return JSON.parse(localStorage.getItem("kp_profile") || "null") || { prenom:"Iliana", nom:"Voratovic", email:"ilianavoratovic@gmail.com", sport:"Karaté Kata", club:"SKB Elite", dateNaissance:"", ville:"" }; }
+    catch { return { prenom:"Iliana", nom:"Voratovic", email:"ilianavoratovic@gmail.com", sport:"Karaté Kata", club:"SKB Elite", dateNaissance:"", ville:"" }; }
   });
   const [editForm, setEditForm] = useState(profile);
 
@@ -2761,7 +2761,7 @@ const Profil = ({ sessions, competitions, authUser }) => {
 
   return (
     <div>
-      <SectionHeader icon="ð¤" title="Profil" subtitle="Vos informations personnelles" color={C.primary} />
+      <SectionHeader icon="👤" title="Profil" subtitle="Vos informations personnelles" color={C.primary} />
       <div style={{ background:C.card, borderRadius:16, border:"1px solid "+C.border, padding:24, textAlign:"center", marginBottom:16 }}>
         <div style={{ position:"relative", display:"inline-block", marginBottom:12 }}>
           {profilePhoto
@@ -2770,18 +2770,18 @@ const Profil = ({ sessions, competitions, authUser }) => {
           }
           <label style={{ position:"absolute", bottom:0, right:0, background:C.primary, borderRadius:"50%", width:26, height:26, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", border:"2px solid #fff" }}>
             <input type="file" accept="image/*" onChange={handlePhotoChange} style={{ display:"none" }}/>
-            <span style={{ color:"#fff", fontSize:14 }}>ð·</span>
+            <span style={{ color:"#fff", fontSize:14 }}>📷</span>
           </label>
         </div>
         <div style={{ fontWeight:800, fontSize:20 }}>{profile.prenom} {profile.nom}</div>
         <Badge label={profile.sport} color={C.primary} />
-        {profile.club && <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>ðï¸ {profile.club}</div>}
+        {profile.club && <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>🏛️ {profile.club}</div>}
         <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>{profile.email}</div>
-        {profile.ville && <div style={{ color:C.muted, fontSize:12 }}>ð {profile.ville}</div>}
+        {profile.ville && <div style={{ color:C.muted, fontSize:12 }}>📍 {profile.ville}</div>}
         <Btn onClick={()=>{ setEditForm(profile); setShowEdit(true); }} color={C.primary} style={{ marginTop:14 }}><Edit2 size={13}/> Modifier le profil</Btn>
       </div>
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10 }}>
-        {[{l:"SÃ©ances totales",v:sessions.length,c:C.red},{l:"CompÃ©titions",v:(competitions||[]).length,c:C.yellow},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.green}].map(s=>(
+        {[{l:"Séances totales",v:sessions.length,c:C.red},{l:"Compétitions",v:(competitions||[]).length,c:C.yellow},{l:"Satisfaction moy.",v:avgSat+"/10",c:C.green}].map(s=>(
           <div key={s.l} style={{ background:C.card, borderRadius:12, border:"1px solid "+C.border, padding:14, textAlign:"center" }}>
             <div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.v}</div>
             <div style={{ fontSize:10, color:C.muted, marginTop:2 }}>{s.l}</div>
@@ -2800,7 +2800,7 @@ const Profil = ({ sessions, competitions, authUser }) => {
             </div>
             <div style={{ padding:"20px 24px" }}>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
-                {[["PrÃ©nom","prenom"],["Nom","nom"],["Email","email"],["Club","club"],["Sport / Discipline","sport"],["Ville","ville"]].map(([l,k])=>(
+                {[["Prénom","prenom"],["Nom","nom"],["Email","email"],["Club","club"],["Sport / Discipline","sport"],["Ville","ville"]].map(([l,k])=>(
                   <div key={k}>
                     <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>{l}</label>
                     <input type="text" value={editForm[k]||""} onChange={e=>setEditForm(f=>({...f,[k]:e.target.value}))}
@@ -2815,7 +2815,7 @@ const Profil = ({ sessions, competitions, authUser }) => {
               </div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setShowEdit(false)} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={handleSaveProfile} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>ð¾ Enregistrer</button>
+                <button onClick={handleSaveProfile} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 Enregistrer</button>
               </div>
             </div>
           </div>
@@ -2825,7 +2825,7 @@ const Profil = ({ sessions, competitions, authUser }) => {
   );
 };
 
-// âââ PLANNING âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── PLANNING ─────────────────────────────────────────────────────────────────
 const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSessions }) => {
   const [showForm, setShowForm] = useState(false);
   const [activeTab, setActiveTab] = useState("planning");
@@ -2835,7 +2835,7 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
   const handleSave = () => {
     if (!form.debut) return;
     setDoc(doc(db, "weekly_plannings", form.debut), { ...form, updatedAt: serverTimestamp() }).catch(console.error);
-    (async () => { try { const u = getCurrentUser(); await notifyNewContent({ type:"nouveau_planning", title:"ð Planning semaine mis Ã  jour", body:"Semaine du "+form.debut+(form.objectif?" â Objectif : "+form.objectif:""), createdBy:u?.id||"unknown" }); } catch(e) {} })();
+    (async () => { try { const u = getCurrentUser(); await notifyNewContent({ type:"nouveau_planning", title:"📅 Planning semaine mis à jour", body:"Semaine du "+form.debut+(form.objectif?" — Objectif : "+form.objectif:""), createdBy:u?.id||"unknown" }); } catch(e) {} })();
     if (editingPlan) {
       setPlannings(prev => prev.map(p => p.id===editingPlan ? {...p,...form} : p));
     } else {
@@ -2848,11 +2848,11 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
 
   return (
     <div>
-      <SectionHeader icon="ð" title="Planning" subtitle="Organisez vos entraÃ®nements et planifiez vos semaines ð" color={C.primary}
+      <SectionHeader icon="📅" title="Planning" subtitle="Organisez vos entraînements et planifiez vos semaines 📅" color={C.primary}
         action={<Btn onClick={()=>setShowForm(true)} color="#fff" style={{ color:C.primary, fontSize:12 }}><Plus size={12}/> Planifier semaine</Btn>} />
 
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
-        {[["planning","ð Planification"],["calendar","ð Calendrier"]].map(([id,label])=>(
+        {[["planning","📋 Planification"],["calendar","📅 Calendrier"]].map(([id,label])=>(
           <button key={id} onClick={()=>setActiveTab(id)} style={{ flex:1, padding:"10px", borderRadius:10, border:"1.5px solid "+(activeTab===id?C.primary:C.border), background:activeTab===id?C.primary+"15":"#fff", color:activeTab===id?C.primary:C.text, fontWeight:activeTab===id?700:400, cursor:"pointer", fontSize:13 }}>{label}</button>
         ))}
       </div>
@@ -2860,7 +2860,7 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
       {activeTab === "calendar" && (
         <div>
           <div style={{ background:C.primary+"11", border:"1px solid "+C.primary+"33", borderRadius:10, padding:"10px 14px", marginBottom:12, fontSize:12, color:C.primary }}>
-            ð Agenda Google de <strong>ilianavoratovic@gmail.com</strong> â Le calendrier doit Ãªtre dÃ©fini comme public dans les paramÃ¨tres Google Calendar pour s'afficher.
+            📅 Agenda Google de <strong>ilianavoratovic@gmail.com</strong> — Le calendrier doit être défini comme public dans les paramètres Google Calendar pour s'afficher.
           </div>
           <div style={{ borderRadius:14, overflow:"hidden", border:"1px solid "+C.border }}>
             <iframe
@@ -2876,7 +2876,7 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
 
       {activeTab === "planning" && (<div>
 
-      {/* RÃ©capitulatif S-1 â dynamique */}
+      {/* Récapitulatif S-1 — dynamique */}
       {(()=>{
         const _lm=new Date(); const _ld=_lm.getDay(); _lm.setDate(_lm.getDate()-((_ld+6)%7)-7); _lm.setHours(0,0,0,0);
         const _le=new Date(_lm); _le.setDate(_le.getDate()+6);
@@ -2885,24 +2885,24 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
         const _lk=toKey(_lm); const _lke=toKey(_le);
         const inLw=d=>{ const s=(d||"").slice(0,10); return s>=_lk&&s<=_lke; };
         const _lp=(plannings||[]).find(p=>p.debut===_lk)||{};
-        const M=["jan.","fÃ©v.","mars","avr.","mai","juin","juil.","aoÃ»t","sep.","oct.","nov.","dÃ©c."];
+        const M=["jan.","fév.","mars","avr.","mai","juin","juil.","août","sep.","oct.","nov.","déc."];
         const _lbl=`Semaine du ${_lm.getDate()} au ${_le.getDate()} ${M[_le.getMonth()]} ${_le.getFullYear()}`;
         const clubR=(sessions||[]).filter(s=>inLw(s.date)&&(s.type==="Collectif"||s.type==="Club")).length;
         const prepaR=(physiqueSessions||[]).filter(s=>inLw(s.date)).length;
         const persoR=(sessions||[]).filter(s=>inLw(s.date)&&(s.type==="Perso"||s.type==="Entr. Perso")).length;
         const competR=(competitions||[]).filter(c=>inLw(c.date)).length;
         const rows=[
-          {l:"EntraÃ®nement Club",prevu:Number(_lp.club)||0,realise:clubR,c:C.red},
-          {l:"PrÃ©pa Physique",prevu:Number(_lp.prepa)||0,realise:prepaR,c:C.blue},
-          {l:"EntraÃ®nement Perso",prevu:Number(_lp.perso)||0,realise:persoR,c:C.primary},
-          {l:"CompÃ©titions",prevu:Number(_lp.compet)||0,realise:competR,c:C.yellow},
+          {l:"Entraînement Club",prevu:Number(_lp.club)||0,realise:clubR,c:C.red},
+          {l:"Prépa Physique",prevu:Number(_lp.prepa)||0,realise:prepaR,c:C.blue},
+          {l:"Entraînement Perso",prevu:Number(_lp.perso)||0,realise:persoR,c:C.primary},
+          {l:"Compétitions",prevu:Number(_lp.compet)||0,realise:competR,c:C.yellow},
         ];
         return (
           <div style={{ background:C.card, borderRadius:16, border:"1px solid "+C.border, padding:16, marginBottom:16 }}>
-            <div style={{ fontWeight:700, fontSize:14, marginBottom:4 }}>ð RÃ©capitulatif S-1</div>
+            <div style={{ fontWeight:700, fontSize:14, marginBottom:4 }}>📊 Récapitulatif S-1</div>
             <div style={{ color:C.muted, fontSize:12, marginBottom:12 }}>{_lbl}</div>
             {!_lp.debut
-              ? <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:8 }}>Aucune planification enregistrÃ©e pour cette semaine.</div>
+              ? <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:8 }}>Aucune planification enregistrée pour cette semaine.</div>
               : <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10 }}>
                   {rows.map(s=>{ const pct=s.prevu===0?100:Math.round((s.realise/s.prevu)*100); const ok=s.realise>=s.prevu; return (
                     <div key={s.l} style={{ background:s.c+"11", border:"1px solid "+s.c+"33", borderRadius:12, padding:"12px 14px" }}>
@@ -2914,9 +2914,9 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
                         </div>
                       </div>
                       <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                        <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>PrÃ©vu</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.prevu}</div></div>
-                        <span style={{ color:C.muted }}>â</span>
-                        <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>RÃ©alisÃ©</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.realise}</div></div>
+                        <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>Prévu</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.prevu}</div></div>
+                        <span style={{ color:C.muted }}>→</span>
+                        <div style={{ textAlign:"center" }}><div style={{ fontSize:10, color:C.muted }}>Réalisé</div><div style={{ fontSize:18, fontWeight:800, color:s.c }}>{s.realise}</div></div>
                       </div>
                     </div>
                   );})}
@@ -2925,27 +2925,27 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
         );
       })()}
 
-      {/* Planifications Ã  venir â dynamique */}
+      {/* Planifications à venir — dynamique */}
       {(()=>{
         const _m=new Date(); const _dow=_m.getDay(); _m.setDate(_m.getDate()-((_dow+6)%7)); _m.setHours(0,0,0,0);
         const _mk=`${_m.getFullYear()}-${String(_m.getMonth()+1).padStart(2,"0")}-${String(_m.getDate()).padStart(2,"0")}`;
         const _up=(plannings||[]).filter(p=>p.debut>=_mk).sort((a,b)=>a.debut.localeCompare(b.debut));
-        const _wl=(debut)=>{ const d=new Date(debut+"T00:00:00"); const fin=new Date(d); fin.setDate(fin.getDate()+6); const M=["jan.","fÃ©v.","mars","avr.","mai","juin","juil.","aoÃ»t","sep.","oct.","nov.","dÃ©c."]; return `Semaine du ${d.getDate()} au ${fin.getDate()} ${M[fin.getMonth()]} ${fin.getFullYear()}`; };
+        const _wl=(debut)=>{ const d=new Date(debut+"T00:00:00"); const fin=new Date(d); fin.setDate(fin.getDate()+6); const M=["jan.","fév.","mars","avr.","mai","juin","juil.","août","sep.","oct.","nov.","déc."]; return `Semaine du ${d.getDate()} au ${fin.getDate()} ${M[fin.getMonth()]} ${fin.getFullYear()}`; };
         return (<>
-          <div style={{ fontWeight:700, fontSize:14, marginBottom:12 }}>Planifications Ã  venir</div>
-          {_up.length===0 && <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12, color:C.muted, fontSize:13, textAlign:"center" }}>Aucune planification Ã  venir.</div>}
+          <div style={{ fontWeight:700, fontSize:14, marginBottom:12 }}>Planifications à venir</div>
+          {_up.length===0 && <div style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12, color:C.muted, fontSize:13, textAlign:"center" }}>Aucune planification à venir.</div>}
           {_up.map(p=>(
             <div key={p.debut} style={{ background:C.card, borderRadius:14, border:"1px solid "+C.border, padding:16, marginBottom:12 }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
                 <div><div style={{ fontWeight:700, fontSize:14 }}>{_wl(p.debut)}</div>
-                  <Badge label="ð PlanifiÃ©" color={C.primary} /></div>
+                  <Badge label="📅 Planifié" color={C.primary} /></div>
                 <div style={{ display:"flex", gap:6 }}>
                   <Btn small outlined color={C.primary} style={{ fontSize:10 }} onClick={()=>{ setEditingPlan(p.id); setForm({debut:p.debut,club:Number(p.club)||0,prepa:Number(p.prepa)||0,perso:Number(p.perso)||0,compet:Number(p.compet)||0,objectif:p.objectif||"",commentaireCoach:p.commentaireCoach||""}); setShowForm(true); }}>Modifier</Btn>
                   <Btn small outlined color={C.red} style={{ fontSize:10 }} onClick={()=>{ deleteDoc(doc(db,"weekly_plannings",p.debut)).catch(console.error); setPlannings(prev=>prev.filter(x=>x.debut!==p.debut)); }}>Supprimer</Btn>
                 </div>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8, margin:"12px 0" }}>
-                {[{l:"Club",v:Number(p.club)||0,c:C.red},{l:"PrÃ©pa",v:Number(p.prepa)||0,c:C.blue},{l:"Perso",v:Number(p.perso)||0,c:C.muted},{l:"CompÃ©t.",v:Number(p.compet)||0,c:C.yellow}].map(x=>(
+                {[{l:"Club",v:Number(p.club)||0,c:C.red},{l:"Prépa",v:Number(p.prepa)||0,c:C.blue},{l:"Perso",v:Number(p.perso)||0,c:C.muted},{l:"Compét.",v:Number(p.compet)||0,c:C.yellow}].map(x=>(
                   <div key={x.l} style={{ textAlign:"center", padding:8, background:x.c+"11", borderRadius:8 }}>
                     <div style={{ fontSize:10, color:x.c }}>{x.l}</div>
                     <div style={{ fontSize:20, fontWeight:800, color:x.c }}>{x.v}</div>
@@ -2953,7 +2953,7 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
                 ))}
               </div>
               {p.objectif && <div style={{ background:C.green+"15", borderRadius:8, padding:"8px 12px", borderLeft:"3px solid "+C.green }}>
-                <span style={{ fontSize:12, color:C.green }}>ð¯ <strong>Objectif :</strong> {p.objectif}</span>
+                <span style={{ fontSize:12, color:C.green }}>🎯 <strong>Objectif :</strong> {p.objectif}</span>
               </div>}
             </div>
           ))}
@@ -2970,11 +2970,11 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
               <button onClick={()=>setShowForm(false)} style={{ background:"#ffffff33", border:"none", borderRadius:"50%", width:30, height:30, cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center" }}><X size={16}/></button>
             </div>
             <div style={{ padding:"20px 24px" }}>
-              <div style={{ marginBottom:16 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>DÃ©but de semaine (Lundi) *</label>
+              <div style={{ marginBottom:16 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Début de semaine (Lundi) *</label>
                 <input type="date" value={form.debut} onChange={e=>setForm(f=>({...f,debut:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
-              <div style={{ fontWeight:600, fontSize:13, marginBottom:12 }}>Nombre de sÃ©ances prÃ©vues :</div>
+              <div style={{ fontWeight:600, fontSize:13, marginBottom:12 }}>Nombre de séances prévues :</div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
-                {[["ð¥ EntraÃ®nement Club","club"],["ðª PrÃ©pa Physique","prepa"],["ð¤ EntraÃ®nement Perso","perso"],["ð CompÃ©titions","compet"]].map(([l,k])=>(
+                {[["🥋 Entraînement Club","club"],["💪 Prépa Physique","prepa"],["👤 Entraînement Perso","perso"],["🏆 Compétitions","compet"]].map(([l,k])=>(
                   <div key={k} style={{ background:C.bg, borderRadius:10, padding:"12px 14px" }}>
                     <label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:8 }}>{l}</label>
                     <div style={{ display:"flex", alignItems:"center", gap:12 }}>
@@ -2985,12 +2985,12 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
                 ))}
               </div>
               <div style={{ marginBottom:14 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Objectif de la semaine *</label>
-                <input type="text" placeholder="Ex: PrÃ©pa compÃ©tition" value={form.objectif} onChange={e=>setForm(f=>({...f,objectif:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
+                <input type="text" placeholder="Ex: Prépa compétition" value={form.objectif} onChange={e=>setForm(f=>({...f,objectif:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box" }}/></div>
               <div style={{ marginBottom:20 }}><label style={{ fontSize:12, fontWeight:600, display:"block", marginBottom:4 }}>Commentaire du coach</label>
                 <textarea rows={3} value={form.commentaireCoach} onChange={e=>setForm(f=>({...f,commentaireCoach:e.target.value}))} style={{ width:"100%", border:"1.5px solid "+C.border, borderRadius:8, padding:"9px 12px", fontSize:13, boxSizing:"border-box", resize:"none" }}/></div>
               <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>{ setShowForm(false); setEditingPlan(null); }} style={{ background:"none", border:"1.5px solid "+C.border, borderRadius:8, padding:"10px 20px", fontSize:13, cursor:"pointer", display:"flex", alignItems:"center", gap:6 }}><X size={14}/> Annuler</button>
-                <button onClick={handleSave} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>ð¾ {editingPlan?"Modifier":"Enregistrer"}</button>
+                <button onClick={handleSave} style={{ background:C.primary, border:"none", borderRadius:8, padding:"10px 24px", fontSize:13, fontWeight:700, color:"#fff", cursor:"pointer" }}>💾 {editingPlan?"Modifier":"Enregistrer"}</button>
               </div>
             </div>
           </div>
@@ -3000,36 +3000,36 @@ const Planning = ({ plannings, setPlannings, sessions, competitions, physiqueSes
   );
 };
 
-// âââ NAV ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── NAV ──────────────────────────────────────────────────────────────────────
 const NAV = [
   { id:"dashboard", label:"Tableau de bord", icon:<LayoutDashboard size={16}/>, bottomIcon:<Home size={20}/>, bottomLabel:"Accueil" },
   { id:"planning", label:"Planification", icon:<Calendar size={16}/> },
   { id:"visionboard", label:"Tableau de visualisation", icon:<BarChart2 size={16}/> },
-  { id:"karate", label:"SÃ©ances KaratÃ©", icon:<Shield size={16}/>, bottomIcon:<Shield size={20}/>, bottomLabel:"SÃ©ances" },
-  { id:"stage", label:"Stage Ãquipe de F...", icon:<Users size={16}/> },
-  { id:"physique", label:"PrÃ©pa Physique", icon:<Dumbbell size={16}/>, bottomIcon:<Dumbbell size={20}/>, bottomLabel:"PrÃ©pa" },
-  { id:"competitions", label:"CompÃ©titions", icon:<Trophy size={16}/> },
+  { id:"karate", label:"Séances Karaté", icon:<Shield size={16}/>, bottomIcon:<Shield size={20}/>, bottomLabel:"Séances" },
+  { id:"stage", label:"Stage Équipe de F...", icon:<Users size={16}/> },
+  { id:"physique", label:"Prépa Physique", icon:<Dumbbell size={16}/>, bottomIcon:<Dumbbell size={20}/>, bottomLabel:"Prépa" },
+  { id:"competitions", label:"Compétitions", icon:<Trophy size={16}/> },
   { id:"corrections", label:"Corrections", icon:<Clock size={16}/>, bottomIcon:<Clock size={20}/>, bottomLabel:"Corrections" },
-  { id:"videos", label:"VidÃ©os", icon:<Video size={16}/> },
+  { id:"videos", label:"Vidéos", icon:<Video size={16}/> },
   { id:"nutrition", label:"Nutrition", icon:<Apple size={16}/> },
   { id:"sommeil", label:"Sommeil", icon:<Moon size={16}/> },
   { id:"chat", label:"Chat", icon:<MessageCircle size={16}/>, bottomIcon:<MessageCircle size={20}/>, bottomLabel:"Chat" },
-  { id:"equipe", label:"Ãquipe", icon:<Users size={16}/> },
+  { id:"equipe", label:"Équipe", icon:<Users size={16}/> },
   { id:"profil", label:"Profil", icon:<User size={16}/> },
 ];
 
 const BOTTOM_NAV = NAV.filter(n => n.bottomIcon);
 
-// âââ APP ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── APP ──────────────────────────────────────────────────────────────────────
 const TEAM_USERS = [
-  { id:"iliana",    fullName:"Iliana Voratovic",   name:"Iliana",   role:"Sportive", emoji:"ð¥" },
-  { id:"isabelle",  fullName:"Isabelle Voratovic",  name:"Isabelle", role:"Maman",    emoji:"ð©" },
-  { id:"alexandre", fullName:"Alexandre Voratovic", name:"Alexandre",role:"Papa",     emoji:"ð¨" },
-  { id:"helvetia",  fullName:"Helvetia",            name:"Helvetia", role:"Coach",    emoji:"ð" },
+  { id:"iliana",    fullName:"Iliana Voratovic",   name:"Iliana",   role:"Sportive", emoji:"🥋" },
+  { id:"isabelle",  fullName:"Isabelle Voratovic",  name:"Isabelle", role:"Maman",    emoji:"👩" },
+  { id:"alexandre", fullName:"Alexandre Voratovic", name:"Alexandre",role:"Papa",     emoji:"👨" },
+  { id:"helvetia",  fullName:"Helvetia",            name:"Helvetia", role:"Coach",    emoji:"🏆" },
 ];
 
 
-// âââ AUTH âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
 const ADMIN_EMAIL = "a.voratovic@gmail.com";
 
 const LoginScreen = ({ onEmailLink }) => {
@@ -3056,7 +3056,7 @@ const LoginScreen = ({ onEmailLink }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch(er) {
-      const codes = { "auth/user-not-found":"Email introuvable.", "auth/wrong-password":"Mot de passe incorrect.", "auth/invalid-credential":"Email ou mot de passe incorrect.", "auth/too-many-requests":"Trop de tentatives. RÃ©essayez plus tard." };
+      const codes = { "auth/user-not-found":"Email introuvable.", "auth/wrong-password":"Mot de passe incorrect.", "auth/invalid-credential":"Email ou mot de passe incorrect.", "auth/too-many-requests":"Trop de tentatives. Réessayez plus tard." };
       setError(codes[er.code] || "Erreur : " + er.message);
     }
     setLoading(false);
@@ -3083,17 +3083,17 @@ const LoginScreen = ({ onEmailLink }) => {
     <div style={{ minHeight:"100vh", background:"linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
       <div style={{ background:"#fff", borderRadius:20, padding:32, width:"100%", maxWidth:400, boxShadow:"0 20px 60px rgba(0,0,0,0.2)" }}>
         <div style={{ textAlign:"center", marginBottom:28 }}>
-          <img src="/iliana.png" alt="KaratÃ© Pro" style={{ width:72, height:72, borderRadius:"50%", objectFit:"cover", objectPosition:"top", marginBottom:12, border:"3px solid #7C3AED" }}/>
-          <div style={{ fontWeight:900, fontSize:22, color:"#1E293B" }}>KaratÃ© Pro</div>
-          <div style={{ color:"#94A3B8", fontSize:13, marginTop:4 }}>AccÃ¨s privÃ©</div>
+          <img src="/iliana.png" alt="Karaté Pro" style={{ width:72, height:72, borderRadius:"50%", objectFit:"cover", objectPosition:"top", marginBottom:12, border:"3px solid #7C3AED" }}/>
+          <div style={{ fontWeight:900, fontSize:22, color:"#1E293B" }}>Karaté Pro</div>
+          <div style={{ color:"#94A3B8", fontSize:13, marginTop:4 }}>Accès privé</div>
         </div>
 
         {tab === "link_sent" && (
           <div style={{ textAlign:"center" }}>
-            <div style={{ fontSize:40, marginBottom:12 }}>ð¬</div>
-            <div style={{ fontWeight:700, fontSize:16, marginBottom:8 }}>Lien envoyÃ© !</div>
-            <div style={{ color:"#64748B", fontSize:13, marginBottom:20 }}>VÃ©rifiez votre boÃ®te mail <strong>{email}</strong> et cliquez sur le lien pour vous connecter.</div>
-            <button onClick={()=>setTab("main")} style={{ ...btnSecondary }}>â Retour</button>
+            <div style={{ fontSize:40, marginBottom:12 }}>📬</div>
+            <div style={{ fontWeight:700, fontSize:16, marginBottom:8 }}>Lien envoyé !</div>
+            <div style={{ color:"#64748B", fontSize:13, marginBottom:20 }}>Vérifiez votre boîte mail <strong>{email}</strong> et cliquez sur le lien pour vous connecter.</div>
+            <button onClick={()=>setTab("main")} style={{ ...btnSecondary }}>← Retour</button>
           </div>
         )}
 
@@ -3111,13 +3111,13 @@ const LoginScreen = ({ onEmailLink }) => {
             </div>
 
             <button onClick={()=>setTab("email")} style={{ ...btnSecondary, borderColor:"#7C3AED", color:"#7C3AED" }}>
-              âï¸ Connexion par email
+              ✉️ Connexion par email
             </button>
 
             {error && <div style={{ background:"#FEF2F2", border:"1px solid #FCA5A5", borderRadius:8, padding:"10px 14px", color:"#DC2626", fontSize:13, marginTop:8 }}>{error}</div>}
 
             <div style={{ textAlign:"center", color:"#CBD5E1", fontSize:11, marginTop:20 }}>
-              AccÃ¨s sur invitation uniquement
+              Accès sur invitation uniquement
             </div>
           </>
         )}
@@ -3133,24 +3133,24 @@ const LoginScreen = ({ onEmailLink }) => {
               <input type="email" placeholder="Adresse email" value={email} onChange={e=>setEmail(e.target.value)} style={inp} required autoFocus/>
               <input type="password" placeholder="Mot de passe" value={password} onChange={e=>setPassword(e.target.value)} style={inp} required/>
               {error && <div style={{ background:"#FEF2F2", border:"1px solid #FCA5A5", borderRadius:8, padding:"10px 14px", color:"#DC2626", fontSize:13, marginBottom:10 }}>{error}</div>}
-              <button type="submit" disabled={loading} style={btnPrimary}>{loading ? "Connexionâ¦" : "ð Se connecter"}</button>
+              <button type="submit" disabled={loading} style={btnPrimary}>{loading ? "Connexion…" : "🔐 Se connecter"}</button>
             </form>
 
             <div style={{ textAlign:"center", margin:"8px 0", color:"#94A3B8", fontSize:12 }}>Pas de mot de passe ?</div>
-            <button onClick={()=>setTab("magic_link")} style={{ ...btnSecondary, fontSize:12, padding:"10px 20px" }}>ð§ Recevoir un lien de connexion</button>
-            <button onClick={()=>setTab("main")} style={{ background:"none", border:"none", color:"#94A3B8", fontSize:12, cursor:"pointer", width:"100%", marginTop:6 }}>â Retour</button>
+            <button onClick={()=>setTab("magic_link")} style={{ ...btnSecondary, fontSize:12, padding:"10px 20px" }}>📧 Recevoir un lien de connexion</button>
+            <button onClick={()=>setTab("main")} style={{ background:"none", border:"none", color:"#94A3B8", fontSize:12, cursor:"pointer", width:"100%", marginTop:6 }}>← Retour</button>
           </>
         )}
 
         {tab === "magic_link" && (
           <>
-            <div style={{ color:"#64748B", fontSize:13, marginBottom:16, textAlign:"center" }}>Entrez votre email. Vous recevrez un lien pour vous connecter instantanÃ©ment, sans mot de passe.</div>
+            <div style={{ color:"#64748B", fontSize:13, marginBottom:16, textAlign:"center" }}>Entrez votre email. Vous recevrez un lien pour vous connecter instantanément, sans mot de passe.</div>
             <form onSubmit={handleMagicLink}>
               <input type="email" placeholder="Adresse email" value={email} onChange={e=>setEmail(e.target.value)} style={inp} required autoFocus/>
               {error && <div style={{ background:"#FEF2F2", border:"1px solid #FCA5A5", borderRadius:8, padding:"10px 14px", color:"#DC2626", fontSize:13, marginBottom:10 }}>{error}</div>}
-              <button type="submit" disabled={loading} style={btnPrimary}>{loading ? "Envoiâ¦" : "ð§ Envoyer le lien"}</button>
+              <button type="submit" disabled={loading} style={btnPrimary}>{loading ? "Envoi…" : "📧 Envoyer le lien"}</button>
             </form>
-            <button onClick={()=>setTab("main")} style={{ background:"none", border:"none", color:"#94A3B8", fontSize:12, cursor:"pointer", width:"100%", marginTop:6 }}>â Retour</button>
+            <button onClick={()=>setTab("main")} style={{ background:"none", border:"none", color:"#94A3B8", fontSize:12, cursor:"pointer", width:"100%", marginTop:6 }}>← Retour</button>
           </>
         )}
       </div>
@@ -3175,66 +3175,66 @@ const AdminUsers = ({ currentUserEmail }) => {
     if (!newEmail.trim()) return;
     setLoading(true); setMsg("");
     try {
-      // 1. Ajouter Ã  la liste blanche Firestore
+      // 1. Ajouter à la liste blanche Firestore
       const q = query(collection(db, "allowed_emails"), where("email", "==", newEmail.trim()));
       const existing = await getDocs(q);
       if (existing.empty) {
         await addDoc(collection(db, "allowed_emails"), { email: newEmail.trim().toLowerCase(), invitedBy: currentUserEmail, invitedAt: serverTimestamp() });
       }
-      // 2. Ouvrir Gmail dans le navigateur avec l'email prÃ©-rempli
+      // 2. Ouvrir Gmail dans le navigateur avec l'email pré-rempli
       const appUrl = window.location.origin;
-      const subject = encodeURIComponent("Invitation â KaratÃ© Pro SKB Elite");
+      const subject = encodeURIComponent("Invitation — Karaté Pro SKB Elite");
       const body = encodeURIComponent(
         "Bonjour,\n\n" +
-        "Tu es invitÃ©(e) Ã  accÃ©der Ã  l'application KaratÃ© Pro de l'Ã©quipe SKB Elite.\n\n" +
-        "ð AccÃ©der Ã  l'app : " + appUrl + "\n\n" +
+        "Tu es invité(e) à accéder à l'application Karaté Pro de l'équipe SKB Elite.\n\n" +
+        "🔗 Accéder à l'app : " + appUrl + "\n\n" +
         "Une fois sur l'app :\n" +
-        "â¢ Clique sur Â« Continuer avec Google Â» si tu as un compte Google\n" +
-        "â¢ Ou clique sur Â« Connexion par email Â» pour crÃ©er un mot de passe\n\n" +
-        "â ï¸ Utilise bien cette adresse email pour te connecter : " + newEmail.trim() + "\n\n" +
-        "Ã bientÃ´t !\n" +
+        "• Clique sur « Continuer avec Google » si tu as un compte Google\n" +
+        "• Ou clique sur « Connexion par email » pour créer un mot de passe\n\n" +
+        "⚠️ Utilise bien cette adresse email pour te connecter : " + newEmail.trim() + "\n\n" +
+        "À bientôt !\n" +
         "Alexandre"
       );
       const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(newEmail.trim())}&su=${subject}&body=${body}`;
       window.open(gmailUrl, "_blank");
-      setMsg("â " + newEmail.trim() + " ajoutÃ©. Gmail s'est ouvert â clique Envoyer.");
+      setMsg("✅ " + newEmail.trim() + " ajouté. Gmail s'est ouvert — clique Envoyer.");
       setNewEmail("");
       loadUsers();
     } catch(e) {
-      setMsg("â Erreur : " + e.message);
+      setMsg("❌ Erreur : " + e.message);
     }
     setLoading(false);
   };
 
   const remove = async (id, email) => {
-    if (!window.confirm("Supprimer l'accÃ¨s de " + email + " ?")) return;
+    if (!window.confirm("Supprimer l'accès de " + email + " ?")) return;
     await deleteDoc(doc(db, "allowed_emails", id));
     loadUsers();
   };
 
   return (
     <div style={{ background:"#F8F7FF", border:"2px solid #7C3AED33", borderRadius:16, padding:20, marginTop:20 }}>
-      <div style={{ fontWeight:800, fontSize:15, color:"#7C3AED", marginBottom:4 }}>ð¡ï¸ Gestion des accÃ¨s</div>
-      <div style={{ fontSize:12, color:"#94A3B8", marginBottom:16 }}>Invitez des personnes Ã  accÃ©der Ã  l'app</div>
+      <div style={{ fontWeight:800, fontSize:15, color:"#7C3AED", marginBottom:4 }}>🛡️ Gestion des accès</div>
+      <div style={{ fontSize:12, color:"#94A3B8", marginBottom:16 }}>Invitez des personnes à accéder à l'app</div>
 
       <div style={{ display:"flex", gap:8, marginBottom:12 }}>
-        <input type="email" placeholder="Email Ã  inviterâ¦" value={newEmail} onChange={e=>setNewEmail(e.target.value)}
+        <input type="email" placeholder="Email à inviter…" value={newEmail} onChange={e=>setNewEmail(e.target.value)}
           onKeyDown={e=>e.key==="Enter"&&invite()}
           style={{ flex:1, border:"1.5px solid #E2E8F0", borderRadius:8, padding:"10px 12px", fontSize:13 }}/>
         <button onClick={invite} disabled={loading || !newEmail.trim()} style={{ background:"#7C3AED", border:"none", borderRadius:8, padding:"10px 16px", color:"#fff", fontWeight:700, fontSize:13, cursor:"pointer" }}>
-          {loading ? "â¦" : "Inviter"}
+          {loading ? "…" : "Inviter"}
         </button>
       </div>
 
-      {msg && <div style={{ fontSize:12, color:msg.startsWith("â")?"#10B981":"#EF4444", marginBottom:10 }}>{msg}</div>}
+      {msg && <div style={{ fontSize:12, color:msg.startsWith("✅")?"#10B981":"#EF4444", marginBottom:10 }}>{msg}</div>}
 
       <div style={{ borderTop:"1px solid #E2E8F0", paddingTop:12 }}>
-        {users.length === 0 && <div style={{ color:"#94A3B8", fontSize:12, textAlign:"center" }}>Aucun utilisateur invitÃ©</div>}
+        {users.length === 0 && <div style={{ color:"#94A3B8", fontSize:12, textAlign:"center" }}>Aucun utilisateur invité</div>}
         {users.map(u => (
           <div key={u.id} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #F1F5F9" }}>
             <div>
               <div style={{ fontSize:13, fontWeight:600 }}>{u.email}</div>
-              <div style={{ fontSize:11, color:"#94A3B8" }}>InvitÃ© par {u.invitedBy}</div>
+              <div style={{ fontSize:11, color:"#94A3B8" }}>Invité par {u.invitedBy}</div>
             </div>
             <button onClick={()=>remove(u.id, u.email)} style={{ background:"#FEF2F2", border:"1px solid #FCA5A5", borderRadius:6, padding:"4px 10px", color:"#DC2626", fontSize:11, cursor:"pointer" }}>Retirer</button>
           </div>
@@ -3245,7 +3245,7 @@ const AdminUsers = ({ currentUserEmail }) => {
 };
 
 export default function App() {
-  const [authUser, setAuthUser] = useState(undefined); // undefined=chargement, null=non connectÃ©
+  const [authUser, setAuthUser] = useState(undefined); // undefined=chargement, null=non connecté
   const [authAllowed, setAuthAllowed] = useState(false);
   const [page, setPage] = useState("dashboard");
   const [sessions, setSessions] = useState(ALL_SESSIONS);
@@ -3263,7 +3263,7 @@ export default function App() {
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    // DÃ©tecter si l'URL contient un lien de connexion Firebase (invitation)
+    // Détecter si l'URL contient un lien de connexion Firebase (invitation)
     if (isSignInWithEmailLink(auth, window.location.href)) {
       let email = localStorage.getItem("kp_signin_email");
       if (!email) email = window.prompt("Confirmez votre adresse email pour terminer la connexion :");
@@ -3273,7 +3273,7 @@ export default function App() {
           .catch(e => console.error("Erreur lien email:", e));
       }
     }
-    // Ãcouter les changements d'authentification
+    // Écouter les changements d'authentification
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user) { setAuthUser(null); setAuthAllowed(false); return; }
       if (user.email === ADMIN_EMAIL) { setAuthUser(user); setAuthAllowed(true); return; }
@@ -3281,7 +3281,7 @@ export default function App() {
         const q = query(collection(db, "allowed_emails"), where("email", "==", user.email.toLowerCase()));
         const snap = await getDocs(q);
         if (!snap.empty) { setAuthUser(user); setAuthAllowed(true); }
-        else { await signOut(auth); setAuthUser(null); setAuthAllowed(false); alert("AccÃ¨s non autorisÃ©. Contactez l'administrateur."); }
+        else { await signOut(auth); setAuthUser(null); setAuthAllowed(false); alert("Accès non autorisé. Contactez l'administrateur."); }
       } catch(e) { setAuthUser(user); setAuthAllowed(true); }
     });
     return () => unsub();
@@ -3289,7 +3289,7 @@ export default function App() {
 
   useEffect(() => {
     if (!authUser) return;
-    // DÃ©sinscrire l'ancien SW Firebase qui bloque OneSignal, puis attendre avant d'init
+    // Désinscrire l'ancien SW Firebase qui bloque OneSignal, puis attendre avant d'init
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => {
         regs.forEach(reg => {
@@ -3307,20 +3307,20 @@ export default function App() {
           appId: "0e17a9d1-8c6e-4131-9644-7ab407e46c75",
           notifyButton: { enable: false },
         });
-        // VÃ©rifier si dÃ©jÃ  abonnÃ©
+        // Vérifier si déjà abonné
         const optedIn = OneSignal.User.PushSubscription.optedIn;
         if (optedIn) {
           setNotifPermission("granted");
           const playerId = OneSignal.User.PushSubscription.id;
           if (playerId) await saveOneSignalPlayerId(authUser.uid, playerId);
         }
-        // Ãcouter les changements d'abonnement
+        // Écouter les changements d'abonnement
         OneSignal.User.PushSubscription.addEventListener("change", async (event) => {
           if (event.current.optedIn) {
             setNotifPermission("granted");
             const playerId = event.current.id;
             if (playerId) await saveOneSignalPlayerId(authUser.uid, playerId);
-            showToast("â Notifications push activÃ©es");
+            showToast("✅ Notifications push activées");
           } else {
             setNotifPermission("default");
           }
@@ -3342,7 +3342,7 @@ export default function App() {
         if (change.type === "added") {
           const d = change.doc.data();
           if (d.senderId !== authUser.uid && page !== "chat") {
-            showToast("ð¬ Nouveau message de " + (d.sender || "?") + " â " + (d.text || ""));
+            showToast("💬 Nouveau message de " + (d.sender || "?") + " — " + (d.text || ""));
           }
         }
       });
@@ -3362,7 +3362,7 @@ export default function App() {
     setAuthAllowed(false);
   };
 
-  // Sessions karatÃ© : migration ALL_SESSIONS â Firestore (1 fois) puis source unique
+  // Sessions karaté : migration ALL_SESSIONS → Firestore (1 fois) puis source unique
   useEffect(() => {
     if (!authUser) return;
     const migKey = "kp_sess_migrated_" + authUser.uid;
@@ -3395,14 +3395,14 @@ export default function App() {
     return () => unsub && unsub();
   }, [authUser]);
 
-  // Physique : migration mockPhysique â Firestore (1 fois) puis onSnapshot
-  // âââ Migration mockCompetitions â Firestore puis onSnapshot âââââââââââââââââ
+  // Physique : migration mockPhysique → Firestore (1 fois) puis onSnapshot
+  // ─── Migration mockCompetitions → Firestore puis onSnapshot ─────────────────
   useEffect(() => {
     if (!authUser) return;
     const migKey = "kp_comp_migrated_" + authUser.uid;
     let unsub;
     const init = async () => {
-      // 1. Seed si jamais migrÃ© et Firestore vide
+      // 1. Seed si jamais migré et Firestore vide
       if (!localStorage.getItem(migKey)) {
         const snap = await getDocs(collection(db, "competitions"));
         if (snap.empty) {
@@ -3413,7 +3413,7 @@ export default function App() {
         }
         localStorage.setItem(migKey, "1");
       }
-      // 2. onSnapshot en temps rÃ©el
+      // 2. onSnapshot en temps réel
       unsub = onSnapshot(collection(db, "competitions"), (snap) => {
       console.log("[v50] onSnapshot competitions:", snap.docs.length, "docs");
         setCompetitions(snap.docs.map(d => ({ ...d.data(), id: d.id })));
@@ -3450,17 +3450,17 @@ export default function App() {
       unsub = onSnapshot(collection(db, "physique_sessions"),
         { includeMetadataChanges: true },
         (snap) => {
-          // v42: dÃ©tecter les writes rejetÃ©s par le serveur
+          // v42: détecter les writes rejetés par le serveur
           snap.docChanges().forEach(ch => {
             if (ch.type === "removed" && !ch.doc.metadata.hasPendingWrites) {
               const d = ch.doc.data();
-              console.warn("[v42] Doc SUPPRIMÃ/REJETÃ par serveur:", ch.doc.id, "type:", d?.type, "date:", d?.date);
+              console.warn("[v42] Doc SUPPRIMÉ/REJETÉ par serveur:", ch.doc.id, "type:", d?.type, "date:", d?.date);
             }
             if (ch.type === "added" && ch.doc.metadata.hasPendingWrites) {
               console.log("[v42] Write en attente serveur:", ch.doc.id, "type:", ch.doc.data()?.type);
             }
             if (ch.type === "modified" && !ch.doc.metadata.hasPendingWrites && !ch.doc.metadata.fromCache) {
-              console.log("[v42] Write CONFIRMÃ serveur:", ch.doc.id, "type:", ch.doc.data()?.type);
+              console.log("[v42] Write CONFIRMÉ serveur:", ch.doc.id, "type:", ch.doc.data()?.type);
             }
           });
           setPhysiqueSessions(snap.docs.map(d => ({ ...d.data(), id: d.id })));
@@ -3472,7 +3472,7 @@ export default function App() {
     return () => unsub && unsub();
   }, [authUser]);
 
-  // âââ SEED PPG SESSIONS (Iliana PPG 2.xlsx) ââââââââââââââââââââââââââââââ
+  // ─── SEED PPG SESSIONS (Iliana PPG 2.xlsx) ──────────────────────────────
   useEffect(() => {
     if (!authUser) return;
     const seedKey = "kp_ppg_seed_v1_" + authUser.uid;
@@ -3568,7 +3568,7 @@ export default function App() {
     init();
   }, [authUser]);
 
-  // âââ SEED PPG SESSION 17/06/2026 âââââââââââââââââââââââââââââââââââââââââ
+  // ─── SEED PPG SESSION 17/06/2026 ─────────────────────────────────────────
   useEffect(() => {
     if (!authUser) return;
     const seedKey = "kp_ppg_seed_v2_" + authUser.uid;
@@ -3637,7 +3637,7 @@ export default function App() {
     init();
   }, [authUser]);
 
-  // ââ Seed PPG v3 â sÃ©ance 21/06/2026 ââââââââââââââââââââââââââââââââââââââ
+  // ── Seed PPG v3 — séance 21/06/2026 ──────────────────────────────────────
   useEffect(() => {
     if (!authUser) return;
     const seedKey = 'kp_ppg_seed_v3_' + authUser.uid;
@@ -3651,46 +3651,46 @@ export default function App() {
           const ppgData = [
             {
               date: "2026-06-21", type: "PPG", duration: 75, intensite: "Elevee",
-              statut: "Terminee", coach: "Kevin", programme: "PPG â Ski Erg Â· Hip Thrust Â· Leg Curl Â· Leg Extension Â· Tirage Vertical Â· Rotation Poulie Â· Extension Lombaire",
+              statut: "Terminee", coach: "Kevin", programme: "PPG — Ski Erg · Hip Thrust · Leg Curl · Leg Extension · Tirage Vertical · Rotation Poulie · Extension Lombaire",
               exercises: [
                 { id:401, nom:"Ski Erg", typeEx:"Classique", videoUrl:"",
-                  repsCibles:"4 min â augmentation progressive du rythme",
+                  repsCibles:"4 min — augmentation progressive du rythme",
                   reposEntre:"", reposApres:"",
                   series:[{id:4011,reps:"4 min",poids:""}],
                   sousExercices:[]
                 },
                 { id:402, nom:"Hip Thrust", typeEx:"Bi-set", videoUrl:"Hip Trust Iliana",
-                  repsCibles:"4 Rds x 4 reps @RPE 8-9 â 2s excentrique",
+                  repsCibles:"4 Rds x 4 reps @RPE 8-9 — 2s excentrique",
                   reposEntre:"", reposApres:"150",
                   series:[{id:4021,reps:"4",poids:"100"},{id:4022,reps:"4",poids:"105"},{id:4023,reps:"4",poids:"105"},{id:4024,reps:"4",poids:"110"}],
-                  sousExercices:[{id:4025,nom:"Kb Swing Russe Ãlastique",videoUrl:"",repsCibles:"6 reps @8kg â max vitesse sur chaque rÃ©pÃ©tition",reposEntre:"",reposApres:"",series:[{id:40251,reps:"12",poids:"8"},{id:40252,reps:"12",poids:"8"},{id:40253,reps:"12",poids:"8"},{id:40254,reps:"12",poids:"8"}]}]
+                  sousExercices:[{id:4025,nom:"Kb Swing Russe Élastique",videoUrl:"",repsCibles:"6 reps @8kg — max vitesse sur chaque répétition",reposEntre:"",reposApres:"",series:[{id:40251,reps:"12",poids:"8"},{id:40252,reps:"12",poids:"8"},{id:40253,reps:"12",poids:"8"},{id:40254,reps:"12",poids:"8"}]}]
                 },
                 { id:403, nom:"Leg Curl", typeEx:"Classique", videoUrl:"Leg Curl Iliana",
-                  repsCibles:"3 x 8 reps @RPE 8 â Tempo 2s excentrique",
+                  repsCibles:"3 x 8 reps @RPE 8 — Tempo 2s excentrique",
                   reposEntre:"", reposApres:"120",
                   series:[{id:4031,reps:"8",poids:"30"},{id:4032,reps:"8",poids:"35"},{id:4033,reps:"8",poids:"42.5"}],
                   sousExercices:[]
                 },
                 { id:404, nom:"Leg Extension", typeEx:"Classique", videoUrl:"Leg Extension Iliana",
-                  repsCibles:"3 x 10 reps @RPE 8 â Tempo 2s excentrique",
+                  repsCibles:"3 x 10 reps @RPE 8 — Tempo 2s excentrique",
                   reposEntre:"", reposApres:"60",
                   series:[{id:4041,reps:"10",poids:"42.5"},{id:4042,reps:"10",poids:"47.5"},{id:4043,reps:"10",poids:"50"}],
                   sousExercices:[]
                 },
                 { id:405, nom:"Tirage Vertical Poulie", typeEx:"Classique", videoUrl:"Tirage Vertical Poulie Iliana",
-                  repsCibles:"4 x 8 reps @RPE 7 â Tempo 2s excentrique",
+                  repsCibles:"4 x 8 reps @RPE 7 — Tempo 2s excentrique",
                   reposEntre:"", reposApres:"120",
                   series:[{id:4051,reps:"8",poids:"25"},{id:4052,reps:"8",poids:"30"},{id:4053,reps:"8",poids:"30"},{id:4054,reps:"8",poids:"35"}],
                   sousExercices:[]
                 },
                 { id:406, nom:"Rotation de Buste Poulie", typeEx:"Classique", videoUrl:"Rotation Poulie Iliana",
-                  repsCibles:"3 x 8/8 reps @RPE 7 â Tempo 2s excentrique",
+                  repsCibles:"3 x 8/8 reps @RPE 7 — Tempo 2s excentrique",
                   reposEntre:"", reposApres:"120",
                   series:[{id:4061,reps:"8/8",poids:"7.5"},{id:4062,reps:"8/8",poids:"7.5"},{id:4063,reps:"8/8",poids:"7.5"}],
                   sousExercices:[]
                 },
                 { id:407, nom:"Extension Lombaire", typeEx:"Classique", videoUrl:"Extension Lombaire Iliana",
-                  repsCibles:"3 x 15 reps â LestÃ© si trop facile Â· Focus fessiers",
+                  repsCibles:"3 x 15 reps — Lesté si trop facile · Focus fessiers",
                   reposEntre:"", reposApres:"60",
                   series:[{id:4071,reps:"15",poids:"PdC"},{id:4072,reps:"15",poids:"PdC"},{id:4073,reps:"15",poids:"PdC"}],
                   sousExercices:[]
@@ -3707,7 +3707,7 @@ export default function App() {
     init();
   }, [authUser]);
 
-  // ââ Seed PPG v4 â sÃ©ance 22/06/2026 ââââââââââââââââââââââââââââââââââââââ
+  // ── Seed PPG v4 — séance 22/06/2026 ──────────────────────────────────────
   useEffect(() => {
     if (!authUser) return;
     const seedKey = 'kp_ppg_seed_v4_' + authUser.uid;
@@ -3722,46 +3722,46 @@ export default function App() {
             {
               date: "2026-06-22", type: "PPG", duration: 75, intensite: "Elevee",
               statut: "Terminee", coach: "Kevin",
-              programme: "PPG â Ski Erg Â· Leg Press Â· Hip Thrust Â· Leg Extension Â· Tirage Vertical Â· Kb Pull Through Â· Kb Biceps Curl",
+              programme: "PPG — Ski Erg · Leg Press · Hip Thrust · Leg Extension · Tirage Vertical · Kb Pull Through · Kb Biceps Curl",
               exercises: [
                 { id:501, nom:"Ski Erg", typeEx:"Classique", videoUrl:"",
-                  repsCibles:"4 min â Ã©chauffement progressif",
+                  repsCibles:"4 min — échauffement progressif",
                   reposEntre:"", reposApres:"",
                   series:[{id:5011,reps:"4 min",poids:""}],
                   sousExercices:[]
                 },
                 { id:502, nom:"Leg Press", typeEx:"Classique", videoUrl:"Leg Press Iliana",
-                  repsCibles:"4X6 reps Tempo @RPE 7 â 2/1/X/1 â Ne pas tendre complÃ¨tement les jambes en fin de mouvement, garder une lÃ©gÃ¨re flexion",
+                  repsCibles:"4X6 reps Tempo @RPE 7 — 2/1/X/1 — Ne pas tendre complètement les jambes en fin de mouvement, garder une légère flexion",
                   reposEntre:"", reposApres:"120",
                   series:[{id:5021,reps:"6",poids:"100"},{id:5022,reps:"6",poids:"115"},{id:5023,reps:"6",poids:"115"},{id:5024,reps:"6",poids:"130"}],
                   sousExercices:[]
                 },
                 { id:503, nom:"Hip Thrust", typeEx:"Classique", videoUrl:"Hip Trust Iliana",
-                  repsCibles:"3X8 reps @95-100kg (RPE 8) â 2'' excentrique",
+                  repsCibles:"3X8 reps @95-100kg (RPE 8) — 2'' excentrique",
                   reposEntre:"", reposApres:"120",
                   series:[{id:5031,reps:"8",poids:"100"},{id:5032,reps:"8",poids:"100"},{id:5033,reps:"8",poids:"105"}],
                   sousExercices:[]
                 },
                 { id:504, nom:"Leg Extension", typeEx:"Classique", videoUrl:"Leg Extension Iliana",
-                  repsCibles:"3X8 reps + 10-15'' isomÃ©trique @42,5-47,5kg (RPE 7) â Adapter la charge Â· 15'' isomÃ©trique jambes tendues",
+                  repsCibles:"3X8 reps + 10-15'' isométrique @42,5-47,5kg (RPE 7) — Adapter la charge · 15'' isométrique jambes tendues",
                   reposEntre:"", reposApres:"60",
                   series:[{id:5041,reps:"8",poids:"42.5"},{id:5042,reps:"8",poids:"47.5"},{id:5043,reps:"8",poids:"47.5"}],
                   sousExercices:[]
                 },
                 { id:505, nom:"Tirage Vertical Poulie", typeEx:"Classique", videoUrl:"Tirage Vertical Poulie Iliana",
-                  repsCibles:"4X6 reps Tempo @RPE 7-8 â 2'' excentrique",
+                  repsCibles:"4X6 reps Tempo @RPE 7-8 — 2'' excentrique",
                   reposEntre:"", reposApres:"120",
                   series:[{id:5051,reps:"6",poids:"25"},{id:5052,reps:"6",poids:"30"},{id:5053,reps:"6",poids:"30"},{id:5054,reps:"6",poids:"35"}],
                   sousExercices:[]
                 },
                 { id:506, nom:"Kb Pull Through", typeEx:"Classique", videoUrl:"Kb Pull Through Iliana",
-                  repsCibles:"3X16 reps (8 reps/cÃ´tÃ©) @RPE 7 â Focus dos droit, activation abdos ++",
+                  repsCibles:"3X16 reps (8 reps/côté) @RPE 7 — Focus dos droit, activation abdos ++",
                   reposEntre:"", reposApres:"90",
                   series:[{id:5061,reps:"8/8",poids:"4"},{id:5062,reps:"8/8",poids:"4"},{id:5063,reps:"8/8",poids:"4"}],
                   sousExercices:[]
                 },
                 { id:507, nom:"Kb Biceps Curl", typeEx:"Classique", videoUrl:"Kb Biceps Curl Iliana",
-                  repsCibles:"3X10 reps Tempo @RPE 7 â 2'' excentrique",
+                  repsCibles:"3X10 reps Tempo @RPE 7 — 2'' excentrique",
                   reposEntre:"", reposApres:"60",
                   series:[{id:5071,reps:"10",poids:"12"},{id:5072,reps:"10",poids:"12"},{id:5073,reps:"10",poids:"12"}],
                   sousExercices:[]
@@ -3778,7 +3778,7 @@ export default function App() {
     init();
   }, [authUser]);
 
-  // ââ Seed PPG v5 â sÃ©ance 24/06/2026 ââââââââââââââââââââââââââââââââââââââ
+  // ── Seed PPG v5 — séance 24/06/2026 ──────────────────────────────────────
   useEffect(() => {
     if (!authUser) return;
     const seedKey = 'kp_ppg_seed_v5_' + authUser.uid;
@@ -3793,10 +3793,10 @@ export default function App() {
             {
               date: "2026-06-24", type: "PPG", duration: 90, intensite: "Elevee",
               statut: "Terminee", coach: "Kevin",
-              programme: "PPG â VÃ©lo Â· Trap Barre Deadlift Â· Squats Smith Machine Â· Banded Lunges Â· Bloc Push Â· ÃlÃ©vations latÃ©rales Â· Metcon",
+              programme: "PPG — Vélo · Trap Barre Deadlift · Squats Smith Machine · Banded Lunges · Bloc Push · Élévations latérales · Metcon",
               exercises: [
                 {
-                  id:601, nom:"VÃ©lo", typeEx:"Classique", videoUrl:"",
+                  id:601, nom:"Vélo", typeEx:"Classique", videoUrl:"",
                   repsCibles:"4' avec augmentation progressive du rythme toutes les minutes",
                   reposEntre:"", reposApres:"",
                   series:[{id:6011,reps:"4 min",poids:""}],
@@ -3804,45 +3804,45 @@ export default function App() {
                 },
                 {
                   id:602, nom:"Trap Barre Deadlift", typeEx:"Bi-set", videoUrl:"Trap Barre Deadlift X Box Jump Iliana",
-                  repsCibles:"Force explosive â Cluster de potentialisation â 4 Rds (@RPE 8) : 4x(1 rep Trap Bar Deadlift @65kg+ + 1 Box Jump max hauteur) avec 20'' repos entre chaque rep â 2'30-3' entre les rounds",
+                  repsCibles:"Force explosive — Cluster de potentialisation — 4 Rds (@RPE 8) : 4x(1 rep Trap Bar Deadlift @65kg+ + 1 Box Jump max hauteur) avec 20'' repos entre chaque rep — 2'30-3' entre les rounds",
                   reposEntre:"20", reposApres:"150",
                   series:[{id:6021,reps:"4x(1+BJ)",poids:"65"},{id:6022,reps:"4x(1+BJ)",poids:"65"},{id:6023,reps:"4x(1+BJ)",poids:"70"},{id:6024,reps:"4x(1+BJ)",poids:"65"}],
-                  sousExercices:[{id:6025,nom:"Box Jump",videoUrl:"",repsCibles:"Max hauteur â 1 rep par cluster",reposEntre:"",reposApres:"",series:[{id:60251,reps:"4",poids:""},{id:60252,reps:"4",poids:""},{id:60253,reps:"4",poids:""},{id:60254,reps:"4",poids:""}]}]
+                  sousExercices:[{id:6025,nom:"Box Jump",videoUrl:"",repsCibles:"Max hauteur — 1 rep par cluster",reposEntre:"",reposApres:"",series:[{id:60251,reps:"4",poids:""},{id:60252,reps:"4",poids:""},{id:60253,reps:"4",poids:""},{id:60254,reps:"4",poids:""}]}]
                 },
                 {
                   id:603, nom:"Squats Smith Machine", typeEx:"Classique", videoUrl:"Squat Smith Machine Iliana",
-                  repsCibles:"5X5 reps Tempo @40kg (RPE 7-8) â Focus posture â 2/1/X/1 : 2'' excentrique + 1'' pause en bas + max vitesse sur la montÃ©e",
+                  repsCibles:"5X5 reps Tempo @40kg (RPE 7-8) — Focus posture — 2/1/X/1 : 2'' excentrique + 1'' pause en bas + max vitesse sur la montée",
                   reposEntre:"", reposApres:"120",
                   series:[{id:6031,reps:"5",poids:"25"},{id:6032,reps:"5",poids:"30"},{id:6033,reps:"5",poids:"30"},{id:6034,reps:"5",poids:"35"},{id:6035,reps:"5",poids:"35"}],
                   sousExercices:[]
                 },
                 {
                   id:604, nom:"Banded Lunges", typeEx:"Classique", videoUrl:"Banded Lunges Iliana",
-                  repsCibles:"3 Rds : 30'' Banded Lunges Hold (focus fessiers) + 8/6 reps Banded Step Over Reverse Lunges â Jambe 1 puis Jambe 2 â 2'' excentrique sur la descente",
+                  repsCibles:"3 Rds : 30'' Banded Lunges Hold (focus fessiers) + 8/6 reps Banded Step Over Reverse Lunges — Jambe 1 puis Jambe 2 — 2'' excentrique sur la descente",
                   reposEntre:"", reposApres:"60",
                   series:[{id:6041,reps:"30''+8/6",poids:"12"},{id:6042,reps:"30''+8/6",poids:"12"},{id:6043,reps:"30''+8/6",poids:"12"}],
                   sousExercices:[]
                 },
                 {
-                  id:605, nom:"Bloc Push (explosivitÃ©)", typeEx:"Bi-set", videoUrl:"Smith Machine Bench Press Iliana",
-                  repsCibles:"EMOM 8' â 4 Rds : 1) 6/5 reps Smith Machine Bench Press Tempo @20kg (RPE 7) â Focus technique + tempo â 2) 20''-30'' Max Med Ball Chest Slam (max intensitÃ©, tension continue) â Si fatigue : rÃ©duire Ã  3 Rds (EMOM 6')",
+                  id:605, nom:"Bloc Push (explosivité)", typeEx:"Bi-set", videoUrl:"Smith Machine Bench Press Iliana",
+                  repsCibles:"EMOM 8' — 4 Rds : 1) 6/5 reps Smith Machine Bench Press Tempo @20kg (RPE 7) — Focus technique + tempo — 2) 20''-30'' Max Med Ball Chest Slam (max intensité, tension continue) — Si fatigue : réduire à 3 Rds (EMOM 6')",
                   reposEntre:"", reposApres:"",
                   series:[{id:6051,reps:"6",poids:"20"},{id:6052,reps:"6",poids:"23"},{id:6053,reps:"5",poids:"23"},{id:6054,reps:"5",poids:"25"}],
-                  sousExercices:[{id:6055,nom:"Med Ball Chest Slam",videoUrl:"",repsCibles:"20-30'' max intensitÃ© en tension continue",reposEntre:"",reposApres:"",series:[{id:60551,reps:"20-30''",poids:""},{id:60552,reps:"20-30''",poids:""},{id:60553,reps:"20-30''",poids:""},{id:60554,reps:"20-30''",poids:""}]}]
+                  sousExercices:[{id:6055,nom:"Med Ball Chest Slam",videoUrl:"",repsCibles:"20-30'' max intensité en tension continue",reposEntre:"",reposApres:"",series:[{id:60551,reps:"20-30''",poids:""},{id:60552,reps:"20-30''",poids:""},{id:60553,reps:"20-30''",poids:""},{id:60554,reps:"20-30''",poids:""}]}]
                 },
                 {
-                  id:606, nom:"ÃlÃ©vations latÃ©rales haltÃ¨res", typeEx:"Classique", videoUrl:"Elevation Laterale Iliana",
-                  repsCibles:"3X10 reps Tempo @RPE 6-7 â Charges lÃ©gÃ¨res â 2'' excentrique",
+                  id:606, nom:"Élévations latérales haltères", typeEx:"Classique", videoUrl:"Elevation Laterale Iliana",
+                  repsCibles:"3X10 reps Tempo @RPE 6-7 — Charges légères — 2'' excentrique",
                   reposEntre:"", reposApres:"90",
                   series:[{id:6061,reps:"10",poids:"6"},{id:6062,reps:"10",poids:"6"},{id:6063,reps:"10",poids:"6"}],
                   sousExercices:[]
                 },
                 {
                   id:607, nom:"Metcon", typeEx:"Classique", videoUrl:"",
-                  repsCibles:"AMRAP 10' (max tours) : 50 sauts Ã  la corde (target 40'' max) + 2-4-6-etc...+2/Rds EnchÃ¢Ã®nements Blocage/poings en Zenkutsu (en avanÃ§ant) + 10 Kb Swing Russe @RPE 7-8 (focus fessiers/abdos) + 2-4-6-etc...+2/Rds Mawashis Pao â Max intensitÃ© sur les techniques karateÌ",
+                  repsCibles:"AMRAP 10' (max tours) : 50 sauts à la corde (target 40'' max) + 2-4-6-etc...+2/Rds Enchâînements Blocage/poings en Zenkutsu (en avançant) + 10 Kb Swing Russe @RPE 7-8 (focus fessiers/abdos) + 2-4-6-etc...+2/Rds Mawashis Pao — Max intensité sur les techniques karaté",
                   reposEntre:"", reposApres:"",
                   series:[{id:6071,reps:"AMRAP 10'",poids:""}],
-                  sousExercices:[{id:6075,nom:"Kb Swing Russe",videoUrl:"",repsCibles:"10 reps @RPE 7-8 â Focus fessiers/abdos",reposEntre:"",reposApres:"",series:[{id:60751,reps:"10",poids:"6"},{id:60752,reps:"10",poids:"6"},{id:60753,reps:"10",poids:"6"},{id:60754,reps:"10",poids:"6"},{id:60755,reps:"10",poids:"6"},{id:60756,reps:"10",poids:"6"}]}]
+                  sousExercices:[{id:6075,nom:"Kb Swing Russe",videoUrl:"",repsCibles:"10 reps @RPE 7-8 — Focus fessiers/abdos",reposEntre:"",reposApres:"",series:[{id:60751,reps:"10",poids:"6"},{id:60752,reps:"10",poids:"6"},{id:60753,reps:"10",poids:"6"},{id:60754,reps:"10",poids:"6"},{id:60755,reps:"10",poids:"6"},{id:60756,reps:"10",poids:"6"}]}]
                 }
               ]
             }
@@ -3866,7 +3866,7 @@ export default function App() {
     return () => unsub();
   }, [authUser]);
 
-  // Marquer chat comme lu Ã  la navigation
+  // Marquer chat comme lu à la navigation
   useEffect(() => {
     if (!authUser) return;
     if (page === "chat") {
@@ -3875,7 +3875,7 @@ export default function App() {
     }
   }, [page, authUser]);
 
-  // Pastille chat : messages non-lus en temps rÃ©el
+  // Pastille chat : messages non-lus en temps réel
   useEffect(() => {
     if (!authUser) return;
     const q = query(collection(db, "chat_messages"), orderBy("createdAt", "asc"));
@@ -3893,13 +3893,13 @@ export default function App() {
     return () => unsub();
   }, [authUser, page]);
 
-  // Pastille sÃ©ances : Firestore, cross-device, hors crÃ©ateur
+  // Pastille séances : Firestore, cross-device, hors créateur
   useEffect(() => {
     if (!authUser) return;
     const unsub = onSnapshot(collection(db, "seances"), (snap) => {
       const seenStr = localStorage.getItem("kp_seances_seen_" + authUser.uid);
       if (page === "karate" || seenStr === null) {
-        // PremiÃ¨re ouverture ou visite de la section : tout marquer comme vu
+        // Première ouverture ou visite de la section : tout marquer comme vu
         const ids = snap.docs.map(d => d.id).join(",");
         localStorage.setItem("kp_seances_seen_" + authUser.uid, ids);
         setUnreadSeances(0);
@@ -3919,7 +3919,7 @@ export default function App() {
   // Auth guards
   if (authUser === undefined) return (
     <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"linear-gradient(135deg,#7C3AED,#EC4899)" }}>
-      <div style={{ color:"#fff", fontWeight:700, fontSize:16 }}>Chargementâ¦</div>
+      <div style={{ color:"#fff", fontWeight:700, fontSize:16 }}>Chargement…</div>
     </div>
   );
 
@@ -3932,7 +3932,7 @@ export default function App() {
         await new Promise(r => setTimeout(r, 500));
         await window.OneSignal.User.PushSubscription.optIn();
       } else {
-        showToast("OneSignal en cours de chargement, rÃ©essayez dans un instant");
+        showToast("OneSignal en cours de chargement, réessayez dans un instant");
       }
     } catch (err) {
       showToast("Erreur activation notifications: " + (err.message || String(err)).substring(0, 60));
@@ -3966,7 +3966,7 @@ export default function App() {
       case "chat": return <Chat authUser={authUser}/>;
       case "equipe": return <Equipe currentUser={currentUser} onIdentify={(u)=>{setCurrentUser(u);setCurrentUserState(u);}}/>;
       case "profil": return <Profil sessions={sessions} competitions={competitions} authUser={authUser}/>;
-      default: return <EmptyState icon={<LayoutDashboard size={24}/>} title="Section Ã  venir"/>;
+      default: return <EmptyState icon={<LayoutDashboard size={24}/>} title="Section à venir"/>;
     }
   };
 
@@ -3979,7 +3979,7 @@ export default function App() {
           </div>
           <div>
             <div style={{ fontWeight:800, fontSize:13, lineHeight:1.2 }}>Iliana<br/>Voratovic</div>
-            <div style={{ fontSize:10, color:C.muted }}>KaratÃ© Kata</div>
+            <div style={{ fontSize:10, color:C.muted }}>Karaté Kata</div>
           </div>
         </div>
         {isMobile && <button onClick={()=>setSidebarOpen(false)} style={{ background:"none", border:"none", cursor:"pointer", color:C.muted }}><X size={20}/></button>}
@@ -4024,7 +4024,7 @@ export default function App() {
           </div>
         </div>
         <button onClick={handleLogout} style={{ width:"100%", background:"none", border:"none", cursor:"pointer", color:C.red, fontSize:12, fontWeight:600, display:"flex", alignItems:"center", gap:6, padding:"4px 2px" }}>
-          <LogOut size={13}/> DÃ©connexion
+          <LogOut size={13}/> Déconnexion
         </button>
       </div>
     </>
@@ -4068,7 +4068,7 @@ export default function App() {
             <div style={{ width:28, height:28, borderRadius:8, background:"linear-gradient(135deg, "+C.primary+", "+C.accent+")", display:"flex", alignItems:"center", justifyContent:"center" }}>
               <TrendingUp size={14} color="#fff"/>
             </div>
-            <span style={{ fontWeight:800, fontSize:14, color:C.primary }}>KaratÃ© Pro</span>
+            <span style={{ fontWeight:800, fontSize:14, color:C.primary }}>Karaté Pro</span>
           </div>
           <button onClick={handleEnableNotifications} style={{ background:"none", border:"none", cursor:"pointer", color:notifPermission==="granted"?C.green:C.muted }}>
             {notifPermission==="granted" ? <Bell size={20}/> : <BellOff size={20}/>}
