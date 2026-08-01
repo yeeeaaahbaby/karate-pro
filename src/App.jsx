@@ -1136,7 +1136,7 @@ const StageEquipe = () => {
       type: "nouveau_stage_edf",
       title: "Nouvelle seance Stage EDF",
       body: "Seance du " + (form.date || "") + (form.duration ? " - " + form.duration + " min" : ""),
-      createdBy: currentUser?.email || "coach"
+      createdBy: "coach"
     }).catch(eN => console.error("[notif_edf]", eN));
     setShowForm(false);
   };
