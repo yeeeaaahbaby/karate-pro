@@ -1086,6 +1086,16 @@ const StageEquipe = () => {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY_STAGE);
   const [expandedIdE, setExpandedIdE] = useState(null);
+
+  useEffect(() => {
+    const unsubEDF = onSnapshot(collection(db, "seances"), (snap) => {
+      const edf = snap.docs
+        .filter(d => d.data().type === "stage_edf")
+        .map(d => ({ id: d.id, ...d.data() }));
+      setStages(edf);
+    });
+    return () => unsubEDF();
+  }, []);
   const trackViewE = async (s) => {
     const u = getCurrentUser(); if (!u) return;
     try {
@@ -1106,12 +1116,22 @@ const StageEquipe = () => {
   const openEdit = (s) => { setForm({...s, duration:String(s.duration), katas:s.katas||[]}); setEditingId(s.id); setShowForm(true); };
   const openCopy = (s) => { setForm({...s, date:new Date().toISOString().split("T")[0], duration:String(s.duration), katas:s.katas||[]}); setEditingId(null); setShowForm(true); };
   const handleDelete = async (id) => { if (!window.confirm("Supprimer ce stage ?")) return; setStages(prev=>prev.filter(s=>s.id!==id)); };
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.date || !form.duration) return;
     const s = { ...form, duration: parseInt(form.duration), katas: form.katas||[] };
     if (editingId) { setStages(prev=>prev.map(x=>x.id===editingId?{...x,...s}:x)); }
     else { setStages(prev=>[{id:Date.now(),...s},...prev]); }
 
+    // firestore_edf — persistance Firestore
+    if (!editingId) {
+      try {
+        await addDoc(collection(db, "seances"), {
+          ...form,
+          type: "stage_edf",
+          createdAt: serverTimestamp()
+        });
+      } catch(eFS) { console.error("[save_edf]", eFS); }
+    }
     // notif_edf — notification push création séance Stage EDF
     notifyNewContent({
       type: "nouveau_stage_edf",
