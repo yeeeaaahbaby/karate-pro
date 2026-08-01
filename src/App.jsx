@@ -1109,7 +1109,7 @@ const StageEquipe = () => {
   };
 
   const avgSat = stages.length ? (stages.reduce((a,b)=>a+b.satisfaction,0)/stages.length).toFixed(1) : 0;
-  const avgDur = stages.length ? Math.round(stages.reduce((a,b)=>a+b.duration,0)/stages.length) : 0;
+  const avgDur = stages.length ? Math.round(stages.reduce((a,b)=>a+Number(b.duration),0)/stages.length) : 0;
   const emoji = (s) => s>=9?"😃":s>=8?"😊":s>=7?"🙂":"😐";
 
   const openAdd = () => { setForm(EMPTY_STAGE); setEditingId(null); setShowForm(true); };
