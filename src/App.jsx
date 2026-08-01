@@ -1091,7 +1091,7 @@ const StageEquipe = () => {
     const unsubEDF = onSnapshot(collection(db, "seances"), (snap) => {
       const edf = snap.docs
         .filter(d => d.data().type === "stage_edf")
-        .map(d => ({ id: d.id, ...d.data() }));
+        .map(d => ({ id: d.id, ...d.data() })).sort((a,b)=>new Date(b.date)-new Date(a.date));
       setStages(edf);
     });
     return () => unsubEDF();
