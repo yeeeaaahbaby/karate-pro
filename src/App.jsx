@@ -1078,7 +1078,7 @@ const mockStages = [
     retours:"" },
 ];
 
-const EMPTY_STAGE = { date: new Date().toISOString().split("T")[0], satisfaction:8, katas:[], duration:"", focus:"", corrections:"", retours:"" };
+const EMPTY_STAGE = { date: new Date().toISOString().split("T")[0], satisfaction:8, katas:[], duration:120, focus:"", corrections:"", retours:"" };
 
 const StageEquipe = () => {
   const [stages, setStages] = useState(mockStages);
