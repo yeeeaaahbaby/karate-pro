@@ -493,7 +493,7 @@ const Dashboard = ({ sessions, competitions, onNavigate, plannings, physiqueSess
 };
 
 // ─── SÉANCES KARATÉ ──────────────────────────────────────────────────────────
-const COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Fernando","Jérémie","Michel","Perso","Autres"];
+const COACHES = ["Helvétia","Romain","Olivier","Yves","Jonathan","Hugo","Fernando","Jérémie","Michel","Romane","Perso","Autres"];
 const KATAS_LIST = ["Gojūshiho Dai","Gojūshiho Shō","Unsu","Gankaku","Kanku Shō","Kanku Dai","Supaenpei","Empi","Sōchin","Sansai","Bassai Dai","Bassai Shō","Jion","Jitte","Hangetsu","Nijūshiho","Chinte","Wankan","Gojūshiho"];
 const TECHNIQUES_LIST = [
   "Mae Geri (Coup de pied avant)","Mawashi Geri (Coup de pied circulaire)","Ushiro Geri (Coup de pied arrière)",
